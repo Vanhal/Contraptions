@@ -13,7 +13,7 @@ import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.core.Proxy;
 import tv.vanhal.contraptions.gui.SimpleGuiHandler;
 import tv.vanhal.contraptions.items.ContItems;
-import tv.vanhal.contraptions.ref.Ref;
+import tv.vanhal.contraptions.util.Ref;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;

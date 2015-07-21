@@ -1,4 +1,4 @@
-package tv.vanhal.contraptions.ref;
+package tv.vanhal.contraptions.util;
 
 public class Ref {
 	public static final String MODID = "contraptions";
