@@ -1,0 +1,16 @@
+[
+{
+  "modid": "contraptions",
+  "name": "Contraptions",
+  "description": "Minecraft mod that provides various contraptions",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Vanhal/Contraptions/",
+  "updateUrl": "https://github.com/Vanhal/Contraptions/releases",
+  "authorList": ["Vanhal"],
+  "credits": "Vanhal",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
