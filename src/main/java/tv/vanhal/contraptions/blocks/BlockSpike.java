@@ -14,5 +14,25 @@ public class BlockSpike extends BaseBlock {
 	public TileEntity createNewTileEntity(World world, int var2) {
 		return new TileSpike();
 	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+	
+	@Override
+	public boolean isBlockNormalCube() {
+		return false;
+	}
+	
+	@Override
+	public int getRenderType() {
+        return -1;
+    }
 
 }

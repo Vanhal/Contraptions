@@ -3,6 +3,7 @@ package tv.vanhal.contraptions.blocks;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,7 @@ public class BaseBlock extends BlockContainer {
 		setCreativeTab(Contraptions.ContraptionTab);
 		
 		GUIid = Contraptions.proxy.registerGui(_name);
+		this.setBlockTextureName(Ref.MODID+":"+_name);
 	}
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
