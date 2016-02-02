@@ -28,8 +28,6 @@ public class BaseRenderer extends TileEntitySpecialRenderer {
 	        GL11.glTranslated(x+0.5, y+0.5, z+0.5);
 	        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	        
-	        //GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-	        //GL11.glScalef(0.09375F, 0.09375F, 0.09375F);
 	        if (tileentity instanceof BaseTile) {
 	        	int direction = ((BaseTile)tileentity).getFacing();
 	        	if (direction>=0) {
@@ -43,12 +41,16 @@ public class BaseRenderer extends TileEntitySpecialRenderer {
 	        }
 
 	        //Bind the texture and render the model
-	        bindTexture(texture);
+	        setTexture(tileentity);
 	        model.renderAll();
 
 	        //OpenGL stuff to put everything back
 	        GL11.glPopMatrix();
 		}
+	}
+	
+	protected void setTexture(TileEntity tileentity) {
+		bindTexture(texture);
 	}
 
 }

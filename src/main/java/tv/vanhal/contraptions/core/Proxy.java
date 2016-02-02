@@ -2,6 +2,7 @@ package tv.vanhal.contraptions.core;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileSpike;
 
@@ -10,6 +11,7 @@ public class Proxy {
 	public void registerEntities() {
 		GameRegistry.registerTileEntity(TileSpike.class, "TileSpike");
 		GameRegistry.registerTileEntity(TilePoweredPiston.class, "TilePoweredPiston");
+		GameRegistry.registerTileEntity(TilePlacer.class, "TilePlacer");
 	}
 	
 	public int registerGui(String guiName) {

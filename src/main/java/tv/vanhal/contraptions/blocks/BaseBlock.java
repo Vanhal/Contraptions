@@ -1,12 +1,16 @@
 package tv.vanhal.contraptions.blocks;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
+import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.Ref;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -118,5 +122,22 @@ public class BaseBlock extends BlockContainer {
 		if ( (tile != null) && (tile instanceof BaseTile) ) {
 			((BaseTile)tile).setFacing(l);
 		}
+    }
+	
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_) {
+		BaseTile tileEntity = (BaseTile)world.getTileEntity(x, y, z);
+
+        if (tileEntity != null) {
+            ArrayList<ItemStack> items = ItemHelper.getBlockContents(world, x, y, z, tileEntity);
+            
+            for (ItemStack item: items) {
+            	ItemHelper.dropAsItem(world, x, y, z, item);
+            }
+            
+
+            world.func_147453_f(x, y, z, block);
+        }
+        super.breakBlock(world, x, y, z, block, p_149749_6_);
     }
 }

@@ -1,6 +1,7 @@
 package tv.vanhal.contraptions.tiles;
 
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.network.NetworkHandler;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
 import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class BaseTile extends TileEntity {
 	protected ItemStack[] slots;
 	public ForgeDirection facing = ForgeDirection.WEST;
+
+	public static final byte TICKS_PER_MESSAGE = 5;
 	
 	//flags and tags for updating the NBT data
 	private boolean dirty;
@@ -137,7 +140,7 @@ public class BaseTile extends TileEntity {
 	 */
 	public void readCommonNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("facing")) facing = ForgeDirection.getOrientation(nbt.getInteger("facing"));
-		else facing = ForgeDirection.WEST;
+		else if (facing == null) facing = ForgeDirection.WEST;
 	}
 	
 	/**
@@ -162,9 +165,8 @@ public class BaseTile extends TileEntity {
      * This method is used to sync data when a GUI is opened. the packet will contain
      * all syncable data.
      */
-		@Override
-    public Packet getDescriptionPacket()
-    {
+	@Override
+    public Packet getDescriptionPacket() {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeCommonNBT(nbttagcompound);
         this.writeSyncOnlyNBT(nbttagcompound);
@@ -174,7 +176,7 @@ public class BaseTile extends TileEntity {
 	/**
 	 * This method is used to load syncable data when a GUI is opened.
 	 */
-		@Override    
+	@Override    
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     	this.readCommonNBT(pkt.func_148857_g());
     	this.readSyncOnlyNBT(pkt.func_148857_g());
@@ -241,7 +243,22 @@ public class BaseTile extends TileEntity {
 		return dirty;
 	}
 	
+	
+	
 	/////END NBT DATA METHODS
+	@Override
+	public void updateEntity() {
+		update();
+		if (isDirty() && worldObj.getWorldTime() % TICKS_PER_MESSAGE == 0) {
+			PartialTileNBTUpdateMessage message = getPartialUpdateMessage();
+			
+			NetworkHandler.sendToAllAroundNearby(message, this);
+		}
+	}
+	
+	public void update() {
+		
+	}
 	
 	public boolean isPowered() {
 		return (isPoweredLevel()>0);
@@ -253,7 +270,6 @@ public class BaseTile extends TileEntity {
 	
 	public void setFacing(int _facing) {
 		facing = ForgeDirection.getOrientation(_facing);
-		this.addPartialUpdate("facing", facing.ordinal());
 	}
 	
 	public int getFacing() {
