@@ -46,6 +46,9 @@ public class TileSpike extends BaseTile {
 					}
 				}
 			}
+			if (this.isPowered()) {
+				Contraptions.logger.info("Power Level: "+this.isPoweredLevel());
+			}
 		}
 	}
 	

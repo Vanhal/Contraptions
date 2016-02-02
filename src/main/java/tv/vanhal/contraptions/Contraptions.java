@@ -13,6 +13,9 @@ import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.core.Proxy;
 import tv.vanhal.contraptions.gui.SimpleGuiHandler;
 import tv.vanhal.contraptions.items.ContItems;
+import tv.vanhal.contraptions.network.NetworkHandler;
+import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
+import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessageHandler;
 import tv.vanhal.contraptions.util.Ref;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -25,6 +28,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Ref.MODID, name = Ref.MODNAME, version = Ref.Version)
 public class Contraptions {
@@ -54,6 +58,9 @@ public class Contraptions {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		NetworkHandler.registerMessageHandler(PartialTileNBTUpdateMessageHandler.class,
+				PartialTileNBTUpdateMessage.class, Side.CLIENT);
+		
 		ContConfig.init(new Configuration(event.getSuggestedConfigurationFile()));
 		
 		ContItems.preInit();
