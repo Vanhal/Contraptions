@@ -32,9 +32,10 @@ public class RenderPoweredPiston extends BasePoweredRenderer {
 			ForgeDirection facing = ((TilePoweredPiston)tileentity).facing;
 			
 
+			//Contraptions.logger.info(facing.offsetX+", "+facing.offsetY+", "+facing.offsetZ);
 			double dx = (facing.offsetX<0)?0.58:(facing.offsetX>0)?0.42:0.5;
 			double dy = (facing.offsetY==0)?0.46:((facing.offsetY>0)?0.42:0.58);
-			double dz = (facing.offsetZ==0)?(facing.offsetY==0)?0.5:0.46:((facing.offsetZ>0)?0.42:0.58);
+			double dz = (facing.offsetZ==0)?(facing.offsetY==0)?0.5:((facing.offsetY>0)?0.46:0.54):((facing.offsetZ>0)?0.42:0.58);
 	        GL11.glTranslated(x+dx, y+dy, z+dz);
 	        
 	        setRotation(tileentity);

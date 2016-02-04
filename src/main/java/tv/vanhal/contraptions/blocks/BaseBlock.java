@@ -115,7 +115,6 @@ public class BaseBlock extends BlockContainer {
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		Contraptions.logger.info("Block Placed");
 		int l = BlockPistonBase.determineOrientation(world, x, y, z, entity);
 		world.setBlockMetadataWithNotify(x, y, z, l, 2);
 		TileEntity tile = world.getTileEntity(x, y, z);

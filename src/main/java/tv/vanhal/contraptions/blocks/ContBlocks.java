@@ -1,5 +1,7 @@
 package tv.vanhal.contraptions.blocks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+
 public class ContBlocks {
 
 	public static void preInit() {
@@ -8,6 +10,8 @@ public class ContBlocks {
 		placer.preInit();
 		spreader.preInit();
 		redstonePoweredPiston.preInit();
+		
+		GameRegistry.registerBlock(pulse, "pulse");
 	}
 	
 	public static void init() {
@@ -31,4 +35,6 @@ public class ContBlocks {
 	public static BlockRedstonePoweredPiston redstonePoweredPiston = new BlockRedstonePoweredPiston();
 	public static BlockPlacer placer = new BlockPlacer();
 	public static BlockSpreader spreader = new BlockSpreader();
+	
+	public static BlockRedstonePulse pulse = new BlockRedstonePulse();
 }

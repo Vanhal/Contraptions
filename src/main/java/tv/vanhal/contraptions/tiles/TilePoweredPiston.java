@@ -87,7 +87,7 @@ public class TilePoweredPiston extends BasePoweredTile {
 			} else {
 				if ( (!isAir(i)) && (isPushable(i)) ) foundBlock = true;
 				else if ( (!isAir(i)) && (!isPushable(i)) ) break;
-				else if (isAir(i)) {
+				else if (isAir(i, false)) {
 					lastAir = i;
 				}
 			}
@@ -95,6 +95,7 @@ public class TilePoweredPiston extends BasePoweredTile {
 		for (int i = firstAir; i>0; i--) {
 			moveBlock(i);
 		}
+		pushDone(lastAir);
 	}
 	
 	protected void pushDone(int lastBlock) {
@@ -102,10 +103,26 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	protected boolean isAir(int distance) {
+		return isAir(distance, true);
+	}
+	
+	protected boolean isAir(int distance, boolean replace) {
 		int x = xCoord + (facing.offsetX*distance);
 		int y = yCoord + (facing.offsetY*distance);
 		int z = zCoord + (facing.offsetZ*distance);
-		return ( (worldObj.isAirBlock(x, y, z)) || (FluidRegistry.lookupFluidForBlock(worldObj.getBlock(x, y, z))!=null) ) ;
+		return isAir(x, y, z, replace);
+	}
+	
+	protected boolean isAir(int x, int y, int z) {
+		return isAir(x, y, z, true);
+	}
+	
+	protected boolean isAir(int x, int y, int z, boolean replace) {
+		Block testBlock = worldObj.getBlock(x, y, z);
+		return ( (worldObj.isAirBlock(x, y, z)) 
+				|| (FluidRegistry.lookupFluidForBlock(testBlock)!=null)
+				|| ( (testBlock.isReplaceable(worldObj, x, y, z)) && (replace) )
+				|| ( (testBlock.getMobilityFlag() == 1) && (replace) ) ) ;
 	}
 	
 	protected boolean isPushable(int distance) {
@@ -135,11 +152,11 @@ public class TilePoweredPiston extends BasePoweredTile {
 		int dx = x + facing.offsetX;
 		int dy = y + facing.offsetY;
 		int dz = z + facing.offsetZ;
-		if (!worldObj.isAirBlock(x, y, z)) {
-			Block moveBlock = worldObj.getBlock(x, y, z);
-			int metaData = worldObj.getBlockMetadata(x, y, z);
+		Block moveBlock = worldObj.getBlock(x, y, z);
+		int metaData = worldObj.getBlockMetadata(x, y, z);
+		if (!isAir(x, y, z)) {
 			if ( isPushable(moveBlock, x, y, z) ) {
-				if ( (worldObj.isAirBlock(dx, dy, dz)) || (worldObj.getBlock(dx, dy, dz).isReplaceable(worldObj, dx, dy, dz)) ) {
+				if (isAir(dx, dy, dz)) {
 					if (moveBlock instanceof BlockSpike) {
 						int bx = dx + facing.offsetX;
 						int by = dy + facing.offsetY;
@@ -171,6 +188,13 @@ public class TilePoweredPiston extends BasePoweredTile {
 					if (isSpike(distance+2)) {
 						ItemHelper.dropBlockIntoWorld(worldObj, dx, dy, dz, moveBlock, metaData);
 					}
+				}
+			}
+		} else if (isAir(x, y, z, false)) {
+			if ( (moveBlock.getMobilityFlag()==1) || (moveBlock.isReplaceable(worldObj, x, y, z)) ) {
+				if (FluidRegistry.lookupFluidForBlock(moveBlock)==null) {
+					worldObj.setBlockToAir(x, y, z);
+					worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(moveBlock) + (metaData << 12));
 				}
 			}
 		}
