@@ -3,6 +3,7 @@ package tv.vanhal.contraptions.tiles;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockPistonMoving;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -10,13 +11,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.IFluidBlock;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BlockSpike;
 import tv.vanhal.contraptions.util.ItemHelper;
 
-public class TilePoweredPiston extends BaseTile {
+public class TilePoweredPiston extends BasePoweredTile {
+	public final int POWER_PER_USE = 100;
+	
 	protected int lastPower = 0;
 	protected int cooldown = 0;
+	
+	public TilePoweredPiston() {
+		super(1600);
+	}
 	
 	@Override
 	public void writeCommonNBT(NBTTagCompound nbt) {
@@ -52,9 +61,11 @@ public class TilePoweredPiston extends BaseTile {
 			int currentPower = this.isPoweredLevel();
 			if ( (currentPower>0) && (lastPower==0) && (cooldown <= 0) ) {
 				lastPower = currentPower;
-				pushBlocks(currentPower);
-				cooldown = 8;
-				addPartialUpdate("cooldown", cooldown);
+				if (consumeCharge(POWER_PER_USE)) {
+					pushBlocks(currentPower);
+					cooldown = 8;
+					addPartialUpdate("cooldown", cooldown);
+				}
 			} else if ( (currentPower==0) && (lastPower>0) ) {
 				lastPower = currentPower;
 			}
@@ -63,15 +74,22 @@ public class TilePoweredPiston extends BaseTile {
 	
 	protected void pushBlocks(int range) {
 		int firstAir = 0;
+		int lastAir = 0;
 		boolean foundBlock = false;
 		for (int i = 1; i <= range; i++) {
 			if (foundBlock) {
 				if (isAir(i)) {
 					firstAir = i;
 					break;
+				} else if (!isPushable(i)) {
+					break;
 				}
 			} else {
 				if ( (!isAir(i)) && (isPushable(i)) ) foundBlock = true;
+				else if ( (!isAir(i)) && (!isPushable(i)) ) break;
+				else if (isAir(i)) {
+					lastAir = i;
+				}
 			}
 		}
 		for (int i = firstAir; i>0; i--) {
@@ -79,11 +97,15 @@ public class TilePoweredPiston extends BaseTile {
 		}
 	}
 	
+	protected void pushDone(int lastBlock) {
+		
+	}
+	
 	protected boolean isAir(int distance) {
 		int x = xCoord + (facing.offsetX*distance);
 		int y = yCoord + (facing.offsetY*distance);
 		int z = zCoord + (facing.offsetZ*distance);
-		return (worldObj.isAirBlock(x, y, z)) ;
+		return ( (worldObj.isAirBlock(x, y, z)) || (FluidRegistry.lookupFluidForBlock(worldObj.getBlock(x, y, z))!=null) ) ;
 	}
 	
 	protected boolean isPushable(int distance) {
@@ -144,7 +166,7 @@ public class TilePoweredPiston extends BaseTile {
 
 					worldObj.removeTileEntity(x, y, z);
 					worldObj.setBlockToAir(x, y, z);
-					worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(moveBlock) + (metaData << 12));
+					//worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(moveBlock) + (metaData << 12));
 					
 					if (isSpike(distance+2)) {
 						ItemHelper.dropBlockIntoWorld(worldObj, dx, dy, dz, moveBlock, metaData);

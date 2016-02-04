@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tv.vanhal.contraptions.blocks.ContBlocks;
+import tv.vanhal.contraptions.compat.ModHelper;
 import tv.vanhal.contraptions.core.Proxy;
 import tv.vanhal.contraptions.gui.SimpleGuiHandler;
 import tv.vanhal.contraptions.items.ContItems;
@@ -62,6 +63,8 @@ public class Contraptions {
 				PartialTileNBTUpdateMessage.class, Side.CLIENT);
 		
 		ContConfig.init(new Configuration(event.getSuggestedConfigurationFile()));
+		
+		ModHelper.init();
 		
 		ContItems.preInit();
 		ContBlocks.preInit();

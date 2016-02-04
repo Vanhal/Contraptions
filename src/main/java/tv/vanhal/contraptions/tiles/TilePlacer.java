@@ -6,11 +6,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class TilePlacer extends BaseISidedTile {
+public class TilePlacer extends BaseInventoryTile {
+	public final int POWER_PER_USE = 40;
 	protected boolean powered = false;
 	
 	public TilePlacer() {
-		super(1);
+		super(1, 2560);
 	}
 	
 	@Override
@@ -40,7 +41,8 @@ public class TilePlacer extends BaseISidedTile {
 			boolean currentPowered = this.isPowered();
 			if ( (currentPowered) && (!powered) ) {
 				powered = currentPowered;
-				placeBlock();
+				if (consumeCharge(POWER_PER_USE))
+					placeBlock();
 			} else if ( (!currentPowered) && (powered) ) {
 				powered = currentPowered;
 			}

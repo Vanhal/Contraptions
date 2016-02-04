@@ -11,7 +11,7 @@ public class BlockSpike extends BaseBlock {
 
 	public BlockSpike() {
 		super("spike", true);
-        setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
+        setBlockBounds(0.1f, 0.1f, 0.1f, 0.90f, 0.90f, 0.90f);
 	}
 	
 	@Override

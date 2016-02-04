@@ -25,28 +25,38 @@ public class BaseRenderer extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
 		if (model!=null) {
 			GL11.glPushMatrix();
-	        GL11.glTranslated(x+0.5, y+0.5, z+0.5);
-	        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	        
-	        if (tileentity instanceof BaseTile) {
-	        	int direction = ((BaseTile)tileentity).getFacing();
-	        	if (direction>=0) {
-	        		if (direction==0) GL11.glRotatef(90, -1, 0, 0); //Down
-	        		if (direction==1) GL11.glRotatef(90, 1, 0, 0); //Up
-	        		if (direction==2) GL11.glRotatef(0, 0, 1, 0); //North
-	        		if (direction==3) GL11.glRotatef(180, 0, 1, 0); //South
-	        		if (direction==4) GL11.glRotatef(90, 0, 1, 0); //West
-	        		if (direction==5) GL11.glRotatef(90, 0, -1, 0); //East
-	        	}
-	        }
-
 	        //Bind the texture and render the model
-	        setTexture(tileentity);
-	        model.renderAll();
+	        renderModel(tileentity, x, y, z, f);
 
 	        //OpenGL stuff to put everything back
 	        GL11.glPopMatrix();
 		}
+	}
+	
+	protected void setPosition(double x, double y, double z) {
+        GL11.glTranslated(x+0.5, y+0.5, z+0.5);
+	}
+	
+	protected void setRotation(TileEntity tileentity) {
+		if (tileentity instanceof BaseTile) {
+        	int direction = ((BaseTile)tileentity).getFacing();
+        	if (direction>=0) {
+        		if (direction==0) GL11.glRotatef(90, -1, 0, 0); //Down
+        		if (direction==1) GL11.glRotatef(90, 1, 0, 0); //Up
+        		if (direction==2) GL11.glRotatef(0, 0, 1, 0); //North
+        		if (direction==3) GL11.glRotatef(180, 0, 1, 0); //South
+        		if (direction==4) GL11.glRotatef(90, 0, 1, 0); //West
+        		if (direction==5) GL11.glRotatef(90, 0, -1, 0); //East
+        	}
+        }
+	}
+	
+	protected void renderModel(TileEntity tileentity, double x, double y, double z, float f) {
+        setTexture(tileentity);
+		setPosition(x, y, z);
+		setRotation(tileentity);
+        model.renderAll();
 	}
 	
 	protected void setTexture(TileEntity tileentity) {

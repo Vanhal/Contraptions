@@ -3,11 +3,16 @@ package tv.vanhal.contraptions.tiles;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class BaseISidedTile extends BaseTile implements ISidedInventory {
+public class BaseInventoryTile extends BasePoweredTile implements ISidedInventory {
 	
-	public BaseISidedTile(int size) {
-		super(size);
+	public BaseInventoryTile(int size) {
+		this(size, 0);
+	}
+	
+	public BaseInventoryTile(int size, int _energyStorage) {
+		super(size, _energyStorage);
 	}
 
 	@Override
