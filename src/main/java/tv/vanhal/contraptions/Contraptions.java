@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.compat.ModHelper;
 import tv.vanhal.contraptions.core.Proxy;
+import tv.vanhal.contraptions.fluids.ContFluids;
 import tv.vanhal.contraptions.gui.SimpleGuiHandler;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.network.NetworkHandler;
@@ -65,6 +66,8 @@ public class Contraptions {
 		ContConfig.init(new Configuration(event.getSuggestedConfigurationFile()));
 		
 		ModHelper.init();
+		
+		ContFluids.preInit();
 		
 		ContItems.preInit();
 		ContBlocks.preInit();
