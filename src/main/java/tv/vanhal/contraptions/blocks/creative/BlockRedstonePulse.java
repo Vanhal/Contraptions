@@ -1,4 +1,4 @@
-package tv.vanhal.contraptions.blocks;
+package tv.vanhal.contraptions.blocks.creative;
 
 import java.util.Random;
 
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class BlockRedstonePulse extends Block {
 	public static final Material invisable = new MaterialTransparent(MapColor.airColor);
 	
-	protected BlockRedstonePulse() {
+	public BlockRedstonePulse() {
 		super(invisable);
 	}
 

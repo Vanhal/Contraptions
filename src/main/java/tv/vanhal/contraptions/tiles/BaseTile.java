@@ -12,6 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Facing;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BaseTile extends TileEntity {
@@ -21,7 +22,8 @@ public class BaseTile extends TileEntity {
 	public static final byte TICKS_PER_MESSAGE = 5;
 	
 	//flags and tags for updating the NBT data
-	private boolean dirty;
+	private boolean dirty = false;
+	private boolean blockUpdate = false;
 	private NBTTagCompound partialUpdateTag = new NBTTagCompound();
 	
 	public BaseTile() {
@@ -30,6 +32,10 @@ public class BaseTile extends TileEntity {
 	
 	public BaseTile(int numSlots) {
 		slots = new ItemStack[numSlots];
+	}
+	
+	public boolean isActive() {
+		return false;
 	}
 	
 	
@@ -180,6 +186,8 @@ public class BaseTile extends TileEntity {
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     	this.readCommonNBT(pkt.func_148857_g());
     	this.readSyncOnlyNBT(pkt.func_148857_g());
+    	
+    	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 	
 	/**
@@ -189,7 +197,6 @@ public class BaseTile extends TileEntity {
 	 * @return
 	 */
 	public PartialTileNBTUpdateMessage getPartialUpdateMessage() {
-		
 		PartialTileNBTUpdateMessage message = new PartialTileNBTUpdateMessage(this.xCoord, this.yCoord, this.zCoord, partialUpdateTag);
 		dirty = false;
 		partialUpdateTag = new NBTTagCompound();
@@ -201,34 +208,55 @@ public class BaseTile extends TileEntity {
 	 * Utility method, so you don't have to remember to set dirty to true
 	 */
 	protected void addPartialUpdate(String fieldName, Integer value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	
+	protected void addPartialUpdate(String fieldName, Integer value, boolean updateBlock) {
 		partialUpdateTag.setInteger(fieldName, value);
 		dirty = true;
+		blockUpdate = updateBlock;
 	}
 	/**
 	 * Utility method, so you don't have to remember to set dirty to true
 	 */	
 	protected void addPartialUpdate(String fieldName, String value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	protected void addPartialUpdate(String fieldName, String value, boolean updateBlock) {
 		partialUpdateTag.setString(fieldName, value);
 		dirty = true;
+		blockUpdate = updateBlock;
 	}
 	/**
 	 * Utility method, so you don't have to remember to set dirty to true
-	 */	
+	 */
 	protected void addPartialUpdate(String fieldName, NBTBase value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	protected void addPartialUpdate(String fieldName, NBTBase value, boolean updateBlock) {
 		partialUpdateTag.setTag(fieldName, value);
 		dirty = true;
+		blockUpdate = updateBlock;
 	}
 	/**
 	 * Utility method, so you don't have to remember to set dirty to true
 	 */	
 	protected void addPartialUpdate(String fieldName, Boolean value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	protected void addPartialUpdate(String fieldName, Boolean value, boolean updateBlock) {
 		partialUpdateTag.setBoolean(fieldName, value);
 		dirty = true;
+		blockUpdate = updateBlock;
 	}
 
 	protected void addPartialUpdate(String fieldName, NBTTagCompound value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	protected void addPartialUpdate(String fieldName, NBTTagCompound value, boolean updateBlock) {
 		partialUpdateTag.setTag(fieldName, value);
 		dirty = true;
+		blockUpdate = updateBlock;
 	}
 
 	protected NBTTagCompound getCompoundTagFromPartialUpdate(String fieldName) {
@@ -243,7 +271,13 @@ public class BaseTile extends TileEntity {
 		return dirty;
 	}
 	
+	public boolean shouldUpdateBlock() {
+		return blockUpdate;
+	}
 	
+	protected void notifyUpdate() {
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
 	
 	/////END NBT DATA METHODS
 	@Override
@@ -253,6 +287,10 @@ public class BaseTile extends TileEntity {
 			PartialTileNBTUpdateMessage message = getPartialUpdateMessage();
 			
 			NetworkHandler.sendToAllAroundNearby(message, this);
+			if (shouldUpdateBlock()) {
+				notifyUpdate();
+				blockUpdate = false;
+			}
 		}
 	}
 	
@@ -264,8 +302,29 @@ public class BaseTile extends TileEntity {
 		return (isPoweredLevel()>0);
 	}
 	
+	public boolean isPoweredNotFacing() {
+		return (isPoweredLevelNotFacing()>0);
+	}
+	
 	public int isPoweredLevel() {
 		return worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord);
+	}
+	
+	public int isPoweredLevelNotFacing() {
+		int highestPower = 0;
+		for (int i = 0; i < 6; ++i) {
+			if (i != facing.ordinal()) {
+	            int testVal = worldObj.getIndirectPowerLevelTo(xCoord + Facing.offsetsXForSide[i],
+	            		yCoord + Facing.offsetsYForSide[i], zCoord + Facing.offsetsZForSide[i], i);
+	
+	            if (testVal >= 15) 
+	            	return 15;
+	
+	            if (testVal > highestPower)
+	            	highestPower = testVal;
+			}
+        }
+		return 0;
 	}
 	
 	public void setFacing(int _facing) {

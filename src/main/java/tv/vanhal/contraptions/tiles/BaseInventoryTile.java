@@ -9,6 +9,8 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 	
 	public BaseInventoryTile(int size) {
 		this(size, 0);
+		this.canExtract = false;
+		this.canRecieve = false;
 	}
 	
 	public BaseInventoryTile(int size, int _energyStorage) {

@@ -8,16 +8,21 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
+import tv.vanhal.contraptions.util.BlockHelper;
+import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -26,6 +31,16 @@ public class BaseBlock extends BlockContainer {
 	public String name;
 	public int GUIid = -1;
 	protected boolean isCustomModel = false;
+	
+	protected Axis rotationType = Axis.SixWay;
+	
+	protected IIcon[] blockIcons = new IIcon[6];
+	protected IIcon frontIcon = null;
+	protected IIcon frontActiveIcon = null;
+	protected String[] blockTextures = new String[6];
+	protected String frontTexture = "";
+	protected String frontActiveTexture = "";
+	
 	
 	public BaseBlock(String _name) {
 		this(_name, false);
@@ -41,9 +56,14 @@ public class BaseBlock extends BlockContainer {
 		setCreativeTab(Contraptions.ContraptionTab);
 		
 		GUIid = Contraptions.proxy.registerGui(_name);
-		this.setBlockTextureName(Ref.MODID+":"+_name);
+		setMainTexture(_name);
 		
 		if (_customModel) setLightOpacity(0);
+	}
+	
+	public void setRotationType(Axis axis) {
+		if (axis == null) rotationType = Axis.None;
+		rotationType = axis;
 	}
 	
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
@@ -76,6 +96,68 @@ public class BaseBlock extends BlockContainer {
 	
 	public void addRecipe() {
 		
+	}
+	
+	//normal block stuff
+	public void setMainTexture(String _name) {
+		for (int i = 0; i < 6; i++) {
+			setFaceTexture(i, _name);
+		}
+	}
+	
+	public void setFaceTexture(int side, String _name) {
+		blockTextures[side] = Ref.MODID+":"+_name;
+	}
+	
+	public void setSidesTexture(String _name) {
+		for (int i = 2; i < 6; i++) {
+			setFaceTexture(i, _name);
+		}
+	}
+	
+	public void setFrontTexture(String _name) {
+		frontTexture = Ref.MODID+":"+_name;
+	}
+	
+	public void setFrontActiveTexture(String _name) {
+		frontActiveTexture = Ref.MODID+":"+_name;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		if (frontIcon!=null) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if (tile instanceof BaseTile) {
+				if ( ((BaseTile)tile).facing.ordinal() == side) {
+					if ( ((BaseTile)tile).isActive() ) {
+						return frontActiveIcon;
+					} else {
+						return frontIcon;
+					}
+				}
+			} else {
+				if (side == world.getBlockMetadata(x, y, z)) {
+					//return frontIcon;
+				}
+			}
+		}
+		return this.getIcon(side, world.getBlockMetadata(x, y, z));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister register) {
+		for (int i = 0; i < 6; i++) {
+			blockIcons[i] = register.registerIcon(blockTextures[i]);
+		}
+		if (frontTexture!="") frontIcon = register.registerIcon(frontTexture);
+		if (frontActiveTexture!="") frontActiveIcon = register.registerIcon(frontActiveTexture);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta) {
+		if ( (rotationType != Axis.FourWay) && (side==meta) && (frontIcon!=null) ) return frontIcon;
+		else if ( (meta==0) && (side==3) && (frontIcon!=null) ) return frontIcon;
+		return blockIcons[side];
 	}
 	
 	@Override
@@ -115,7 +197,7 @@ public class BaseBlock extends BlockContainer {
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		int l = BlockPistonBase.determineOrientation(world, x, y, z, entity);
+		int l = BlockHelper.determineOrientation(world, rotationType, x, y, z, entity);
 		world.setBlockMetadataWithNotify(x, y, z, l, 2);
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if ( (tile != null) && (tile instanceof BaseTile) ) {

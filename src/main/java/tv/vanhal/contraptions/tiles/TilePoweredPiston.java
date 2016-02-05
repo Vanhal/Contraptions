@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
 import tv.vanhal.contraptions.Contraptions;
-import tv.vanhal.contraptions.blocks.BlockSpike;
+import tv.vanhal.contraptions.blocks.machines.BlockSpike;
 import tv.vanhal.contraptions.util.ItemHelper;
 
 public class TilePoweredPiston extends BasePoweredTile {
@@ -58,7 +58,7 @@ public class TilePoweredPiston extends BasePoweredTile {
 	
 	public void blockUpdated() {
 		if (!worldObj.isRemote) {
-			int currentPower = this.isPoweredLevel();
+			int currentPower = this.isPoweredLevelNotFacing();
 			if ( (currentPower>0) && (lastPower==0) && (cooldown <= 0) ) {
 				lastPower = currentPower;
 				if (consumeCharge(POWER_PER_USE)) {

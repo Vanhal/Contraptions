@@ -9,6 +9,7 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 	protected int maxEnergyStorage;
 	protected int energyStorage;
 	protected boolean canExtract = false;
+	protected boolean canRecieve = false;
 	
 	public BasePoweredTile() {
 		this(0, 0);
@@ -58,6 +59,7 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int amount, boolean simulate) {
+		if (!canRecieve) return 0;
 		int energyReceived = Math.min(getMaxEnergyStored(from) - getEnergyStored(from), amount);
 
 		if (!simulate) {

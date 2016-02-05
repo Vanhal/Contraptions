@@ -1,8 +1,9 @@
-package tv.vanhal.contraptions.blocks;
+package tv.vanhal.contraptions.blocks.machines;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.tiles.TileSpreader;
 
 public class BlockSpreader extends BaseBlock {
@@ -10,6 +11,7 @@ public class BlockSpreader extends BaseBlock {
 	public BlockSpreader() {
 		super("spreader", true);
         setBlockBounds(0.08f, 0.0f, 0.08f, 0.92f, 0.80f, 0.92f);
+        setRotationType(null);
 	}
 
 	@Override

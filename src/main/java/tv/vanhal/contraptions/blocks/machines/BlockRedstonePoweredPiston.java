@@ -1,8 +1,9 @@
-package tv.vanhal.contraptions.blocks;
+package tv.vanhal.contraptions.blocks.machines;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileRedstonePoweredPiston;
 

@@ -8,6 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
 
 public class ItemHelper {
@@ -54,5 +55,13 @@ public class ItemHelper {
 		}
 		
 		return items;
+	}
+	
+	public static boolean isFuel(ItemStack itemStack) {
+		return (getBurnTime(itemStack)>0);
+	}
+	
+	public static int getBurnTime(ItemStack itemStack) {
+		return TileEntityFurnace.getItemBurnTime(itemStack);
 	}
 }

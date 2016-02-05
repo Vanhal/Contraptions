@@ -2,9 +2,12 @@ package tv.vanhal.contraptions.core;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.tiles.TileCreativePower;
+import tv.vanhal.contraptions.tiles.TileCreativeSteam;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileRedstonePoweredPiston;
+import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.tiles.TileSpike;
 import tv.vanhal.contraptions.tiles.TileSpreader;
 
@@ -16,6 +19,9 @@ public class Proxy {
 		GameRegistry.registerTileEntity(TileRedstonePoweredPiston.class, "TileRedstonePoweredPiston");
 		GameRegistry.registerTileEntity(TilePlacer.class, "TilePlacer");
 		GameRegistry.registerTileEntity(TileSpreader.class, "TileSpreader");
+		GameRegistry.registerTileEntity(TileSolidBurner.class, "TileSolidBurner");
+		GameRegistry.registerTileEntity(TileCreativePower.class, "TileCreativePower");
+		GameRegistry.registerTileEntity(TileCreativeSteam.class, "TileCreativeSteam");
 	}
 	
 	public int registerGui(String guiName) {

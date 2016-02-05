@@ -43,8 +43,6 @@ public class FluidSteam extends BlockFluidFinite {
 		setBlockName(name);
 	}
 	
-	
-
 	public void preInit() {
 		GameRegistry.registerBlock(this, name);
 	}
