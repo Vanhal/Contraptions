@@ -2,6 +2,7 @@ package tv.vanhal.contraptions.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /* A Point case to allow for an x, y, z point */
 public class Point3I {
@@ -76,6 +77,26 @@ public class Point3I {
 	
 	public void decrZ() {
 		this.z--;
+	}
+	
+	@Override
+	public boolean equals(Object test) {
+		if (test instanceof Point3I) {
+			Point3I testPoint = (Point3I) test;
+			return ( (x == testPoint.getX()) && (y == testPoint.getY()) && (z == testPoint.getZ()) );
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		String hash = x+"|"+y+"|"+z;
+		return hash.hashCode();
+	}
+	
+	public Point3I getAdjacentBlock(int side) {
+		ForgeDirection dir = ForgeDirection.getOrientation(side);
+		return new Point3I(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
 	}
 	
 	public NBTTagCompound getNBT() {

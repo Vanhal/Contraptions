@@ -8,12 +8,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
+import tv.vanhal.contraptions.interfaces.IHeatBlock;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;
+import tv.vanhal.contraptions.world.HeatRegistry;
 
-public class BlockSolidBurner extends BaseBlock {
+public class BlockSolidBurner extends BaseBlock implements IHeatBlock {
 
 	public BlockSolidBurner() {
 		super("solidBurner");
@@ -79,4 +81,17 @@ public class BlockSolidBurner extends BaseBlock {
 	public boolean canProvidePower() {
         return true;
     }
+
+	@Override
+	public int getMeltingPoint() {
+		return 2000;
+	}
+	
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		if (!world.isRemote)
+			HeatRegistry.getInstance(world).addHeatBlock(x, y, z);
+		super.onBlockAdded(world, x, y, z);
+    }
+
 }

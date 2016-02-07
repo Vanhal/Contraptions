@@ -19,6 +19,7 @@ import tv.vanhal.contraptions.network.NetworkHandler;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessageHandler;
 import tv.vanhal.contraptions.util.Ref;
+import tv.vanhal.contraptions.world.WorldTicker;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -82,6 +83,7 @@ public class Contraptions {
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 		FMLCommonHandler.instance().bus().register(instance);
+		FMLCommonHandler.instance().bus().register(new WorldTicker());
 	}
 	
 	@EventHandler

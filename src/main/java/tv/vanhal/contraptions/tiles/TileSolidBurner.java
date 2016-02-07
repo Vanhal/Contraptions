@@ -2,6 +2,7 @@ package tv.vanhal.contraptions.tiles;
 
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.world.HeatRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,6 @@ public class TileSolidBurner extends BaseInventoryTile {
 			if (isRedstonePowered!=isPowered()) {
 				isRedstonePowered = isPowered();
 				addPartialUpdate("isRedstonePowered", isRedstonePowered, true);
-				//update the conductive block list that connects to this burner
 			}
 		}
 	}
@@ -53,8 +53,9 @@ public class TileSolidBurner extends BaseInventoryTile {
 	
 	protected void generateHeat() {
 		//heat should spread evenly over all the plates and machines connected
-		//blocks will melt if they get too hot
-		
+		//blocks will melt if they get too hot 
+		//UPDATE: This will be taken care of in the heat registry
+		HeatRegistry.getInstance(worldObj).addHeat(xCoord, yCoord, zCoord, HEAT_PER_TICK);
 	}
 	
 	@Override

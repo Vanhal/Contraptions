@@ -2,8 +2,12 @@ package tv.vanhal.contraptions.blocks.creative;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
+import tv.vanhal.contraptions.util.Ref;
+import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockPistonBase;
@@ -11,9 +15,11 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -22,6 +28,8 @@ public class BlockRedstonePulse extends Block {
 	
 	public BlockRedstonePulse() {
 		super(invisable);
+		setBlockName("pulse");
+		this.setBlockTextureName(Ref.MODID+":invisable");
 	}
 
 	@Override
