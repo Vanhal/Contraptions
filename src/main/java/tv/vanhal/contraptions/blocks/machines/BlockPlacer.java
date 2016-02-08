@@ -48,7 +48,7 @@ public class BlockPlacer extends BaseBlock implements IGuiRenderer {
 		if (placer != null) {
 			ItemStack contents = placer.getStackInSlot(0);
 			if (contents != null) {
-				RenderOverlay.drawItemStack(contents, scr_x, scr_y - 20, true);
+				RenderOverlay.drawItemStack(contents, scr_x, scr_y - 24, true);
 			}
 		}
 	}

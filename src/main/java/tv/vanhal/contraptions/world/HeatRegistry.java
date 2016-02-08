@@ -56,6 +56,8 @@ public class HeatRegistry extends WorldSavedData {
 	public int tickCounter = 0;
 	private TMap<Point3I, Integer> heatValues = new THashMap<Point3I, Integer>();
 	private ArrayList<Point3I> toRemove = new ArrayList<Point3I>();
+	private ArrayList<Point3I> toAdd = new ArrayList<Point3I>();
+	private ArrayList<Point3I> toBurn = new ArrayList<Point3I>();
 	
 	public HeatRegistry(String _name) {
 		super(_name);
@@ -79,7 +81,7 @@ public class HeatRegistry extends WorldSavedData {
 	}
 	
 	public void removeHeatBlock(Point3I point) {
-		if (heatValues.containsKey(point)) {
+		if ( (heatValues.containsKey(point)) && (!toRemove.contains(point)) ) {
 			toRemove.add(point);
 		}
 	}
@@ -137,8 +139,9 @@ public class HeatRegistry extends WorldSavedData {
 		if (tickCounter > ContConfig.TICKS_PER_HEAT_TICK) {
 			for (Point3I point : heatValues.keySet()) {
 				if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
-					if (!(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock)) {
-						Contraptions.logger.info("Removing: "+point.toString());
+					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
+							(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.water) &&
+							(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.flowing_water) ) {
 						removeHeatBlock(point);
 					} else {
 						//do passive cooling
@@ -154,6 +157,9 @@ public class HeatRegistry extends WorldSavedData {
 								if (isHeatBlock(testBlock)) {
 									touchingBlocks++;
 									totalHeat += getValue(testBlock);
+								} else if (world.getBlock(testBlock.getX(), testBlock.getY(), testBlock.getZ()) == Blocks.water) {
+									if (!toAdd.contains(testBlock))
+										toAdd.add(testBlock);
 								}
 							}
 							if (touchingBlocks>1) {
@@ -167,11 +173,15 @@ public class HeatRegistry extends WorldSavedData {
 							}
 						} else if (heat <= 0) {
 							heat = 0;
+							if (world.getBlock(point.getX(), point.getY(), point.getZ()) == Blocks.water) {
+								removeHeatBlock(point);
+							}
 						}
 						
 						//update this blocks heat
 						if (heat != heatValues.get(point)) {
 							setValue(point, heat);
+							
 						}
 					}
 				}
@@ -184,14 +194,6 @@ public class HeatRegistry extends WorldSavedData {
 				if (heat > 0) {
 					if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
 						if (world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) {
-							//check if there is water above this block
-							if (heat >= ContConfig.WATER_BOIL_HEAT) {
-								if (world.getBlock(point.getX(), point.getY() + 1, point.getZ()) == Blocks.water) {
-									world.setBlock(point.getX(), point.getY() + 1, point.getZ(), ContFluids.steam);
-									heat -= ContConfig.WATER_BOIL_HEAT/2;
-								}
-							}
-							
 							//check to see if this block should melt
 							IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
 							if (heat > block.getMeltingPoint()) {
@@ -203,6 +205,19 @@ public class HeatRegistry extends WorldSavedData {
 							if (heat != heatValues.get(point)) {
 								setValue(point, heat);
 							}
+						} else if (world.getBlock(point.getX(), point.getY(), point.getZ()) == Blocks.water) {
+							//check if this is a water block
+							if (heat >= ContConfig.WATER_BOIL_HEAT) {
+								if (toBurn.contains(point)) {
+									world.setBlock(point.getX(), point.getY(), point.getZ(), ContFluids.steam);
+									removeHeatBlock(point);
+									toBurn.remove(point);
+								} else {
+									toBurn.add(point);
+								}
+							} else if (toBurn.contains(point)) {
+								toBurn.remove(point);
+							}
 						}
 					}
 				}
@@ -211,18 +226,37 @@ public class HeatRegistry extends WorldSavedData {
 			
 			tickCounter = 0;
 		}
-		deleteRemoved();
+		deleteRemoved(world);
+		addNew();
 		tickCounter++;
 	}
 	
-	protected void deleteRemoved() {
+	protected void deleteRemoved(World world) {
 		if (toRemove.size()>0) {
 			for (Point3I point : toRemove) {
 				if (heatValues.containsKey(point)) {
-					heatValues.remove(point);
+					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
+						(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.water) &&
+						(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.flowing_water) ) {
+						//Contraptions.logger.info("Removing: "+point.toString()+" block "+world.getBlock(point.getX(), point.getY(), point.getZ()).toString());
+						heatValues.remove(point);
+					}
 				}
 			}
 			toRemove.clear();
+			markDirty();
+		}
+	}
+	
+	protected void addNew() {
+		if (toAdd.size()>0) {
+			for (Point3I point : toAdd) {
+				if (!isHeatBlock(point)) {
+					//Contraptions.logger.info("Adding Water block: "+point.toString());
+					addHeatBlock(point);
+				}
+			}
+			toAdd.clear();
 			markDirty();
 		}
 	}
@@ -243,7 +277,7 @@ public class HeatRegistry extends WorldSavedData {
 				heatValues.put(point, value);
 			}
 		}
-		Contraptions.logger.info("Heat Data Loaded for "+dimensionID);
+		Contraptions.logger.info("Heat Data Loaded for dimID: "+dimensionID);
 	}
 
 	@Override
@@ -258,7 +292,7 @@ public class HeatRegistry extends WorldSavedData {
 			contents.appendTag(tag);
 		}
 		nbt.setTag("heatValues", contents);
-		Contraptions.logger.info("Heat Data Saved for "+dimensionID);
+		Contraptions.logger.info("Heat Data Saved for dimID: "+dimensionID);
 	}
 	
 

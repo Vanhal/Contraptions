@@ -156,7 +156,7 @@ public class BaseTile extends TileEntity {
 	 * contents and S30PacketWindowItems)
 	 * @param nbt
 	 */
-	protected void readNonSyncableNBT(NBTTagCompound nbt) {
+	public void readNonSyncableNBT(NBTTagCompound nbt) {
 		
 		NBTTagList contents = nbt.getTagList("Contents", 10);
 		for (int i = 0; i < contents.tagCount(); i++) {
@@ -164,7 +164,6 @@ public class BaseTile extends TileEntity {
 			byte slot = tag.getByte("Slot");
 			if (slot < slots.length) {
 				slots[slot] = ItemStack.loadItemStackFromNBT(tag);
-				Contraptions.logger.info("Loading: "+slots[slot].getDisplayName());
 			}
 		}
 	}
@@ -189,7 +188,6 @@ public class BaseTile extends TileEntity {
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     	this.readCommonNBT(pkt.func_148857_g());
     	this.readSyncOnlyNBT(pkt.func_148857_g());
-    	this.readNonSyncableNBT(pkt.func_148857_g());
  
     	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -206,6 +204,7 @@ public class BaseTile extends TileEntity {
 		}
 		PartialTileNBTUpdateMessage message = new PartialTileNBTUpdateMessage(this.xCoord, this.yCoord, this.zCoord, partialUpdateTag);
 		dirty = false;
+		contentsUpdate = false;
 		partialUpdateTag = new NBTTagCompound();
 		
 		return message;
@@ -304,8 +303,10 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public void setContentsUpdate() {
-		contentsUpdate = true;
-		dirty = true;
+		if (!worldObj.isRemote) {
+			contentsUpdate = true;
+			dirty = true;
+		}
 	}
 	
 	protected void notifyUpdate() {
@@ -316,7 +317,7 @@ public class BaseTile extends TileEntity {
 	@Override
 	public void updateEntity() {
 		update();
-		if (isDirty() && worldObj.getWorldTime() % TICKS_PER_MESSAGE == 0) {
+		if ( (isDirty()) && ((worldObj.getWorldTime() % TICKS_PER_MESSAGE) == 0)) {
 			PartialTileNBTUpdateMessage message = getPartialUpdateMessage();
 			
 			NetworkHandler.sendToAllAroundNearby(message, this);

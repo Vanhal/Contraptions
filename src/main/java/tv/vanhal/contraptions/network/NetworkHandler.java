@@ -1,8 +1,8 @@
 package tv.vanhal.contraptions.network;
 
+import tv.vanhal.contraptions.Contraptions;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -32,7 +32,7 @@ public class NetworkHandler {
 	}
 	
 	public static void sendToAllAroundNearby(IMessage message, TileEntity entity) {
-		CHANNEL.sendToAllAround(message, new TargetPoint(entity.getWorldObj().provider.dimensionId, entity.xCoord, entity.yCoord, entity.zCoord, NEARBY));
+		CHANNEL.sendToAllAround(message, new TargetPoint(entity.getWorldObj().provider.dimensionId, entity.xCoord, entity.yCoord, entity.zCoord, MEDIUM));
 	}
 	
 	public static void sendToPlayer(IMessage message, EntityPlayerMP player) {

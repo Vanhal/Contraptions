@@ -39,8 +39,8 @@ public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiR
 
 	@Override
 	public void renderGUI(World world, int x, int y, int z, ScaledResolution res) {
-		int scr_x = res.getScaledWidth() / 2 - 24;
-		int scr_y = res.getScaledHeight() / 2 - 20;
+		int scr_x = res.getScaledWidth() / 2;
+		int scr_y = res.getScaledHeight() / 2;
 		
 		int currentHeat = HeatRegistry.getInstance(world).getValue(x, y, z);
 		int color = Colours.WHITE;
