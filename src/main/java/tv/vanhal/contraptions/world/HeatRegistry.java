@@ -277,7 +277,7 @@ public class HeatRegistry extends WorldSavedData {
 				heatValues.put(point, value);
 			}
 		}
-		Contraptions.logger.info("Heat Data Loaded for dimID: "+dimensionID);
+		//Contraptions.logger.info("Heat Data Loaded for dimID: "+dimensionID);
 	}
 
 	@Override
@@ -292,7 +292,7 @@ public class HeatRegistry extends WorldSavedData {
 			contents.appendTag(tag);
 		}
 		nbt.setTag("heatValues", contents);
-		Contraptions.logger.info("Heat Data Saved for dimID: "+dimensionID);
+		//Contraptions.logger.info("Heat Data Saved for dimID: "+dimensionID);
 	}
 	
 

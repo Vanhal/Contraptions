@@ -13,6 +13,7 @@ import tv.vanhal.contraptions.interfaces.IHeatBlock;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.StringHelper;
 import tv.vanhal.contraptions.world.HeatRegistry;
 import tv.vanhal.contraptions.world.RenderOverlay;
 
@@ -47,7 +48,7 @@ public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiR
 		if (currentHeat >= getMeltingPoint()*0.85) color = Colours.RED;
 		else if (currentHeat >= getMeltingPoint()*0.6) color = Colours.ORANGE;
 
-		RenderOverlay.drawStringCentered("Heat: "+currentHeat, scr_x, scr_y - 20, color);
+		RenderOverlay.drawStringCentered(StringHelper.localize("gui.heat")+": "+currentHeat, scr_x, scr_y - 20, color);
 	}
 	
 	
