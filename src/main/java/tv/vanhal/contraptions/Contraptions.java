@@ -84,6 +84,7 @@ public class Contraptions {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 		FMLCommonHandler.instance().bus().register(instance);
 		FMLCommonHandler.instance().bus().register(new WorldTicker());
+		proxy.init();
 	}
 	
 	@EventHandler

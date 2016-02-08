@@ -10,12 +10,13 @@ public class TileCreativePower extends BasePoweredTile {
 	
 	public TileCreativePower() {
 		canExtract = true;
+		canRecieve = false;
 	}
 	
 	@Override
 	public void update() {
 		if (!worldObj.isRemote) {
-			for (int i = 0; i < 6; ++i) {
+			for (int i = 0; i < 6; i++) {
 				TileEntity testTile = worldObj.getTileEntity(xCoord + Facing.offsetsXForSide[i],
 	            		yCoord + Facing.offsetsYForSide[i], zCoord + Facing.offsetsZForSide[i]);
 				if ( (testTile!=null) && (testTile instanceof IEnergyReceiver) ) {

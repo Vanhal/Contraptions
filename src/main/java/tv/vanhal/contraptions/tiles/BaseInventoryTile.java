@@ -40,6 +40,7 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 					slots[slot] = null;
 				}
 			}
+			setContentsUpdate();
 			return newStack;
 		}
 		return null;
@@ -61,6 +62,7 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 		if (itemStack != null && itemStack.stackSize > this.getInventoryStackLimit()) {
 			itemStack.stackSize = this.getInventoryStackLimit();
 		}
+		setContentsUpdate();
 	}
 
 	@Override

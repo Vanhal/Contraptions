@@ -24,6 +24,7 @@ public class BaseTile extends TileEntity {
 	//flags and tags for updating the NBT data
 	private boolean dirty = false;
 	private boolean blockUpdate = false;
+	private boolean contentsUpdate = false;
 	private NBTTagCompound partialUpdateTag = new NBTTagCompound();
 	
 	public BaseTile() {
@@ -163,6 +164,7 @@ public class BaseTile extends TileEntity {
 			byte slot = tag.getByte("Slot");
 			if (slot < slots.length) {
 				slots[slot] = ItemStack.loadItemStackFromNBT(tag);
+				Contraptions.logger.info("Loading: "+slots[slot].getDisplayName());
 			}
 		}
 	}
@@ -176,6 +178,7 @@ public class BaseTile extends TileEntity {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeCommonNBT(nbttagcompound);
         this.writeSyncOnlyNBT(nbttagcompound);
+        
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, -1, nbttagcompound);
     }
 	
@@ -186,7 +189,8 @@ public class BaseTile extends TileEntity {
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     	this.readCommonNBT(pkt.func_148857_g());
     	this.readSyncOnlyNBT(pkt.func_148857_g());
-    	
+    	this.readNonSyncableNBT(pkt.func_148857_g());
+ 
     	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 	
@@ -197,6 +201,9 @@ public class BaseTile extends TileEntity {
 	 * @return
 	 */
 	public PartialTileNBTUpdateMessage getPartialUpdateMessage() {
+		if ( (shouldUpdateContents()) && (!worldObj.isRemote) ) {
+			writeNonSyncableNBT(partialUpdateTag);
+		}
 		PartialTileNBTUpdateMessage message = new PartialTileNBTUpdateMessage(this.xCoord, this.yCoord, this.zCoord, partialUpdateTag);
 		dirty = false;
 		partialUpdateTag = new NBTTagCompound();
@@ -213,6 +220,23 @@ public class BaseTile extends TileEntity {
 	
 	protected void addPartialUpdate(String fieldName, Integer value, boolean updateBlock) {
 		partialUpdateTag.setInteger(fieldName, value);
+		dirty = true;
+		blockUpdate = updateBlock;
+	}
+	
+	/**
+	 * Utility method, so you don't have to remember to set dirty to true
+	 */
+	protected void addPartialUpdate(String fieldName, ItemStack value) {
+		addPartialUpdate(fieldName, value, false);
+	}
+	
+	protected void addPartialUpdate(String fieldName, ItemStack value, boolean updateBlock) {
+		NBTTagCompound tag = new NBTTagCompound();
+		if (value!=null) {
+			value.writeToNBT(tag);
+		}
+		partialUpdateTag.setTag("fieldName", tag);
 		dirty = true;
 		blockUpdate = updateBlock;
 	}
@@ -273,6 +297,15 @@ public class BaseTile extends TileEntity {
 	
 	public boolean shouldUpdateBlock() {
 		return blockUpdate;
+	}
+	
+	public boolean shouldUpdateContents() {
+		return contentsUpdate;
+	}
+	
+	public void setContentsUpdate() {
+		contentsUpdate = true;
+		dirty = true;
 	}
 	
 	protected void notifyUpdate() {

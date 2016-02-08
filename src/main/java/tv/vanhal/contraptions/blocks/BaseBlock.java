@@ -26,6 +26,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.RotationHelper;
 
 public class BaseBlock extends BlockContainer {
 	public String name;
@@ -135,10 +137,6 @@ public class BaseBlock extends BlockContainer {
 						return frontIcon;
 					}
 				}
-			} else {
-				if (side == world.getBlockMetadata(x, y, z)) {
-					//return frontIcon;
-				}
 			}
 		}
 		return this.getIcon(side, world.getBlockMetadata(x, y, z));
@@ -198,11 +196,7 @@ public class BaseBlock extends BlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		int l = BlockHelper.determineOrientation(world, rotationType, x, y, z, entity);
-		world.setBlockMetadataWithNotify(x, y, z, l, 2);
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if ( (tile != null) && (tile instanceof BaseTile) ) {
-			((BaseTile)tile).setFacing(l);
-		}
+		setFacing(world, x, y, z, l);
     }
 	
 	@Override
@@ -220,5 +214,35 @@ public class BaseBlock extends BlockContainer {
             world.func_147453_f(x, y, z, block);
         }
         super.breakBlock(world, x, y, z, block, p_149749_6_);
+    }
+	
+	protected int getFacing(World world, int x, int y, int z) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if ( (tile != null) && (tile instanceof BaseTile) ) {
+			return ((BaseTile)tile).getFacing();
+		}
+		return world.getBlockMetadata(x, y, z);
+	}
+	
+	protected void setFacing(World world, int x, int y, int z, int facing) {
+		world.setBlockMetadataWithNotify(x, y, z, facing, 2);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if ( (tile != null) && (tile instanceof BaseTile) ) {
+			((BaseTile)tile).setFacing(facing);
+		}
+	}
+	
+	@Override
+	public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis) {
+		//if (worldObj.isRemote) return false;
+		int currentFacing = getFacing(worldObj, x, y, z);
+		int newFacing = BlockHelper.rotateBlock(currentFacing, rotationType);
+		setFacing(worldObj, x, y, z, newFacing);
+		return (currentFacing != newFacing);
+	}
+
+	@Override
+    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z) {
+        return BlockHelper.getValidFacing(rotationType);
     }
 }

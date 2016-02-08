@@ -60,6 +60,7 @@ public class TilePlacer extends BaseInventoryTile {
 						&& (worldObj.getBlock(dx, dy, dz) != block) ) {
 					worldObj.setBlock(dx, dy, dz, block);
 					slots[0] = null;
+					setContentsUpdate();
 				}
 			}
 		}

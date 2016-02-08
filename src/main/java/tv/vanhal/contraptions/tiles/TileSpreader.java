@@ -77,7 +77,6 @@ public class TileSpreader extends BaseInventoryTile {
 	}
 
 	private void useContents() {
-		// TODO use bonemeal
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
 				if (!( (y==0) && (x==0) )) {
@@ -85,6 +84,7 @@ public class TileSpreader extends BaseInventoryTile {
 						Point3I plantPoint = new Point3I(xCoord + x, yCoord, zCoord + y);
 						if (ItemDye.applyBonemeal(slots[0], worldObj, plantPoint.getX(), 
 								plantPoint.getY(), plantPoint.getZ(), null)) {
+							setContentsUpdate();
 							if (!worldObj.isRemote) {
 								worldObj.playAuxSFX(2005, plantPoint.getX(), 
 										plantPoint.getY(), plantPoint.getZ(), 0);

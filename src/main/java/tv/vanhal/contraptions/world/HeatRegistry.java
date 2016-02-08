@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.fluids.ContFluids;
@@ -50,9 +51,6 @@ public class HeatRegistry extends WorldSavedData {
 	}
 	
 	//normal class
-	public final int HEAT_LOSS_PER_TICK = 1;
-	public final int TICKS_PER_HEAT_TICK = 5;
-	public final int WATER_BOIL_HEAT = 600;
 	
 	public int dimensionID = 0;
 	public int tickCounter = 0;
@@ -111,11 +109,7 @@ public class HeatRegistry extends WorldSavedData {
 	}
 	
 	public void setValue(Point3I point, int value) {
-		if (!heatValues.containsKey(point)) {
-			heatValues.put(point, value);
-		} else {
-			heatValues.replace(point, value);
-		}
+		heatValues.put(point, value);
 		markDirty();
 	}
 	
@@ -140,7 +134,7 @@ public class HeatRegistry extends WorldSavedData {
 	
 	public void tick(World world) {
 		//do a tick!
-		if (tickCounter>TICKS_PER_HEAT_TICK) {
+		if (tickCounter > ContConfig.TICKS_PER_HEAT_TICK) {
 			for (Point3I point : heatValues.keySet()) {
 				if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
 					if (!(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock)) {
@@ -149,7 +143,7 @@ public class HeatRegistry extends WorldSavedData {
 					} else {
 						//do passive cooling
 						int heat = heatValues.get(point);
-						heat -= HEAT_LOSS_PER_TICK;
+						heat -= ContConfig.HEAT_LOSS_PER_TICK;
 
 						//spread heat, equalize between all touching blocks if this block is hotter than the others
 						if (heat>0) {
@@ -174,24 +168,41 @@ public class HeatRegistry extends WorldSavedData {
 						} else if (heat <= 0) {
 							heat = 0;
 						}
-						//check if there is water above this block
-						if (heat>=WATER_BOIL_HEAT) {
-							if (world.getBlock(point.getX(), point.getY() + 1, point.getZ()) == Blocks.water) {
-								world.setBlock(point.getX(), point.getY() + 1, point.getZ(), ContFluids.steam);
-								heat -= WATER_BOIL_HEAT;
-							}
-						}
-						
-						//check to see if this block should melt
-						IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
-						if (heat > block.getMeltingPoint()) {
-							//melt block!
-							Contraptions.logger.info("Block Melted! "+heat+": "+point.toString());
-						}
 						
 						//update this blocks heat
 						if (heat != heatValues.get(point)) {
 							setValue(point, heat);
+						}
+					}
+				}
+				
+			}
+			
+			//now do stuff like heating water and melting blocks
+			for (Point3I point : heatValues.keySet()) {
+				int heat = heatValues.get(point);
+				if (heat > 0) {
+					if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
+						if (world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) {
+							//check if there is water above this block
+							if (heat >= ContConfig.WATER_BOIL_HEAT) {
+								if (world.getBlock(point.getX(), point.getY() + 1, point.getZ()) == Blocks.water) {
+									world.setBlock(point.getX(), point.getY() + 1, point.getZ(), ContFluids.steam);
+									heat -= ContConfig.WATER_BOIL_HEAT/2;
+								}
+							}
+							
+							//check to see if this block should melt
+							IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
+							if (heat > block.getMeltingPoint()) {
+								//melt block!
+								Contraptions.logger.info("Block Melted! "+heat+": "+point.toString());
+							}
+							
+							//update this blocks heat
+							if (heat != heatValues.get(point)) {
+								setValue(point, heat);
+							}
 						}
 					}
 				}

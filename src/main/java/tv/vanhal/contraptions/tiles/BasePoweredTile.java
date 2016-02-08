@@ -9,10 +9,11 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 	protected int maxEnergyStorage;
 	protected int energyStorage;
 	protected boolean canExtract = false;
-	protected boolean canRecieve = false;
+	protected boolean canRecieve = true;
 	
 	public BasePoweredTile() {
 		this(0, 0);
+		canRecieve = false;
 	}
 	
 	public BasePoweredTile(int _energyStorage) {	
