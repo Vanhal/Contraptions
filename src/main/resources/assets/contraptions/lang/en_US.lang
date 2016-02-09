@@ -1,0 +1,15 @@
+itemGroup.ContraptionTab=Contraptions
+
+tile.spike.name=Spike
+tile.poweredPiston.name=Powered Piston
+tile.placer.name=Placer
+tile.spreader.name=Spreader
+tile.poweredRedstonePiston.name=Powered Redstone Piston
+tile.creativeSteam.name=Creative Steam Supply
+tile.creativePower.name=Creative RF Supply
+tile.conductivePlate.name=Conductive Plate
+tile.solidBurner.name=Solid Fuel Burner
+
+item.screwDriver.name=Screwdriver
+
+gui.heat=Heat
