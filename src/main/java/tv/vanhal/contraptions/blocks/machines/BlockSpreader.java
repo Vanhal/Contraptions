@@ -49,8 +49,7 @@ public class BlockSpreader extends BaseBlock implements IGuiRenderer {
 		if (spreader != null) {
 			ItemStack contents = spreader.getStackInSlot(0);
 			if (contents != null) {
-				Contraptions.logger.info("Here");
-				RenderOverlay.drawItemStack(contents, scr_x, scr_y - 20, true);
+				RenderOverlay.drawItemStack(contents, scr_x, scr_y - 24, true);
 			}
 		}
 	}

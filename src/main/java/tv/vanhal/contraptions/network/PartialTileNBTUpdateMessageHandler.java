@@ -17,6 +17,8 @@ public class PartialTileNBTUpdateMessageHandler implements IMessageHandler<Parti
 			BaseTile paEntity = (BaseTile) entity;
 			paEntity.readCommonNBT(message.nbtTag);
 			paEntity.readSyncOnlyNBT(message.nbtTag);
+			if (message.nbtTag.hasKey("Contents"))
+				paEntity.readNonSyncableNBT(message.nbtTag);
 		}
 		return null;
 	}

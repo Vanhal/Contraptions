@@ -15,6 +15,7 @@ public class TileSpreader extends BaseInventoryTile {
 	public float currentSpin = 0;
 	protected boolean powered = false;
 	protected int cooldown = 0;
+	protected int previousStackSize = 0;
 
 	public TileSpreader() {
 		super(1, 2560);
@@ -26,6 +27,13 @@ public class TileSpreader extends BaseInventoryTile {
 			if (cooldown>0) {
 				cooldown--;
 				if (cooldown==0) addPartialUpdate("cooldown", cooldown);
+			}
+			if ( (slots[0]!=null) && (slots[0].stackSize != previousStackSize) ) {
+				previousStackSize = slots[0].stackSize;
+				setContentsUpdate();
+			} else if ( (slots[0]==null) && (previousStackSize != 0) ) {
+				previousStackSize = 0;
+				setContentsUpdate();
 			}
 		}
 	}
@@ -85,7 +93,7 @@ public class TileSpreader extends BaseInventoryTile {
 						if (ItemDye.applyBonemeal(slots[0], worldObj, plantPoint.getX(), 
 								plantPoint.getY(), plantPoint.getZ(), null)) {
 							setContentsUpdate();
-							if (!worldObj.isRemote) {
+							if (worldObj.isRemote) {
 								worldObj.playAuxSFX(2005, plantPoint.getX(), 
 										plantPoint.getY(), plantPoint.getZ(), 0);
 		                    }

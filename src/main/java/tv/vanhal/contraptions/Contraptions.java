@@ -51,7 +51,7 @@ public class Contraptions {
 	public static CreativeTabs ContraptionTab = new CreativeTabs("ContraptionTab") {
 		@Override
 		public Item getTabIconItem() {
-			return Item.getItemFromBlock(Blocks.piston);
+			return ContItems.screwDriver;
 		}
 	};
 	

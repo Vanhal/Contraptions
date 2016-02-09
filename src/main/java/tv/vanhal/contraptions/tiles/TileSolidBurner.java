@@ -31,7 +31,7 @@ public class TileSolidBurner extends BaseInventoryTile {
 	@Override
 	public void update() {
 		if (!worldObj.isRemote) {
-			if (isRedstonePowered) {
+			if (!isRedstonePowered) {
 				if (isActive()) {
 					generateHeat();
 				} else if ( (slots[0]!=null) && (ItemHelper.isFuel(slots[0])) ) {
@@ -78,7 +78,7 @@ public class TileSolidBurner extends BaseInventoryTile {
 	
 	@Override
 	public boolean isActive() {
-		return ( (burning>0) && (isRedstonePowered) );
+		return ( (burning>0) && (!isRedstonePowered) );
 	}
 	
 	@Override
