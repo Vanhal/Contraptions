@@ -12,6 +12,10 @@ import tv.vanhal.contraptions.tiles.TileSpike;
 import tv.vanhal.contraptions.tiles.TileSpreader;
 
 public class Proxy {
+	
+	public void registerItems() {
+		
+	}
 
 	public void registerEntities() {
 		GameRegistry.registerTileEntity(TileSpike.class, "TileSpike");

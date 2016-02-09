@@ -1,16 +1,25 @@
 package tv.vanhal.contraptions.core;
 
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-import tv.vanhal.contraptions.client.renderers.RenderPlacer;
-import tv.vanhal.contraptions.client.renderers.RenderPoweredPiston;
-import tv.vanhal.contraptions.client.renderers.RenderRedstonePoweredPiston;
-import tv.vanhal.contraptions.client.renderers.RenderSpike;
-import tv.vanhal.contraptions.client.renderers.RenderSpreader;
+import tv.vanhal.contraptions.client.renderers.items.RenderScrewDriver;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderPlacer;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderPoweredPiston;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderRedstonePoweredPiston;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderSpike;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderSpreader;
+import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.world.RenderOverlay;
 import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends Proxy {
+	
+	@Override
+	public void registerItems() {
+		MinecraftForgeClient.registerItemRenderer(ContItems.screwDriver, new RenderScrewDriver());
+	}
+	
 	@Override
 	public void registerEntities() {
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileSpike.class, new RenderSpike());

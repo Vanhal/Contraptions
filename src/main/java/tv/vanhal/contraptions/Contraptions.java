@@ -93,6 +93,7 @@ public class Contraptions {
 		ContBlocks.postInit();
 		
 		proxy.registerEntities();
+		proxy.registerItems();
 		
 		ContConfig.postInit();
 	}
