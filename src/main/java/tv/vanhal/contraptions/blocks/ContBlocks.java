@@ -3,7 +3,10 @@ package tv.vanhal.contraptions.blocks;
 import tv.vanhal.contraptions.blocks.creative.BlockCreativePower;
 import tv.vanhal.contraptions.blocks.creative.BlockCreativeSteam;
 import tv.vanhal.contraptions.blocks.creative.BlockRedstonePulse;
+import tv.vanhal.contraptions.blocks.generation.BlockGenerator;
+import tv.vanhal.contraptions.blocks.generation.BlockShaftExtender;
 import tv.vanhal.contraptions.blocks.generation.BlockSolidBurner;
+import tv.vanhal.contraptions.blocks.generation.BlockTurbine;
 import tv.vanhal.contraptions.blocks.machines.BlockPlacer;
 import tv.vanhal.contraptions.blocks.machines.BlockPoweredPiston;
 import tv.vanhal.contraptions.blocks.machines.BlockRedstonePoweredPiston;
@@ -24,6 +27,9 @@ public class ContBlocks {
 		conductivePlate.preInit();
 		
 		solidBurner.preInit();
+		generator.preInit();
+		shaftExtender.preInit();
+		turbine.preInit();
 		
 		creativePower.preInit();
 		creativeSteam.preInit();
@@ -40,6 +46,9 @@ public class ContBlocks {
 		conductivePlate.init();
 		
 		solidBurner.init();
+		generator.init();
+		shaftExtender.init();
+		turbine.init();
 		
 		creativePower.init();
 		creativeSteam.init();
@@ -54,12 +63,15 @@ public class ContBlocks {
 		
 		conductivePlate.postInit();
 		
-		solidBurner.init();
+		solidBurner.postInit();
+		generator.postInit();
+		shaftExtender.postInit();
+		turbine.postInit();
 		
 		creativePower.postInit();
 		creativeSteam.postInit();
 	}
-	
+
 	//machines
 	public static BlockSpike spike = new BlockSpike();
 	public static BlockPoweredPiston poweredPiston = new BlockPoweredPiston();
@@ -69,6 +81,9 @@ public class ContBlocks {
 	
 	//generation
 	public static BlockSolidBurner solidBurner = new BlockSolidBurner();
+	public static BlockGenerator generator = new BlockGenerator();
+	public static BlockShaftExtender shaftExtender = new BlockShaftExtender();
+	public static BlockTurbine turbine = new BlockTurbine(); 
 	
 	//normal blocks (No entities)
 	public static BlockConductivePlate conductivePlate = new BlockConductivePlate();
