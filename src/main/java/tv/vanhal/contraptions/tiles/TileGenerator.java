@@ -10,6 +10,7 @@ import tv.vanhal.contraptions.interfaces.ITorqueBlock;
 
 public class TileGenerator extends BasePoweredTile {
 	public final int maxEnergyTransferPerTick = 250;
+	private int currentOutputPower = 0;
 	
 	public TileGenerator() {
 		super(20000);
@@ -45,6 +46,15 @@ public class TileGenerator extends BasePoweredTile {
 					}
 				}
 			}
+			if (currentOutputPower != getComparatorOutput()) {
+				currentOutputPower = getComparatorOutput();
+				worldObj.notifyBlockChange(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord));
+			}
 		}
+	}
+
+	public int getComparatorOutput() {
+		float percentagePowered = (float) energyStorage / (float) maxEnergyStorage;
+		return (int)Math.floor(percentagePowered * 15);
 	}
 }

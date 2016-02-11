@@ -198,7 +198,7 @@ public class HeatRegistry extends WorldSavedData {
 							IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
 							if (heat > block.getMeltingPoint()) {
 								//melt block!
-								Contraptions.logger.info("Block Melted! "+heat+": "+point.toString());
+								//Contraptions.logger.info("Block Melted! "+heat+": "+point.toString());
 							}
 							
 							//update this blocks heat

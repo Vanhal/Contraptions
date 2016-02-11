@@ -195,6 +195,11 @@ public class BaseBlock extends BlockContainer {
     }
 	
 	@Override
+	public boolean getWeakChanges(IBlockAccess world, int x, int y, int z) {
+        return canProvidePower();
+    }
+	
+	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		int l = BlockHelper.determineOrientation(world, rotationType, x, y, z, entity);
 		setFacing(world, x, y, z, l);

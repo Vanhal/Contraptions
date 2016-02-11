@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.tiles.TileGenerator;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;
@@ -28,5 +29,19 @@ public class BlockGenerator extends BaseBlock {
 		} else {
 			return getBounding(x, y, z, 0.0f, 0.0f, 0.09f, 1.0f, 0.86f, 0.91f);
 		}
+    }
+	
+	@Override
+    public boolean hasComparatorInputOverride() {
+        return true;
+    }
+
+	@Override
+    public int getComparatorInputOverride(World world, int x, int y, int z, int meta) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if ( (tile != null) && (tile instanceof TileGenerator) ) {
+			return ((TileGenerator)tile).getComparatorOutput();
+		}
+        return 0;
     }
 }
