@@ -22,6 +22,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -244,5 +245,17 @@ public class BaseBlock extends BlockContainer {
 	@Override
     public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z) {
         return BlockHelper.getValidFacing(rotationType);
+    }
+	
+	protected AxisAlignedBB getBounding(int _x, int _y, int _z, double _minX, double _minY, double _minZ, double _maxX, double _maxY, double _maxZ) {
+		return AxisAlignedBB.getBoundingBox(
+	        	(double)_x + _minX, (double)_y + _minY, (double)_z + _minZ, 
+	        	(double)_x + _maxX, (double)_y + _maxY, (double)_z + _maxZ
+	        );
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		return getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 }

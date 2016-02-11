@@ -9,6 +9,10 @@ tile.creativeSteam.name=Creative Steam Supply
 tile.creativePower.name=Creative RF Supply
 tile.conductivePlate.name=Conductive Plate
 tile.solidBurner.name=Solid Fuel Burner
+tile.turbine.name=Steam Turbine
+tile.generator.name=Generator
+tile.barExtender.name=Shaft Extender
+tile.steam.name=Steam
 
 item.screwDriver.name=Screwdriver
 

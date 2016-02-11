@@ -17,6 +17,7 @@ public class BlockPlacer extends BaseBlock implements IGuiRenderer {
 
 	public BlockPlacer() {
 		super("placer", true);
+		setBlockBounds(0.1f, 0.1f, 0.1f, 0.9f, 0.9f, 0.9f);
 	}
 	
 	@Override

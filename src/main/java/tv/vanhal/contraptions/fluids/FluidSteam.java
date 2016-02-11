@@ -2,6 +2,7 @@ package tv.vanhal.contraptions.fluids;
 
 import java.util.Random;
 
+import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.util.Ref;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -36,6 +37,7 @@ public class FluidSteam extends BlockFluidFinite {
 		displacements.put(this, false);
 		setHardness(100.0F);
 		setLightOpacity(3);
+		setCreativeTab(Contraptions.ContraptionTab);
 	}
 	
 	public void setName(String _name) {

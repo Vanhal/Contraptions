@@ -3,7 +3,7 @@ package tv.vanhal.contraptions.tiles;
 import tv.vanhal.contraptions.fluids.ContFluids;
 
 public class TileCreativeSteam extends BaseTile {
-	public final int TICKS_PER_STEAM = 20;
+	public final int TICKS_PER_STEAM = 5;
 	protected int currentCount = 0;
 	
 	@Override
