@@ -14,8 +14,8 @@ import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.StringHelper;
-import tv.vanhal.contraptions.world.HeatRegistry;
 import tv.vanhal.contraptions.world.RenderOverlay;
+import tv.vanhal.contraptions.world.heat.HeatRegistry;
 
 public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiRenderer {
 
@@ -28,7 +28,7 @@ public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiR
 
 	@Override
 	public int getMeltingPoint() {
-		return 1000;
+		return 2000;
 	}
 	
 	@Override

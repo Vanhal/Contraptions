@@ -1,0 +1,36 @@
+package tv.vanhal.contraptions.world.heat;
+
+import gnu.trove.map.TMap;
+import gnu.trove.map.hash.THashMap;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
+import tv.vanhal.contraptions.interfaces.IHeatBlockHandler;
+import tv.vanhal.contraptions.util.Point3I;
+
+public class HeatHandlers {
+	private static TMap<Block, IHeatBlockHandler> validHeatBlocks = new THashMap<Block, IHeatBlockHandler>();
+	
+	public static void registerHandler(Block block, IHeatBlockHandler handler) {
+		validHeatBlocks.put(block, handler);
+	}
+	
+	public static boolean isValidBlock(World world, Point3I point) {
+		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
+		return validHeatBlocks.containsKey(world.getBlock(point.getX(), point.getY(), point.getZ()));
+	}
+	
+	public static boolean canBlockProcess(World world, Point3I point, int heat) {
+		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
+		if (validHeatBlocks.containsKey(block)) {
+			return validHeatBlocks.get(block).canProcess(heat);
+		}
+		return false;
+	}
+	
+	public static boolean processBlockHeat(World world, Point3I point, int currentHeat) {
+		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
+		if (!validHeatBlocks.containsKey(block)) return false;
+		return validHeatBlocks.get(block).processHeat(world, point, currentHeat, HeatRegistry.getInstance(world));
+	}
+}

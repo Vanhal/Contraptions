@@ -11,6 +11,7 @@ import tv.vanhal.contraptions.client.renderers.tiles.RenderShaftExtender;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderSpike;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderSpreader;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderTurbine;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderCrusher;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.world.RenderOverlay;
@@ -29,6 +30,7 @@ public class ClientProxy extends Proxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TilePoweredPiston.class, new RenderPoweredPiston());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileRedstonePoweredPiston.class, new RenderRedstonePoweredPiston());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TilePlacer.class, new RenderPlacer());
+		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileCrusher.class, new RenderCrusher());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileSpreader.class, new RenderSpreader());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileGenerator.class, new RenderGenerator());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileShaftExtender.class, new RenderShaftExtender());

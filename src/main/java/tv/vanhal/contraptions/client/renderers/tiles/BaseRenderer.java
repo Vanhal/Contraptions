@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tv.vanhal.contraptions.tiles.BaseTile;
+import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

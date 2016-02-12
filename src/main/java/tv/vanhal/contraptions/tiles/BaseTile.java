@@ -1,6 +1,7 @@
 package tv.vanhal.contraptions.tiles;
 
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.network.NetworkHandler;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
 import tv.vanhal.contraptions.util.Point3I;
@@ -39,6 +40,11 @@ public class BaseTile extends TileEntity {
 		return false;
 	}
 	
+	public BaseBlock getBlock() {
+		if (worldObj.getBlock(xCoord, yCoord, zCoord) instanceof BaseBlock)
+			return (BaseBlock) worldObj.getBlock(xCoord, yCoord, zCoord);
+		return null;
+	}
 	
 	/////START NBT DATA METHODS
 	/**

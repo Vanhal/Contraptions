@@ -1,6 +1,7 @@
 package tv.vanhal.contraptions.world;
 
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.world.heat.HeatRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;

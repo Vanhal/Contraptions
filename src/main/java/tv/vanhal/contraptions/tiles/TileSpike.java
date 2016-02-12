@@ -26,7 +26,7 @@ public class TileSpike extends BaseTile {
 	}
 	
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if (!worldObj.isRemote) {
 			List<TileEntity> tiles = new ArrayList<TileEntity>();
 			for (ForgeDirection direction: ForgeDirection.VALID_DIRECTIONS) {
@@ -46,9 +46,6 @@ public class TileSpike extends BaseTile {
 						}
 					}
 				}
-			}
-			if (this.isPowered()) {
-				Contraptions.logger.info("Power Level: "+this.isPoweredLevel());
 			}
 		}
 	}

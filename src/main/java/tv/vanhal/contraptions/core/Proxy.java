@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.TileCreativePower;
 import tv.vanhal.contraptions.tiles.TileCreativeSteam;
+import tv.vanhal.contraptions.tiles.TileCrusher;
 import tv.vanhal.contraptions.tiles.TileGenerator;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
@@ -27,6 +28,7 @@ public class Proxy {
 		GameRegistry.registerTileEntity(TileRedstonePoweredPiston.class, Ref.MODID+":TileRedstonePoweredPiston");
 		GameRegistry.registerTileEntity(TilePlacer.class, Ref.MODID+":TilePlacer");
 		GameRegistry.registerTileEntity(TileSpreader.class, Ref.MODID+":TileSpreader");
+		GameRegistry.registerTileEntity(TileCrusher.class, Ref.MODID+":TileCrusher");
 		GameRegistry.registerTileEntity(TileSolidBurner.class, Ref.MODID+":TileSolidBurner");
 		GameRegistry.registerTileEntity(TileGenerator.class, Ref.MODID+":TileGenerator");
 		GameRegistry.registerTileEntity(TileShaftExtender.class, Ref.MODID+":TileShaftExtender");

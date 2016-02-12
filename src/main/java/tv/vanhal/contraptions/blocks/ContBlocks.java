@@ -7,6 +7,7 @@ import tv.vanhal.contraptions.blocks.generation.BlockGenerator;
 import tv.vanhal.contraptions.blocks.generation.BlockShaftExtender;
 import tv.vanhal.contraptions.blocks.generation.BlockSolidBurner;
 import tv.vanhal.contraptions.blocks.generation.BlockTurbine;
+import tv.vanhal.contraptions.blocks.machines.BlockCrusher;
 import tv.vanhal.contraptions.blocks.machines.BlockPlacer;
 import tv.vanhal.contraptions.blocks.machines.BlockPoweredPiston;
 import tv.vanhal.contraptions.blocks.machines.BlockRedstonePoweredPiston;
@@ -23,6 +24,7 @@ public class ContBlocks {
 		placer.preInit();
 		spreader.preInit();
 		redstonePoweredPiston.preInit();
+		crusher.preInit();
 		
 		conductivePlate.preInit();
 		
@@ -42,6 +44,7 @@ public class ContBlocks {
 		placer.init();
 		spreader.init();
 		redstonePoweredPiston.init();
+		crusher.init();
 		
 		conductivePlate.init();
 		
@@ -60,6 +63,7 @@ public class ContBlocks {
 		placer.postInit();
 		spreader.postInit();
 		redstonePoweredPiston.postInit();
+		crusher.postInit();
 		
 		conductivePlate.postInit();
 		
@@ -78,6 +82,7 @@ public class ContBlocks {
 	public static BlockRedstonePoweredPiston redstonePoweredPiston = new BlockRedstonePoweredPiston();
 	public static BlockPlacer placer = new BlockPlacer();
 	public static BlockSpreader spreader = new BlockSpreader();
+	public static BlockCrusher crusher = new BlockCrusher();
 	
 	//generation
 	public static BlockSolidBurner solidBurner = new BlockSolidBurner();

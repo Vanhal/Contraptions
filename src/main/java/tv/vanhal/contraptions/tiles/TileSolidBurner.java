@@ -3,7 +3,7 @@ package tv.vanhal.contraptions.tiles;
 import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.util.ItemHelper;
-import tv.vanhal.contraptions.world.HeatRegistry;
+import tv.vanhal.contraptions.world.heat.HeatRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

@@ -3,9 +3,13 @@ package tv.vanhal.contraptions.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.vanhal.contraptions.tiles.TileCrusher;
+import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -63,5 +67,41 @@ public class ItemHelper {
 	
 	public static int getBurnTime(ItemStack itemStack) {
 		return TileEntityFurnace.getItemBurnTime(itemStack);
+	}
+	
+	public static boolean clickAddToTile(World world, int x, int y, int z, EntityPlayer player, int slot) {
+		if (player.isSneaking()) {
+			if (!world.isRemote) {
+				if (player.getCurrentEquippedItem()==null) {
+					TileEntity tile = world.getTileEntity(x, y, z);
+					if ( (tile != null) && (tile instanceof ISidedInventory) ) {
+						ISidedInventory inventory = (ISidedInventory)tile;
+						if (inventory.getStackInSlot(slot)!=null) {
+							dropAsItem(world, x, y + 1, z, inventory.getStackInSlot(slot));
+							inventory.setInventorySlotContents(slot, null);
+						}
+					}
+				}
+			}
+			return true;
+		} else if (player.getCurrentEquippedItem() != null) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if ( (tile != null) && (tile instanceof ISidedInventory) ) {
+				ISidedInventory inventory = (ISidedInventory)tile;
+				if (inventory.isItemValidForSlot(slot, player.getCurrentEquippedItem())) {
+					if (!world.isRemote) {
+						if (inventory.canInsertItem(slot, player.getCurrentEquippedItem(), 0)) {
+							if (inventory.getStackInSlot(slot)==null) {
+								inventory.setInventorySlotContents(slot, new ItemStack(player.getCurrentEquippedItem().getItem(), 
+										1, player.getCurrentEquippedItem().getItemDamage()));
+								player.inventory.decrStackSize(player.inventory.currentItem, 1);
+							}
+						}
+					}
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

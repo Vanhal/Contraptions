@@ -5,6 +5,7 @@ tile.poweredPiston.name=Powered Piston
 tile.placer.name=Placer
 tile.spreader.name=Spreader
 tile.poweredRedstonePiston.name=Powered Redstone Piston
+tile.crusher.name=Crusher Pedestal
 tile.creativeSteam.name=Creative Steam Supply
 tile.creativePower.name=Creative RF Supply
 tile.conductivePlate.name=Conductive Plate

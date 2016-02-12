@@ -1,4 +1,4 @@
-package tv.vanhal.contraptions.world;
+package tv.vanhal.contraptions.world.heat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.fluids.ContFluids;
 import tv.vanhal.contraptions.interfaces.IHeatBlock;
+import tv.vanhal.contraptions.interfaces.IHeatBlockHandler;
 import tv.vanhal.contraptions.util.Point3I;
 import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.block.Block;
@@ -61,6 +62,7 @@ public class HeatRegistry extends WorldSavedData {
 	
 	public HeatRegistry(String _name) {
 		super(_name);
+		registerValidBlocks();
 	}
 
 	public void setDemension(int dimID) {
@@ -140,15 +142,14 @@ public class HeatRegistry extends WorldSavedData {
 			for (Point3I point : heatValues.keySet()) {
 				if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
 					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
-							(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.water) &&
-							(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.flowing_water) ) {
+							(!HeatHandlers.isValidBlock(world, point))  ) {
 						removeHeatBlock(point);
 					} else {
 						//do passive cooling
 						int heat = heatValues.get(point);
 						heat -= ContConfig.HEAT_LOSS_PER_TICK;
 
-						//spread heat, equalize between all touching blocks if this block is hotter than the others
+						//spread heat, equalize between all touching blocks
 						if (heat>0) {
 							int touchingBlocks = 1;
 							int totalHeat = heat;
@@ -157,7 +158,7 @@ public class HeatRegistry extends WorldSavedData {
 								if (isHeatBlock(testBlock)) {
 									touchingBlocks++;
 									totalHeat += getValue(testBlock);
-								} else if (world.getBlock(testBlock.getX(), testBlock.getY(), testBlock.getZ()) == Blocks.water) {
+								} else if (HeatHandlers.isValidBlock(world, testBlock)) {
 									if (!toAdd.contains(testBlock))
 										toAdd.add(testBlock);
 								}
@@ -173,7 +174,7 @@ public class HeatRegistry extends WorldSavedData {
 							}
 						} else if (heat <= 0) {
 							heat = 0;
-							if (world.getBlock(point.getX(), point.getY(), point.getZ()) == Blocks.water) {
+							if (HeatHandlers.isValidBlock(world, point)) {
 								removeHeatBlock(point);
 							}
 						}
@@ -198,24 +199,21 @@ public class HeatRegistry extends WorldSavedData {
 							IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
 							if (heat > block.getMeltingPoint()) {
 								//melt block!
-								//Contraptions.logger.info("Block Melted! "+heat+": "+point.toString());
 							}
 							
 							//update this blocks heat
 							if (heat != heatValues.get(point)) {
 								setValue(point, heat);
 							}
-						} else if (world.getBlock(point.getX(), point.getY(), point.getZ()) == Blocks.water) {
-							//check if this is a water block
-							if (heat >= ContConfig.WATER_BOIL_HEAT) {
+						} else if (HeatHandlers.isValidBlock(world, point)) {
+							if (HeatHandlers.canBlockProcess(world, point, heat)) {
 								if (toBurn.contains(point)) {
-									world.setBlock(point.getX(), point.getY(), point.getZ(), ContFluids.steam);
-									removeHeatBlock(point);
-									toBurn.remove(point);
+									if (HeatHandlers.processBlockHeat(world, point, heat))
+										toBurn.remove(point);
 								} else {
 									toBurn.add(point);
 								}
-							} else if (toBurn.contains(point)) {
+							} else {
 								toBurn.remove(point);
 							}
 						}
@@ -236,9 +234,7 @@ public class HeatRegistry extends WorldSavedData {
 			for (Point3I point : toRemove) {
 				if (heatValues.containsKey(point)) {
 					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
-						(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.water) &&
-						(world.getBlock(point.getX(), point.getY(), point.getZ()) != Blocks.flowing_water) ) {
-						//Contraptions.logger.info("Removing: "+point.toString()+" block "+world.getBlock(point.getX(), point.getY(), point.getZ()).toString());
+						(!HeatHandlers.isValidBlock(world, point)) ) {
 						heatValues.remove(point);
 					}
 				}
@@ -252,7 +248,6 @@ public class HeatRegistry extends WorldSavedData {
 		if (toAdd.size()>0) {
 			for (Point3I point : toAdd) {
 				if (!isHeatBlock(point)) {
-					//Contraptions.logger.info("Adding Water block: "+point.toString());
 					addHeatBlock(point);
 				}
 			}
@@ -277,7 +272,6 @@ public class HeatRegistry extends WorldSavedData {
 				heatValues.put(point, value);
 			}
 		}
-		//Contraptions.logger.info("Heat Data Loaded for dimID: "+dimensionID);
 	}
 
 	@Override
@@ -292,9 +286,14 @@ public class HeatRegistry extends WorldSavedData {
 			contents.appendTag(tag);
 		}
 		nbt.setTag("heatValues", contents);
-		//Contraptions.logger.info("Heat Data Saved for dimID: "+dimensionID);
 	}
 	
+	private void registerValidBlocks() {
+		HeatHandlers.registerHandler(Blocks.water, new HandlerWater());
+		HeatHandlers.registerHandler(Blocks.flowing_water, new HandlerWater());
+		HeatHandlers.registerHandler(Blocks.furnace, new HandlerFurnace());
+		HeatHandlers.registerHandler(Blocks.lit_furnace, new HandlerFurnace());
+	}
 
 
 }

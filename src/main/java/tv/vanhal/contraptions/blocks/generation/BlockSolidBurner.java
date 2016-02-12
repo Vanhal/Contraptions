@@ -23,8 +23,8 @@ import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.StringHelper;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;
-import tv.vanhal.contraptions.world.HeatRegistry;
 import tv.vanhal.contraptions.world.RenderOverlay;
+import tv.vanhal.contraptions.world.heat.HeatRegistry;
 
 public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRenderer {
 
@@ -47,39 +47,7 @@ public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRende
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		if (player.isSneaking()) {
-			if (!world.isRemote) {
-				if (player.getCurrentEquippedItem()==null) {
-					TileEntity tile = world.getTileEntity(x, y, z);
-					if ( (tile != null) && (tile instanceof TileSolidBurner) ) {
-						TileSolidBurner burner = (TileSolidBurner)tile;
-						if (burner.getStackInSlot(0)!=null) {
-							ItemHelper.dropAsItem(world, x, y, z, burner.getStackInSlot(0));
-							burner.setInventorySlotContents(0, null);
-						}
-					}
-				}
-			}
-			return true;
-		} else if (player.getCurrentEquippedItem() != null) {
-			if (ItemHelper.isFuel(player.getCurrentEquippedItem())) {
-				TileEntity tile = world.getTileEntity(x, y, z);
-				if ( (tile != null) && (tile instanceof TileSolidBurner) ) {
-					if (!world.isRemote) {
-						TileSolidBurner burner = (TileSolidBurner)tile;
-						if (burner.canInsertItem(0, player.getCurrentEquippedItem(), 0)) {
-							if (burner.getStackInSlot(0)==null) {
-								burner.setInventorySlotContents(0, new ItemStack(player.getCurrentEquippedItem().getItem(), 
-										1, player.getCurrentEquippedItem().getItemDamage()));
-								player.inventory.decrStackSize(player.inventory.currentItem, 1);
-							}
-						}
-					}
-					return true;
-				}
-			}
-		}
-		return false;
+		return ItemHelper.clickAddToTile(world, x, y, z, player, 0);
 	}
 	
 	
