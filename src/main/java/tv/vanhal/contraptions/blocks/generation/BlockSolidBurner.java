@@ -4,19 +4,24 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.interfaces.IGuiRenderer;
 import tv.vanhal.contraptions.interfaces.IHeatBlock;
+import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.util.Colours;
@@ -95,5 +100,12 @@ public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRende
 		else if (currentHeat >= getMeltingPoint()*0.6) color = Colours.ORANGE;
 		
 		RenderOverlay.drawStringCentered(StringHelper.localize("gui.heat")+": "+currentHeat, scr_x, scr_y - 20, color);
+	}
+	
+	@Override
+	public void addRecipe() {
+		ShapedOreRecipe recipe = new ShapedOreRecipe(new ItemStack(this), new Object[]{
+			"ppp", "pfp", "sss", 'p', ContItems.plateIron, 's', Blocks.stone, 'f', Blocks.furnace});
+		GameRegistry.addRecipe(recipe);
 	}
 }

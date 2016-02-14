@@ -91,11 +91,10 @@ public class BaseBlock extends BlockContainer {
 	
 	public void preInit() {
 		GameRegistry.registerBlock(this, name);
-		addRecipe();
 	}
 	
 	public void init() {
-		
+		addRecipe();
 	}
 	
 	public void postInit() {

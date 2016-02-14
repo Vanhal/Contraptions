@@ -1,17 +1,20 @@
 package tv.vanhal.contraptions.items;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import tv.vanhal.contraptions.crafting.RecipeManager;
 import tv.vanhal.contraptions.util.Ref;
 
 public class ItemScrewDriver extends BaseItem {
 	
 	public ItemScrewDriver() {
 		super("screwDriver");
-		setTextureName(Ref.MODID+":screwDriver");
 		this.setMaxStackSize(1);
 	}
 	
@@ -33,4 +36,11 @@ public class ItemScrewDriver extends BaseItem {
 		}
         return !world.isRemote;
     }
+	
+	@Override
+	protected void addRecipe() {
+		ShapedOreRecipe recipe = new ShapedOreRecipe(new ItemStack(this), new Object[]{
+				"p  ", " i ", "   ", 'p', ContItems.plateIron, 'i', Items.iron_ingot});
+		GameRegistry.addRecipe(recipe);
+	}
 }

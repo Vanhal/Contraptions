@@ -1,5 +1,6 @@
 package tv.vanhal.contraptions.network;
 
+import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -17,8 +18,10 @@ public class PartialTileNBTUpdateMessageHandler implements IMessageHandler<Parti
 			BaseTile paEntity = (BaseTile) entity;
 			paEntity.readCommonNBT(message.nbtTag);
 			paEntity.readSyncOnlyNBT(message.nbtTag);
-			if (message.nbtTag.hasKey("Contents"))
+			if (message.nbtTag.hasKey("Contents")) {
 				paEntity.readNonSyncableNBT(message.nbtTag);
+				
+			}
 		}
 		return null;
 	}

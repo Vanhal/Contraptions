@@ -120,13 +120,17 @@ public class BaseTile extends TileEntity {
 	public void writeNonSyncableNBT(NBTTagCompound nbt) {
 		NBTTagList contents = new NBTTagList();
 		for (int i = 0; i < slots.length; i++) {
+			
+			ItemStack stack = slots[i];
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setByte("Slot", (byte)i);
 			if (slots[i] != null) {
-				ItemStack stack = slots[i];
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)i);
+				tag.setBoolean("isNull", false);
 				stack.writeToNBT(tag);
-				contents.appendTag(tag);
+			} else {
+				tag.setBoolean("isNull", true);
 			}
+			contents.appendTag(tag);
 		}
 		nbt.setTag("Contents", contents);
 	}
@@ -163,13 +167,15 @@ public class BaseTile extends TileEntity {
 	 * @param nbt
 	 */
 	public void readNonSyncableNBT(NBTTagCompound nbt) {
-		
 		NBTTagList contents = nbt.getTagList("Contents", 10);
 		for (int i = 0; i < contents.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) contents.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
-			if (slot < slots.length) {
+			boolean isNull = tag.getBoolean("isNull");
+			if ( (slot < slots.length) && (!isNull) ) {
 				slots[slot] = ItemStack.loadItemStackFromNBT(tag);
+			} else if (isNull) {
+				slots[slot] = null;
 			}
 		}
 	}

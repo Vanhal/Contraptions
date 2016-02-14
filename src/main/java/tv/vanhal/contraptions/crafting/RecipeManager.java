@@ -2,6 +2,7 @@ package tv.vanhal.contraptions.crafting;
 
 import java.util.ArrayList;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class RecipeManager {

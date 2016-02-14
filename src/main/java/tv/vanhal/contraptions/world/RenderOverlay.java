@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL12;
 import tv.vanhal.contraptions.interfaces.IGuiRenderer;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.util.Colours;
+import tv.vanhal.contraptions.util.GUIHelper;
 import tv.vanhal.contraptions.util.StringHelper;
 import tv.vanhal.contraptions.world.heat.HeatRegistry;
 import net.minecraft.block.Block;
@@ -100,8 +101,7 @@ public class RenderOverlay {
 	
 	public static void drawStringCentered(String str, int x, int y, int colour) {
 		Minecraft mc = Minecraft.getMinecraft();
-		int strWidth = Math.round(mc.fontRenderer.getStringWidth(str) / 2.0f);
-		mc.fontRenderer.drawStringWithShadow(str, x - strWidth, y, colour);
+		GUIHelper.DrawStringCentered(mc.fontRenderer, str, x, y, colour);
 	}
 	
 	private void renderHeatGUI(World world, int x, int y, int z, ScaledResolution res) {

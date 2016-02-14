@@ -2,14 +2,18 @@ package tv.vanhal.contraptions.blocks.passive;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.interfaces.IGuiRenderer;
 import tv.vanhal.contraptions.interfaces.IHeatBlock;
+import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
@@ -51,6 +55,11 @@ public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiR
 		RenderOverlay.drawStringCentered(StringHelper.localize("gui.heat")+": "+currentHeat, scr_x, scr_y - 20, color);
 	}
 	
-	
+	@Override
+	public void addRecipe() {
+		ShapedOreRecipe recipe = new ShapedOreRecipe(new ItemStack(this), new Object[]{
+			"ppp", "sss", "sss", 'p', ContItems.plateIron, 's', Blocks.stone});
+		GameRegistry.addRecipe(recipe);
+	}
 
 }

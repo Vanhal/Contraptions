@@ -5,7 +5,7 @@ tile.poweredPiston.name=Powered Piston
 tile.placer.name=Placer
 tile.spreader.name=Spreader
 tile.poweredRedstonePiston.name=Powered Redstone Piston
-tile.crusher.name=Crusher Pedestal
+tile.crusher.name=Smasher Pedestal
 tile.creativeSteam.name=Creative Steam Supply
 tile.creativePower.name=Creative RF Supply
 tile.conductivePlate.name=Conductive Plate
@@ -16,5 +16,12 @@ tile.barExtender.name=Shaft Extender
 tile.steam.name=Steam
 
 item.screwDriver.name=Screwdriver
+item.crushedIron.name=Smashed Iron
+item.moltenIron.name=Molten Iron
+item.plateIron.name=Iron Plate
+item.rfCore.name=RF Core
 
 gui.heat=Heat
+gui.time=Time
+gui.times=Times
+gui.smashedup=Slightly smashed up

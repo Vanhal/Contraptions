@@ -5,6 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,7 @@ import tv.vanhal.contraptions.network.NetworkHandler;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessageHandler;
 import tv.vanhal.contraptions.util.Ref;
+import tv.vanhal.contraptions.world.TooltipHandler;
 import tv.vanhal.contraptions.world.WorldTicker;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -84,6 +86,7 @@ public class Contraptions {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 		FMLCommonHandler.instance().bus().register(instance);
 		FMLCommonHandler.instance().bus().register(new WorldTicker());
+		MinecraftForge.EVENT_BUS.register(new TooltipHandler());
 		proxy.init();
 	}
 	
