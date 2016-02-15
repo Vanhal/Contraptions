@@ -5,6 +5,7 @@ import gnu.trove.map.hash.THashMap;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import tv.vanhal.contraptions.crafting.HeatRecipes;
 import tv.vanhal.contraptions.interfaces.IHeatBlockHandler;
 import tv.vanhal.contraptions.util.Point3I;
 
@@ -13,6 +14,10 @@ public class HeatHandlers {
 	
 	public static void registerHandler(Block block, IHeatBlockHandler handler) {
 		validHeatBlocks.put(block, handler);
+	}
+	
+	public static void registerRecipeHandler(Block block, HeatRecipes recipe) {
+		registerHandler(block, new HandlerRecipes(recipe));
 	}
 	
 	public static boolean isValidBlock(World world, Point3I point) {

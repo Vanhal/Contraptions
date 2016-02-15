@@ -10,6 +10,7 @@ import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileRedstonePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileShaftExtender;
+import tv.vanhal.contraptions.tiles.TileSolarHeater;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.tiles.TileSpike;
 import tv.vanhal.contraptions.tiles.TileSpreader;
@@ -30,6 +31,7 @@ public class Proxy {
 		GameRegistry.registerTileEntity(TileSpreader.class, Ref.MODID+":TileSpreader");
 		GameRegistry.registerTileEntity(TileCrusher.class, Ref.MODID+":TileCrusher");
 		GameRegistry.registerTileEntity(TileSolidBurner.class, Ref.MODID+":TileSolidBurner");
+		GameRegistry.registerTileEntity(TileSolarHeater.class, Ref.MODID+":TileSolarHeater");
 		GameRegistry.registerTileEntity(TileGenerator.class, Ref.MODID+":TileGenerator");
 		GameRegistry.registerTileEntity(TileShaftExtender.class, Ref.MODID+":TileShaftExtender");
 		GameRegistry.registerTileEntity(TileTurbine.class, Ref.MODID+":TileTurbine");

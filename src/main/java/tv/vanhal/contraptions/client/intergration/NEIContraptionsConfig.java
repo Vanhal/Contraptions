@@ -20,8 +20,11 @@ public class NEIContraptionsConfig implements IConfigureNEI {
 
 	@Override
 	public void loadConfig() {
-		API.registerRecipeHandler(new NEIRecipeHandler());
-		API.registerUsageHandler(new NEIRecipeHandler());
+		API.registerRecipeHandler(new NEICrusherRecipeHandler());
+		API.registerUsageHandler(new NEICrusherRecipeHandler());
+		
+		API.registerRecipeHandler(new NEIHeatRecipeHandler());
+		API.registerUsageHandler(new NEIHeatRecipeHandler());
 		
 		API.hideItem(new ItemStack(ContBlocks.pulse));
 	}

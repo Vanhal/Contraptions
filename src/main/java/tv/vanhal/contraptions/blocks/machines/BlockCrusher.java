@@ -39,5 +39,8 @@ public class BlockCrusher extends BaseBlock {
 		ShapedOreRecipe recipe = new ShapedOreRecipe(new ItemStack(this), new Object[]{
 				"ooo", "sss", "s s", 'o', Blocks.obsidian, 's', Blocks.stone});
 		GameRegistry.addRecipe(recipe);
+		recipe = new ShapedOreRecipe(new ItemStack(this), new Object[]{
+			"lll", "sss", "sws", 's', Blocks.stone, 'w', Items.water_bucket, 'l', Items.lava_bucket});
+		GameRegistry.addRecipe(recipe);
 	}
 }

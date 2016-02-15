@@ -101,7 +101,7 @@ public class RenderOverlay {
 	
 	public static void drawStringCentered(String str, int x, int y, int colour) {
 		Minecraft mc = Minecraft.getMinecraft();
-		GUIHelper.DrawStringCentered(mc.fontRenderer, str, x, y, colour);
+		GUIHelper.DrawShadowStringCentered(mc.fontRenderer, str, x, y, colour);
 	}
 	
 	private void renderHeatGUI(World world, int x, int y, int z, ScaledResolution res) {

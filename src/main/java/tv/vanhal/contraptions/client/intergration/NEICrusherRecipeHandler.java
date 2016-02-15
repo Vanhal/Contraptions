@@ -22,7 +22,7 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import codechicken.nei.PositionedStack;
 
-public class NEIRecipeHandler extends TemplateRecipeHandler {
+public class NEICrusherRecipeHandler extends TemplateRecipeHandler {
 	
 	public class CachedCrusherRecipe extends CachedRecipe {
 

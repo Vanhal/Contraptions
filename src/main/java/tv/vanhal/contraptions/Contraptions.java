@@ -11,8 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tv.vanhal.contraptions.blocks.ContBlocks;
+import tv.vanhal.contraptions.client.intergration.MTContraptions;
 import tv.vanhal.contraptions.compat.ModHelper;
 import tv.vanhal.contraptions.core.Proxy;
+import tv.vanhal.contraptions.crafting.Recipes;
 import tv.vanhal.contraptions.fluids.ContFluids;
 import tv.vanhal.contraptions.gui.SimpleGuiHandler;
 import tv.vanhal.contraptions.items.ContItems;
@@ -97,6 +99,8 @@ public class Contraptions {
 		
 		proxy.registerEntities();
 		proxy.registerItems();
+		
+		Recipes.register();
 		
 		ContConfig.postInit();
 	}

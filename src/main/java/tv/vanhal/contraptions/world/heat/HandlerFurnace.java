@@ -31,7 +31,7 @@ public class HandlerFurnace implements IHeatBlockHandler {
 					// BlockFurnace.updateFurnaceBlockState(true, world, point.getX(), point.getY(), point.getZ());
 					furnace.furnaceBurnTime = ContConfig.TICKS_PER_HEAT_TICK + 1;
 					furnace.currentItemBurnTime = 1;
-					heatReg.removeHeat(point, 10);
+					heatReg.removeHeat(point, 25);
 					furnace.markDirty();
 				}
 			}

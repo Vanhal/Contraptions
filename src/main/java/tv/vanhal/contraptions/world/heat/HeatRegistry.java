@@ -7,15 +7,20 @@ import java.util.List;
 import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.ContBlocks;
+import tv.vanhal.contraptions.crafting.RecipeManager;
 import tv.vanhal.contraptions.fluids.ContFluids;
 import tv.vanhal.contraptions.interfaces.IHeatBlock;
 import tv.vanhal.contraptions.interfaces.IHeatBlockHandler;
+import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.Point3I;
 import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
@@ -55,6 +60,9 @@ public class HeatRegistry extends WorldSavedData {
 	
 	public int dimensionID = 0;
 	public int tickCounter = 0;
+
+	private AxisAlignedBB boundCheck = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+	
 	private TMap<Point3I, Integer> heatValues = new THashMap<Point3I, Integer>();
 	private ArrayList<Point3I> toRemove = new ArrayList<Point3I>();
 	private ArrayList<Point3I> toAdd = new ArrayList<Point3I>();
@@ -128,6 +136,13 @@ public class HeatRegistry extends WorldSavedData {
 		return 0;
 	}
 	
+	public boolean isHeatableBlock(World world, Point3I point) {
+		if (isHeatBlock(point)) return true;
+		if ( (world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) ||
+				(HeatHandlers.isValidBlock(world, point))  ) return true;
+		return false;
+	}
+	
 	public boolean isHeatBlock(int x, int y, int z) {
 		return isHeatBlock(new Point3I(x, y, z));
 	}
@@ -163,12 +178,35 @@ public class HeatRegistry extends WorldSavedData {
 										toAdd.add(testBlock);
 								}
 							}
+							//check to see if there is any items on top
+							boundCheck.setBounds(point.getX(), point.getY() + 1, point.getZ(), 
+									point.getX()+1, point.getY()+2, point.getZ()+1);
+							List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, boundCheck);
+							for (EntityItem item : items) {
+								if (item.getEntityData() != null) {
+									if (item.getEntityData().hasKey("ContHeatValue")) {
+										touchingBlocks++;
+										totalHeat += item.getEntityData().getInteger("ContHeatValue");
+									} else {
+										item.getEntityData().setInteger("ContHeatValue", 0);
+										touchingBlocks++;
+									}
+								}
+							}
+							
+							//spread the heat
 							if (touchingBlocks>1) {
 								heat = (int) Math.floor(totalHeat/(double)touchingBlocks);
 								for (int i = 0; i < 6; i++) {
 									Point3I testBlock = point.getAdjacentBlock(i);
 									if (isHeatBlock(testBlock)) {
 										setValue(testBlock, heat);
+									}
+								}
+								for (EntityItem item : items) {
+									if ( (item.getEntityData() != null) && (item.getEntityData().hasKey("ContHeatValue")) ) {
+										item.getEntityData().setInteger("ContHeatValue", heat);
+										processItemHeat(world, point, item, heat);
 									}
 								}
 							}
@@ -253,6 +291,20 @@ public class HeatRegistry extends WorldSavedData {
 			}
 			toAdd.clear();
 			markDirty();
+		}
+	}
+	
+	protected void processItemHeat(World world, Point3I point, EntityItem item, int currentHeat) {
+		if (currentHeat>0) {
+			int recipeHeat = RecipeManager.getHeatRequired(item.getEntityItem()) * item.getEntityItem().stackSize;
+			if ( (recipeHeat>0) && (currentHeat>=recipeHeat) && (item.getEntityItem().stackSize>0) ) {
+				ItemStack output = RecipeManager.getHeatOutput(item.getEntityItem());
+				output.stackSize = item.getEntityItem().stackSize;
+				world.removeEntity(item);
+				ItemHelper.dropAsItem(world, point.getX(), point.getY() + 1, point.getZ(), output);
+			} else if ( (currentHeat>=100) && (recipeHeat==0) ) {
+				item.setFire(5);
+			}
 		}
 	}
 	
