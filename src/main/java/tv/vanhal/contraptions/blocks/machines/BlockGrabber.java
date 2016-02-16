@@ -1,24 +1,31 @@
 package tv.vanhal.contraptions.blocks.machines;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.interfaces.IConfigurable;
 import tv.vanhal.contraptions.interfaces.IGuiRenderer;
 import tv.vanhal.contraptions.items.ContItems;
+import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.tiles.TileGrabber;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.StringHelper;
+import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import tv.vanhal.contraptions.world.RenderOverlay;
 import tv.vanhal.contraptions.world.heat.HeatRegistry;
 
@@ -26,6 +33,8 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 
 	public BlockGrabber() {
 		super("grabber");
+		setFrontTexture("grabber");
+		setFrontActiveTexture("grabberOn");
         setRotationType(null);
 	}
 	
@@ -83,12 +92,29 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 				RenderOverlay.drawItemStack(filterItem, scr_x, scr_y - 46, false);
 			}
 	
-			
 			//render the range
 			RenderOverlay.drawStringCentered(StringHelper.localize("gui.range")+": "+grabber.range, scr_x, scr_y - 16, Colours.WHITE);
 			//render the current mode
 			RenderOverlay.drawStringCentered(StringHelper.localize("gui.mode")+": "+
 					StringHelper.localize("gui.mode."+grabber.mode.toString()), scr_x, scr_y - 28, Colours.WHITE);
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if ( (tile!=null) && (tile instanceof BaseTile) ) {
+			if ( ((BaseTile)tile).isActive() ) {
+				return frontActiveIcon;
+			} else {
+				return frontIcon;
+			}
+		}
+		return this.getIcon(side, world.getBlockMetadata(x, y, z));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta) {
+		return frontActiveIcon;
 	}
 }

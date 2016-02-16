@@ -41,14 +41,18 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 		int previousEnergy = energyStorage;
 		energyStorage += amount;
 		if (energyStorage >= maxEnergyStorage) energyStorage = maxEnergyStorage;
-		if (previousEnergy!=energyStorage) addPartialUpdate("energy", energyStorage);
+		if (previousEnergy!=energyStorage) addPartialUpdate("energy", energyStorage, true);
 	}
 	
 	protected boolean consumeCharge(int amount) {
 		if (amount <= energyStorage) {
 			energyStorage -= amount;
-			if (energyStorage<0) energyStorage = 0;
-			addPartialUpdate("energy", energyStorage);
+			if (energyStorage<0) {
+				energyStorage = 0;
+				addPartialUpdate("energy", energyStorage, true);
+			} else {
+				addPartialUpdate("energy", energyStorage);
+			}
 			return true;
 		}
 		return false;

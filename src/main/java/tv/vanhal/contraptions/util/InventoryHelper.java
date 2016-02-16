@@ -1,5 +1,6 @@
 package tv.vanhal.contraptions.util;
 
+import tv.vanhal.contraptions.Contraptions;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -88,7 +89,7 @@ public class InventoryHelper {
                     itemStack.splitStack(max);
                 }
             }
-        } else if (ItemHelper.areStacksEqual(stackInSlot, itemStack)) {
+        } else if (areItemStacksEqual(stackInSlot, itemStack, true, true)) {
             int max = Math.min(itemStack.getMaxStackSize(), inventory.getInventoryStackLimit());
             if (max > stackInSlot.stackSize) {
                 int l = Math.min(itemStack.stackSize, max - stackInSlot.stackSize);
@@ -104,6 +105,29 @@ public class InventoryHelper {
         }
 
         return itemStack;
+    }
+    
+    public static boolean doesInventoryHaveItem(TileEntity tile, ItemStack itemStack, ForgeDirection direction) {
+    	if (isInventory(tile, direction)) {
+    		IInventory inventory = (IInventory)tile;
+    		if (inventory instanceof ISidedInventory) {
+                ISidedInventory iSidedInventory = (ISidedInventory) inventory;
+                int[] accessibleSlotsFromSide = iSidedInventory.getAccessibleSlotsFromSide(direction.ordinal());
+
+                for (int anAccessibleSlotsFromSide : accessibleSlotsFromSide) {
+                	if (areItemStacksEqual(itemStack, iSidedInventory.getStackInSlot(anAccessibleSlotsFromSide), true, true)) 
+                		return true;
+                }
+            } else {
+                int j = inventory.getSizeInventory();
+
+                for (int slot = 0; slot < j; ++slot) {
+                	if (areItemStacksEqual(itemStack, inventory.getStackInSlot(slot), true, true)) 
+                		return true;
+                }
+            }
+    	}
+    	return false;
     }
 
 	public static boolean canInsertItemToInventory(IInventory inventory, ItemStack itemStack, int slot, int side) {
@@ -123,5 +147,9 @@ public class InventoryHelper {
             return !(tile instanceof ISidedInventory) || ((ISidedInventory) tile).getAccessibleSlotsFromSide(side.ordinal()).length > 0;
         }
         return false;
+    }
+    
+    public static boolean areItemStacksEqual(ItemStack itemStack1, ItemStack itemStack2, boolean checkMeta, boolean checkNBT) {
+        return itemStack1 == null && itemStack2 == null || (!(itemStack1 == null || itemStack2 == null) && (itemStack1.getItem() == itemStack2.getItem() && ((!checkMeta || itemStack1.getItemDamage() == itemStack2.getItemDamage()) && (!checkNBT || !(itemStack1.stackTagCompound == null && itemStack2.stackTagCompound != null) && (itemStack1.stackTagCompound == null || itemStack1.stackTagCompound.equals(itemStack2.stackTagCompound))))));
     }
 }

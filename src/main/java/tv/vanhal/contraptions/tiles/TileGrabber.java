@@ -2,10 +2,14 @@ package tv.vanhal.contraptions.tiles;
 
 import java.util.List;
 
+import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.util.InventoryHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileGrabber extends BaseInventoryTile {
 	public int range = 2;
@@ -20,6 +24,11 @@ public class TileGrabber extends BaseInventoryTile {
 	public TileGrabber() {
 		super(1, 5000);
 		updateBounds();
+	}
+	
+	@Override
+	public boolean isActive() {
+		return ( (energyStorage > 0) && (!isPowered()) );
 	}
 	
 	@Override
@@ -60,14 +69,19 @@ public class TileGrabber extends BaseInventoryTile {
 	@Override
 	public void update() {
 		if (!worldObj.isRemote) {
-			if ( (energyStorage > 0) && (!isPowered()) ) {
+			if (isActive()) {
 				List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
 				for (EntityItem item : items) {
 					if (energyStorage >= (RF_PER_ACTION*range)) {
-						if ( (mode == MODE.ITEM) && (item.getEntityItem().isItemEqual(slots[0])) ) {
-							addItemToFirstAdjacent(item);
-						} else if ( (mode == MODE.NOT_ITEM) && (!item.getEntityItem().isItemEqual(slots[0])) ) {
-							addItemToFirstAdjacent(item);
+						ForgeDirection invDir = canGetItem(item);
+						if ( (invDir!=null) && (item.age>=10) ) {
+							if ( (slots[0]!=null) && (mode == MODE.ITEM) && (item.getEntityItem().isItemEqual(slots[0])) ) {
+								addItemToFirstAdjacent(item, invDir);
+							} else if ( (slots[0]!=null) && (mode == MODE.NOT_ITEM) && (!item.getEntityItem().isItemEqual(slots[0])) ) {
+								addItemToFirstAdjacent(item, invDir);
+							} else if ( (mode == MODE.CONTENTS) || (mode == MODE.EVERYTHING) ) {
+								addItemToFirstAdjacent(item, invDir);
+							}
 						}
 					}
 				}
@@ -75,9 +89,29 @@ public class TileGrabber extends BaseInventoryTile {
 		}
 	}
 	
-	protected boolean addItemToFirstAdjacent(EntityItem item) {
-		
-		return false;
+	protected ForgeDirection canGetItem(EntityItem item) {
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			ItemStack remaining = InventoryHelper.insert(tile, item.getEntityItem().copy(), dir.getOpposite(), true);
+			if ( (remaining == null) || (remaining.stackSize < item.getEntityItem().stackSize) ) {
+				if (mode == MODE.CONTENTS) {
+					if (InventoryHelper.doesInventoryHaveItem(tile, item.getEntityItem(), dir)) return dir;
+				} else {
+					return dir;
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected void addItemToFirstAdjacent(EntityItem item, ForgeDirection dir) {
+		if (consumeCharge(RF_PER_ACTION*range)) {
+			ItemStack remainder = InventoryHelper.insert(
+					worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), 
+					item.getEntityItem(), dir.getOpposite(), false);
+			if (remainder==null) worldObj.removeEntity(item);
+			else item.setEntityItemStack(remainder);
+		}
 	}
 	
 
@@ -93,6 +127,7 @@ public class TileGrabber extends BaseInventoryTile {
 		super.writeCommonNBT(nbt);
 		nbt.setInteger("range", range);
 		nbt.setInteger("mode", mode.ordinal());
+		updateBounds();
 	}
 	
 	@Override
