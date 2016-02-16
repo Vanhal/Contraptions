@@ -46,6 +46,13 @@ public class HeatRecipes {
 		return placedBlock;
 	}
 	
+	public Block getInputBlock() {
+		if (placedBlock) {
+			return (Block)input;
+		}
+		return Blocks.air;
+	}
+	
 	public ItemStack getInput() {
 		if (!placedBlock) {
 			return (ItemStack)input;

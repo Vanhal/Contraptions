@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tv.vanhal.contraptions.blocks.ContBlocks;
-import tv.vanhal.contraptions.client.intergration.MTContraptions;
+import tv.vanhal.contraptions.client.intergration.MineTweaker;
 import tv.vanhal.contraptions.compat.ModHelper;
 import tv.vanhal.contraptions.core.Proxy;
 import tv.vanhal.contraptions.crafting.Recipes;
@@ -26,6 +26,7 @@ import tv.vanhal.contraptions.world.TooltipHandler;
 import tv.vanhal.contraptions.world.WorldTicker;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -84,6 +85,9 @@ public class Contraptions {
 	public void init(FMLInitializationEvent event) {
 		ContItems.init();
 		ContBlocks.init();
+		
+		if(Loader.isModLoaded("MineTweaker3"))
+			MineTweaker.init();
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 		FMLCommonHandler.instance().bus().register(instance);

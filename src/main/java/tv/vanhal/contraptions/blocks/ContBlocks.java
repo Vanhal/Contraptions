@@ -9,6 +9,7 @@ import tv.vanhal.contraptions.blocks.generation.BlockSolarHeater;
 import tv.vanhal.contraptions.blocks.generation.BlockSolidBurner;
 import tv.vanhal.contraptions.blocks.generation.BlockTurbine;
 import tv.vanhal.contraptions.blocks.machines.BlockCrusher;
+import tv.vanhal.contraptions.blocks.machines.BlockGrabber;
 import tv.vanhal.contraptions.blocks.machines.BlockPlacer;
 import tv.vanhal.contraptions.blocks.machines.BlockPoweredPiston;
 import tv.vanhal.contraptions.blocks.machines.BlockRedstonePoweredPiston;
@@ -18,6 +19,31 @@ import tv.vanhal.contraptions.blocks.passive.BlockConductivePlate;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ContBlocks {
+	//machines
+	public static BlockSpike spike = new BlockSpike();
+	public static BlockPoweredPiston poweredPiston = new BlockPoweredPiston();
+	public static BlockRedstonePoweredPiston redstonePoweredPiston = new BlockRedstonePoweredPiston();
+	public static BlockPlacer placer = new BlockPlacer();
+	public static BlockSpreader spreader = new BlockSpreader();
+	public static BlockCrusher crusher = new BlockCrusher();
+	public static BlockGrabber grabber = new BlockGrabber();
+	
+	//generation
+	public static BlockSolidBurner solidBurner = new BlockSolidBurner();
+	public static BlockSolarHeater solarHeater = new BlockSolarHeater();
+	public static BlockGenerator generator = new BlockGenerator();
+	public static BlockShaftExtender shaftExtender = new BlockShaftExtender();
+	public static BlockTurbine turbine = new BlockTurbine(); 
+	
+	//normal blocks (No entities)
+	public static BlockConductivePlate conductivePlate = new BlockConductivePlate();
+	
+	//creativethings
+	public static BlockCreativePower creativePower = new BlockCreativePower();
+	public static BlockCreativeSteam creativeSteam = new BlockCreativeSteam();
+	public static BlockRedstonePulse pulse = new BlockRedstonePulse();
+	
+	
 
 	public static void preInit() {
 		spike.preInit();
@@ -26,6 +52,7 @@ public class ContBlocks {
 		spreader.preInit();
 		redstonePoweredPiston.preInit();
 		crusher.preInit();
+		grabber.preInit();
 		
 		conductivePlate.preInit();
 		
@@ -47,6 +74,7 @@ public class ContBlocks {
 		spreader.init();
 		redstonePoweredPiston.init();
 		crusher.init();
+		grabber.init();
 		
 		conductivePlate.init();
 		
@@ -67,6 +95,7 @@ public class ContBlocks {
 		spreader.postInit();
 		redstonePoweredPiston.postInit();
 		crusher.postInit();
+		grabber.postInit();
 		
 		conductivePlate.postInit();
 		
@@ -79,27 +108,4 @@ public class ContBlocks {
 		creativePower.postInit();
 		creativeSteam.postInit();
 	}
-
-	//machines
-	public static BlockSpike spike = new BlockSpike();
-	public static BlockPoweredPiston poweredPiston = new BlockPoweredPiston();
-	public static BlockRedstonePoweredPiston redstonePoweredPiston = new BlockRedstonePoweredPiston();
-	public static BlockPlacer placer = new BlockPlacer();
-	public static BlockSpreader spreader = new BlockSpreader();
-	public static BlockCrusher crusher = new BlockCrusher();
-	
-	//generation
-	public static BlockSolidBurner solidBurner = new BlockSolidBurner();
-	public static BlockSolarHeater solarHeater = new BlockSolarHeater();
-	public static BlockGenerator generator = new BlockGenerator();
-	public static BlockShaftExtender shaftExtender = new BlockShaftExtender();
-	public static BlockTurbine turbine = new BlockTurbine(); 
-	
-	//normal blocks (No entities)
-	public static BlockConductivePlate conductivePlate = new BlockConductivePlate();
-	
-	//creativethings
-	public static BlockCreativePower creativePower = new BlockCreativePower();
-	public static BlockCreativeSteam creativeSteam = new BlockCreativeSteam();
-	public static BlockRedstonePulse pulse = new BlockRedstonePulse();
 }

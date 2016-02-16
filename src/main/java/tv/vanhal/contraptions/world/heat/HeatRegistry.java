@@ -302,8 +302,8 @@ public class HeatRegistry extends WorldSavedData {
 				output.stackSize = item.getEntityItem().stackSize;
 				world.removeEntity(item);
 				ItemHelper.dropAsItem(world, point.getX(), point.getY() + 1, point.getZ(), output);
-			} else if ( (currentHeat>=100) && (recipeHeat==0) ) {
-				item.setFire(5);
+			} else if ( (currentHeat>=500) && (recipeHeat==0) ) {
+				item.setFire(10);
 			}
 		}
 	}

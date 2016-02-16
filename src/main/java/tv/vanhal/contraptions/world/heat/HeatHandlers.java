@@ -20,6 +20,10 @@ public class HeatHandlers {
 		registerHandler(block, new HandlerRecipes(recipe));
 	}
 	
+	public static void removeRecipeHandler(Block block) {
+		validHeatBlocks.remove(block);
+	}
+	
 	public static boolean isValidBlock(World world, Point3I point) {
 		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
 		return validHeatBlocks.containsKey(world.getBlock(point.getX(), point.getY(), point.getZ()));

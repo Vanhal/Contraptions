@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.crafting.RecipeManager;
+import tv.vanhal.contraptions.interfaces.IConfigurable;
 import tv.vanhal.contraptions.util.Ref;
 
 public class ItemScrewDriver extends BaseItem {
@@ -21,6 +22,14 @@ public class ItemScrewDriver extends BaseItem {
 	@Override
 	public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		Block block = world.getBlock(x, y, z);
+		if (block instanceof IConfigurable) {
+			boolean activated = false;
+			if (player.isSneaking())
+				activated = ((IConfigurable)block).sneakClick(player, world, x, y, z, side);
+			else 
+				activated = ((IConfigurable)block).click(player, world, x, y, z, side);
+	        if (activated) return !world.isRemote;
+		}
 		if (player.isSneaking()) {
 			//dismantle
 			/*if (block instanceof IDismantleable) {

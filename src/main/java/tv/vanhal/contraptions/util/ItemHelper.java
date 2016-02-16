@@ -61,6 +61,17 @@ public class ItemHelper {
 		return items;
 	}
 	
+	public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2) {
+		if ( (stack1 == null) && (stack2 == null) ) return true;
+		if (stack1 == null) return false;
+		if (stack2 == null) return false;
+		return ( 
+			(stack1.isItemEqual(stack2)) && 
+			(stack1.stackSize == stack2.stackSize) && 
+			(stack1.getItemDamage() == stack2.getItemDamage())
+		);
+	}
+	
 	public static boolean isFuel(ItemStack itemStack) {
 		return (getBurnTime(itemStack)>0);
 	}

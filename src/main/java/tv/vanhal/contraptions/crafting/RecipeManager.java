@@ -15,6 +15,10 @@ public class RecipeManager {
 	//crusher recipes
 	public static CrusherRecipes registerCrusherRecipe(ItemStack output, ItemStack input, int times) {
 		CrusherRecipes recipe = new CrusherRecipes(output, input, times);
+		return registerCrusherRecipe(recipe);
+	}
+	
+	public static CrusherRecipes registerCrusherRecipe(CrusherRecipes recipe) {
 		crusher.add(recipe);
 		return recipe;
 	}
@@ -38,17 +42,22 @@ public class RecipeManager {
 	}
 	
 	//heat recipes
+	public static HeatRecipes registerHeatRecipe(HeatRecipes recipe) {
+		heat.add(recipe);
+		if (recipe.isBlockRecipe()) {
+			HeatHandlers.registerRecipeHandler(recipe.getInputBlock(), recipe);
+		}
+		return recipe;
+	}
+	
 	public static HeatRecipes registerHeatRecipe(ItemStack output, ItemStack input, int heatRequired) {
 		HeatRecipes recipe = new HeatRecipes(output, input, heatRequired);
-		heat.add(recipe);
-		return recipe;
+		return registerHeatRecipe(recipe);
 	}
 	
 	public static HeatRecipes registerHeatRecipe(Block output, Block input, int heatRequired) {
 		HeatRecipes recipe = new HeatRecipes(output, input, heatRequired);
-		heat.add(recipe);
-		HeatHandlers.registerRecipeHandler(input, recipe);
-		return recipe;
+		return registerHeatRecipe(recipe);
 	}
 	
 	public static ItemStack getHeatOutput(ItemStack input) {
