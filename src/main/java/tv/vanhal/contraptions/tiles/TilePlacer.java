@@ -53,9 +53,9 @@ public class TilePlacer extends BaseInventoryTile {
 		if (slots[0]!=null) {
 			Block block = Block.getBlockFromItem(slots[0].getItem());
 			if (block != Blocks.air) {
-				int dx = xCoord + facing.offsetX;
-				int dy = yCoord + facing.offsetY;
-				int dz = zCoord + facing.offsetZ;
+				int dx = getX() + facing.offsetX;
+				int dy = getY() + facing.offsetY;
+				int dz = getZ() + facing.offsetZ;
 				if ( (block.canPlaceBlockAt(worldObj, dx, dy, dz)) 
 						&& (worldObj.getBlock(dx, dy, dz) != block) ) {
 					worldObj.setBlock(dx, dy, dz, block);

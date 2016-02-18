@@ -89,7 +89,7 @@ public class TileSpreader extends BaseInventoryTile {
 			for (int y = -1; y <= 1; y++) {
 				if (!( (y==0) && (x==0) )) {
 					if ( (slots[0] != null) && (slots[0].stackSize>0) ) {
-						Point3I plantPoint = new Point3I(xCoord + x, yCoord, zCoord + y);
+						Point3I plantPoint = new Point3I(getX() + x, getY(), getZ() + y);
 						if (ItemDye.applyBonemeal(slots[0], worldObj, plantPoint.getX(), 
 								plantPoint.getY(), plantPoint.getZ(), null)) {
 							setContentsUpdate();
@@ -109,7 +109,7 @@ public class TileSpreader extends BaseInventoryTile {
 			for (int y = -1; y <= 1; y++) {
 				if (!( (y==0) && (x==0) )) {
 					if ( (slots[0] != null) && (slots[0].stackSize>0) ) {
-						Point3I plantPoint = new Point3I(xCoord + x, yCoord, zCoord + y);
+						Point3I plantPoint = new Point3I(getX() + x, getY(), getZ() + y);
 						if (ModHelper.validBlock(worldObj, slots[0], plantPoint)) {
 							if (ModHelper.placeSeed(worldObj, slots[0], plantPoint, false)) {
 								ModHelper.placeSeed(worldObj, slots[0], plantPoint, true);

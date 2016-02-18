@@ -41,9 +41,26 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public BaseBlock getBlock() {
-		if (worldObj.getBlock(xCoord, yCoord, zCoord) instanceof BaseBlock)
-			return (BaseBlock) worldObj.getBlock(xCoord, yCoord, zCoord);
+		if (worldObj.getBlock(getX(), getY(), getZ()) instanceof BaseBlock)
+			return (BaseBlock) worldObj.getBlock(getX(), getY(), getZ());
 		return null;
+	}
+	
+	//these methods are here to improve compat between 1.7 and 1.8 (less rewriting stuff
+	public int getX() {
+		return xCoord;
+	}
+	
+	public int getY() {
+		return yCoord;
+	}
+	
+	public int getZ() {
+		return zCoord;
+	}
+	
+	public Point3I getPos() {
+		return new Point3I(getX(), getY(), getZ());
 	}
 	
 	/////START NBT DATA METHODS
@@ -190,7 +207,7 @@ public class BaseTile extends TileEntity {
         this.writeCommonNBT(nbttagcompound);
         this.writeSyncOnlyNBT(nbttagcompound);
         
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, -1, nbttagcompound);
+        return new S35PacketUpdateTileEntity(this.getX(), this.getY(), this.getZ(), -1, nbttagcompound);
     }
 	
 	/**
@@ -201,7 +218,7 @@ public class BaseTile extends TileEntity {
     	this.readCommonNBT(pkt.func_148857_g());
     	this.readSyncOnlyNBT(pkt.func_148857_g());
  
-    	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    	worldObj.markBlockForUpdate(getX(), getY(), getZ());
     }
 	
 	/**
@@ -214,7 +231,7 @@ public class BaseTile extends TileEntity {
 		if ( (shouldUpdateContents()) && (!worldObj.isRemote) ) {
 			writeNonSyncableNBT(partialUpdateTag);
 		}
-		PartialTileNBTUpdateMessage message = new PartialTileNBTUpdateMessage(this.xCoord, this.yCoord, this.zCoord, partialUpdateTag);
+		PartialTileNBTUpdateMessage message = new PartialTileNBTUpdateMessage(this.getX(), this.getY(), this.getZ(), partialUpdateTag);
 		dirty = false;
 		contentsUpdate = false;
 		partialUpdateTag = new NBTTagCompound();
@@ -322,7 +339,7 @@ public class BaseTile extends TileEntity {
 	}
 	
 	protected void notifyUpdate() {
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(getX(), getY(), getZ());
 	}
 	
 	/////END NBT DATA METHODS
@@ -353,15 +370,15 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public int isPoweredLevel() {
-		return worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord);
+		return worldObj.getStrongestIndirectPower(getX(), getY(), getZ());
 	}
 	
 	public int isPoweredLevelNotFacing() {
 		int highestPower = 0;
 		for (int i = 0; i < 6; ++i) {
 			if (i != facing.ordinal()) {
-	            int testVal = worldObj.getIndirectPowerLevelTo(xCoord + Facing.offsetsXForSide[i],
-	            		yCoord + Facing.offsetsYForSide[i], zCoord + Facing.offsetsZForSide[i], i);
+	            int testVal = worldObj.getIndirectPowerLevelTo(getX() + Facing.offsetsXForSide[i],
+	            		getY() + Facing.offsetsYForSide[i], getZ() + Facing.offsetsZForSide[i], i);
 	
 	            if (testVal >= 15) 
 	            	return 15;

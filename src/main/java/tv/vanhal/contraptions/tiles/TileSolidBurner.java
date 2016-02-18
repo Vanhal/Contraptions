@@ -61,7 +61,7 @@ public class TileSolidBurner extends BaseInventoryTile {
 		//heat should spread evenly over all the plates and machines connected
 		//blocks will melt if they get too hot 
 		//UPDATE: This will be taken care of in the heat registry
-		HeatRegistry.getInstance(worldObj).addHeat(xCoord, yCoord, zCoord, ContConfig.BASE_HEAT_PER_TICK);
+		HeatRegistry.getInstance(worldObj).addHeat(getX(), getY(), getZ(), ContConfig.BASE_HEAT_PER_TICK);
 	}
 	
 	public ItemStack getBurningItem() {

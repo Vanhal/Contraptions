@@ -1,5 +1,6 @@
 package tv.vanhal.contraptions.tiles;
 
+import tv.vanhal.contraptions.Contraptions;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Facing;
@@ -16,12 +17,11 @@ public class TileCreativePower extends BasePoweredTile {
 	@Override
 	public void update() {
 		if (!worldObj.isRemote) {
-			for (int i = 0; i < 6; i++) {
-				TileEntity testTile = worldObj.getTileEntity(xCoord + Facing.offsetsXForSide[i],
-	            		yCoord + Facing.offsetsYForSide[i], zCoord + Facing.offsetsZForSide[i]);
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				TileEntity testTile = worldObj.getTileEntity(getX() + dir.offsetX, getY() + dir.offsetY, getZ() + dir.offsetZ);
 				if ( (testTile!=null) && (testTile instanceof IEnergyReceiver) ) {
 					IEnergyReceiver receiver = (IEnergyReceiver)testTile;
-					ForgeDirection recieveSide = ForgeDirection.getOrientation(Facing.oppositeSide[i]);
+					ForgeDirection recieveSide = dir.getOpposite();
 					if (receiver.canConnectEnergy(recieveSide)) {
 						receiver.receiveEnergy(recieveSide, POWER_PER_TICK, false);
 					}

@@ -30,7 +30,7 @@ public class TileSpike extends BaseTile {
 		if (!worldObj.isRemote) {
 			List<TileEntity> tiles = new ArrayList<TileEntity>();
 			for (ForgeDirection direction: ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity test = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
+				TileEntity test = worldObj.getTileEntity(getX() + direction.offsetX, getY() + direction.offsetY, getZ() + direction.offsetZ);
 				if (test!=null) {
 					if (test instanceof TileEntityPiston) {
 						TileEntityPiston movingPiston = (TileEntityPiston)test;

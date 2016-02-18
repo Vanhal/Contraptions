@@ -33,9 +33,9 @@ public class TileCrusher extends BaseInventoryTile {
 	public void update() {
 		if (!worldObj.isRemote) {
 			//check for a piston moved towards, and then back from the crusher
-			Block aboveBlock = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
+			Block aboveBlock = worldObj.getBlock(getX(), getY() + 1, getZ());
 			if (!crushed) {
-				TileEntity test = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+				TileEntity test = worldObj.getTileEntity(getX(), getY() + 1, getZ());
 				if (test!=null) {
 					if (test instanceof TileEntityPiston) {
 						TileEntityPiston movingPiston = (TileEntityPiston)test;
@@ -68,7 +68,7 @@ public class TileCrusher extends BaseInventoryTile {
 				if (currentTimes >= times) {
 					ItemStack output = RecipeManager.getCrusherOutput(slots[0]);
 					if (output!=null) {
-						ItemHelper.dropAsItem(worldObj, xCoord, yCoord + 1, zCoord, output);
+						ItemHelper.dropAsItem(worldObj, getX(), getY() + 1, getZ(), output);
 					} else {
 						Contraptions.logger.warn("Crusher Output is null");
 					}
@@ -78,7 +78,7 @@ public class TileCrusher extends BaseInventoryTile {
 					slots[0].stackTagCompound.setInteger("ContCrushTimes", currentTimes);
 				}
 			} else {
-				ItemHelper.dropAsItem(worldObj, xCoord, yCoord + 1, zCoord, slots[0]);
+				ItemHelper.dropAsItem(worldObj, getX(), getY() + 1, getZ(), slots[0]);
 				setInventorySlotContents(0, null);
 			}
 		}

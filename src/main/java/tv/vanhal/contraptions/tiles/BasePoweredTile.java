@@ -31,7 +31,8 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 		super.writeCommonNBT(nbt);
 		nbt.setInteger("energy", energyStorage);
 	}
-	
+
+	@Override
 	public void readCommonNBT(NBTTagCompound nbt) {
 		super.readCommonNBT(nbt);
 		if (nbt.hasKey("energy")) energyStorage = nbt.getInteger("energy");

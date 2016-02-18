@@ -16,6 +16,7 @@ import tv.vanhal.contraptions.blocks.machines.BlockRedstonePoweredPiston;
 import tv.vanhal.contraptions.blocks.machines.BlockSpike;
 import tv.vanhal.contraptions.blocks.machines.BlockSpreader;
 import tv.vanhal.contraptions.blocks.passive.BlockConductivePlate;
+import tv.vanhal.contraptions.blocks.transport.BlockRFPylon;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ContBlocks {
@@ -33,7 +34,10 @@ public class ContBlocks {
 	public static BlockSolarHeater solarHeater = new BlockSolarHeater();
 	public static BlockGenerator generator = new BlockGenerator();
 	public static BlockShaftExtender shaftExtender = new BlockShaftExtender();
-	public static BlockTurbine turbine = new BlockTurbine(); 
+	public static BlockTurbine turbine = new BlockTurbine();
+	
+	//tranport blocks
+	public static BlockRFPylon rfPylon = new BlockRFPylon();
 	
 	//normal blocks (No entities)
 	public static BlockConductivePlate conductivePlate = new BlockConductivePlate();
@@ -62,6 +66,8 @@ public class ContBlocks {
 		shaftExtender.preInit();
 		turbine.preInit();
 		
+		rfPylon.preInit();
+		
 		creativePower.preInit();
 		creativeSteam.preInit();
 		GameRegistry.registerBlock(pulse, "pulse");
@@ -84,6 +90,8 @@ public class ContBlocks {
 		shaftExtender.init();
 		turbine.init();
 		
+		rfPylon.init();
+		
 		creativePower.init();
 		creativeSteam.init();
 	}
@@ -104,6 +112,8 @@ public class ContBlocks {
 		generator.postInit();
 		shaftExtender.postInit();
 		turbine.postInit();
+		
+		rfPylon.postInit();
 		
 		creativePower.postInit();
 		creativeSteam.postInit();

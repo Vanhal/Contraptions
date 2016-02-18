@@ -15,6 +15,7 @@ tile.solarHeater.name=Solar Heater
 tile.turbine.name=Steam Turbine
 tile.generator.name=Generator
 tile.barExtender.name=Shaft Extender
+tile.RFPylon.name=RF Pylon
 tile.steam.name=Steam
 
 item.screwDriver.name=Screwdriver
@@ -31,6 +32,7 @@ gui.placed=Placed
 gui.time=Time
 gui.times=Times
 gui.range=Range
+gui.cost=Transmit Cost
 gui.mode=Mode
 gui.mode.ITEM=Only filter item
 gui.mode.EVERYTHING=All items

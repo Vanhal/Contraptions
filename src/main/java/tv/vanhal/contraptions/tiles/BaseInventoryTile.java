@@ -82,8 +82,8 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this &&
-				 player.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+		return worldObj.getTileEntity(getX(), getY(), getZ()) == this &&
+				 player.getDistanceSq(getX() + 0.5, getY() + 0.5, getZ() + 0.5) < 64;
 	}
 
 	@Override

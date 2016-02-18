@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -121,9 +122,9 @@ public class NEIHeatRecipeHandler extends TemplateRecipeHandler {
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
 		for(HeatRecipes recipe : RecipeManager.heat) {
-			if(recipe == null) continue;
+			if ( (recipe == null) || (ingredient.getItem() == null) ) continue;
 			
-			if (recipe.matches(ingredient)) {
+			if ( (recipe.matches(ingredient)) || (recipe.matches(Block.getBlockFromItem(ingredient.getItem()))) ) {
 				arecipes.add(new CachedHeatRecipe(recipe));
 			}
 		}

@@ -34,14 +34,14 @@ public class TileTurbine extends BaseTile {
 			
 			//pull in more steam if there is space
 			if (steamStorage < maxSteam) {
-				Block testBlock = worldObj.getBlock(xCoord, yCoord - 1, zCoord);
+				Block testBlock = worldObj.getBlock(getX(), getY() - 1, getZ());
 				if (testBlock instanceof IFluidBlock) {
 					IFluidBlock fluidBlock = (IFluidBlock)testBlock;
 					if (fluidBlock.getFluid() == ContFluids.steamFluid) {
-						FluidStack fluidStack = fluidBlock.drain(worldObj, xCoord, yCoord - 1, zCoord, false);
+						FluidStack fluidStack = fluidBlock.drain(worldObj, getX(), getY() - 1, getZ(), false);
 						if (fluidStack.amount <= (maxSteam - steamStorage)) {
 							steamStorage += fluidStack.amount;
-							fluidStack = fluidBlock.drain(worldObj, xCoord, yCoord - 1, zCoord, true);
+							fluidStack = fluidBlock.drain(worldObj, getX(), getY() - 1, getZ(), true);
 						}
 					}
 					
@@ -63,13 +63,13 @@ public class TileTurbine extends BaseTile {
 	}
 	
 	public boolean isRunning() {
-		Block thisBlock = worldObj.getBlock(xCoord, yCoord, zCoord);
+		Block thisBlock = worldObj.getBlock(getX(), getY(), getZ());
 		if (thisBlock instanceof ITorqueBlock) {
 			int amountOfTorque = currentTorque;
-			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, xCoord, 
-					yCoord, zCoord, facing.ordinal());
-			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, xCoord, 
-					yCoord, zCoord, facing.getOpposite().ordinal());
+			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
+					getY(), getZ(), facing.ordinal());
+			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
+					getY(), getZ(), facing.getOpposite().ordinal());
 			return (amountOfTorque > 0);
 		}
 		return false;

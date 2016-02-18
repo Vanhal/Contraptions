@@ -6,6 +6,7 @@ import tv.vanhal.contraptions.client.renderers.items.RenderScrewDriver;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderGenerator;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderPlacer;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderPoweredPiston;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderPylon;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderRedstonePoweredPiston;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderShaftExtender;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderSolarHeater;
@@ -37,6 +38,7 @@ public class ClientProxy extends Proxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileSolarHeater.class, new RenderSolarHeater());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileShaftExtender.class, new RenderShaftExtender());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileTurbine.class, new RenderTurbine());
+		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TilePylon.class, new RenderPylon());
 		super.registerEntities();
 	}
 	

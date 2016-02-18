@@ -107,9 +107,9 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	protected boolean isAir(int distance, boolean replace) {
-		int x = xCoord + (facing.offsetX*distance);
-		int y = yCoord + (facing.offsetY*distance);
-		int z = zCoord + (facing.offsetZ*distance);
+		int x = getX() + (facing.offsetX*distance);
+		int y = getY() + (facing.offsetY*distance);
+		int z = getZ() + (facing.offsetZ*distance);
 		return isAir(x, y, z, replace);
 	}
 	
@@ -126,9 +126,9 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	protected boolean isPushable(int distance) {
-		int x = xCoord + (facing.offsetX*distance);
-		int y = yCoord + (facing.offsetY*distance);
-		int z = zCoord + (facing.offsetZ*distance);
+		int x = getX() + (facing.offsetX*distance);
+		int y = getY() + (facing.offsetY*distance);
+		int z = getZ() + (facing.offsetZ*distance);
 		Block moveBlock = worldObj.getBlock(x, y, z);
 		return isPushable(moveBlock, x, y, z);
 	}
@@ -138,17 +138,17 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	protected boolean isSpike(int distance) {
-		int x = xCoord + (facing.offsetX*distance);
-		int y = yCoord + (facing.offsetY*distance);
-		int z = zCoord + (facing.offsetZ*distance);
+		int x = getX() + (facing.offsetX*distance);
+		int y = getY() + (facing.offsetY*distance);
+		int z = getZ() + (facing.offsetZ*distance);
 		Block testBlock = worldObj.getBlock(x, y, z);
 		return (testBlock instanceof BlockSpike);
 	}
 	
 	protected boolean moveBlock(int distance) {
-		int x = xCoord + (facing.offsetX*distance);
-		int y = yCoord + (facing.offsetY*distance);
-		int z = zCoord + (facing.offsetZ*distance);
+		int x = getX() + (facing.offsetX*distance);
+		int y = getY() + (facing.offsetY*distance);
+		int z = getZ() + (facing.offsetZ*distance);
 		int dx = x + facing.offsetX;
 		int dy = y + facing.offsetY;
 		int dz = z + facing.offsetZ;

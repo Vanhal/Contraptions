@@ -52,8 +52,8 @@ public class TileGrabber extends BaseInventoryTile {
 	
 	public void updateBounds() {
 		bounds.setBounds(
-				xCoord - range, yCoord - range, zCoord - range, 
-				xCoord + range + 1, yCoord + range + 1, zCoord + range + 1
+				getX() - range, getY() - range, getZ() - range, 
+				getX() + range + 1, getY() + range + 1, getZ() + range + 1
 			);
 	}
 	
@@ -91,7 +91,7 @@ public class TileGrabber extends BaseInventoryTile {
 	
 	protected ForgeDirection canGetItem(EntityItem item) {
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			TileEntity tile = worldObj.getTileEntity(getX() + dir.offsetX, getY() + dir.offsetY, getZ() + dir.offsetZ);
 			ItemStack remaining = InventoryHelper.insert(tile, item.getEntityItem().copy(), dir.getOpposite(), true);
 			if ( (remaining == null) || (remaining.stackSize < item.getEntityItem().stackSize) ) {
 				if (mode == MODE.CONTENTS) {
@@ -107,7 +107,7 @@ public class TileGrabber extends BaseInventoryTile {
 	protected void addItemToFirstAdjacent(EntityItem item, ForgeDirection dir) {
 		if (consumeCharge(RF_PER_ACTION*range)) {
 			ItemStack remainder = InventoryHelper.insert(
-					worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ), 
+					worldObj.getTileEntity(getX() + dir.offsetX, getY() + dir.offsetY, getZ() + dir.offsetZ), 
 					item.getEntityItem(), dir.getOpposite(), false);
 			if (remainder==null) worldObj.removeEntity(item);
 			else item.setEntityItemStack(remainder);

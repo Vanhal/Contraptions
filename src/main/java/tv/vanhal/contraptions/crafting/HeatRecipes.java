@@ -27,6 +27,7 @@ public class HeatRecipes {
 	}
 	
 	public boolean matches(Object stack) {
+		if (stack == null) return false;
 		if ( (stack instanceof ItemStack) && (!placedBlock) ) {
 			if (((ItemStack)stack).isItemEqual(((ItemStack)input))) return true;
 		} else if ( (stack instanceof Block) && (placedBlock) ) {

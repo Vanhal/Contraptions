@@ -12,6 +12,10 @@ public class Point3I {
 		setLocation(0, 0, 0);
 	}
 	
+	public Point3I(NBTTagCompound nbt) {
+		setNBT(nbt);
+	}
+	
 	public Point3I(Point3I point) {
 		setLocation(point.getX(), point.getY(), point.getZ());
 	}
