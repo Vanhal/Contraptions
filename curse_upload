@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ./build/libs/
-FILE_NAME=`echo ProgressiveAutomation-1.7.10-*`
+FILE_NAME=`echo Contraptions-1.7.10-*`
 cd ../../
 FILE_LOCATION=`echo "./build/libs/$FILE_NAME"`
 CHANGE_LOG=`git log -1 --pretty=format:"%B"`
@@ -11,6 +11,6 @@ JSON=`printf '{"changelog": "%s", "gameVersions": [4449], "releaseType": "alpha"
 
 echo "Uploading $FILE_NAME to Curse Forge..."
 echo
-RESPONSE=`curl -H "X-Api-Token: $CURSE_API_KEY" -X POST  -F metadata="$JSON"  -F file="@$FILE_LOCATION" https://minecraft.curseforge.com/api/projects/220606/upload-file`
+RESPONSE=`curl -H "X-Api-Token: $CURSE_API_KEY" -X POST  -F metadata="$JSON"  -F file="@$FILE_LOCATION" https://minecraft.curseforge.com/api/projects/241975/upload-file`
 echo
 echo $RESPONSE
