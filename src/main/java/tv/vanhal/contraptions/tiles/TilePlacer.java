@@ -1,6 +1,7 @@
 package tv.vanhal.contraptions.tiles;
 
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -53,12 +54,10 @@ public class TilePlacer extends BaseInventoryTile {
 		if (slots[0]!=null) {
 			Block block = Block.getBlockFromItem(slots[0].getItem());
 			if (block != Blocks.air) {
-				int dx = getX() + facing.offsetX;
-				int dy = getY() + facing.offsetY;
-				int dz = getZ() + facing.offsetZ;
-				if ( (block.canPlaceBlockAt(worldObj, dx, dy, dz)) 
-						&& (worldObj.getBlock(dx, dy, dz) != block) ) {
-					worldObj.setBlock(dx, dy, dz, block);
+				Point3I placePoint = getPoint().getAdjacentPoint(facing);
+				if ( (block.canPlaceBlockAt(worldObj, placePoint.getX(), placePoint.getY(), placePoint.getZ())) 
+						&& (placePoint.getBlock(worldObj) != block) ) {
+					worldObj.setBlock(placePoint.getX(), placePoint.getY(), placePoint.getZ(), block);
 					slots[0] = null;
 					setContentsUpdate();
 				}

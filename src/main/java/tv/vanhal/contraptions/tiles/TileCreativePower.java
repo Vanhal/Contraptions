@@ -18,7 +18,7 @@ public class TileCreativePower extends BasePoweredTile {
 	public void update() {
 		if (!worldObj.isRemote) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				TileEntity testTile = worldObj.getTileEntity(getX() + dir.offsetX, getY() + dir.offsetY, getZ() + dir.offsetZ);
+				TileEntity testTile = getPoint().getAdjacentPoint(dir).getTileEntity(worldObj);
 				if ( (testTile!=null) && (testTile instanceof IEnergyReceiver) ) {
 					IEnergyReceiver receiver = (IEnergyReceiver)testTile;
 					ForgeDirection recieveSide = dir.getOpposite();

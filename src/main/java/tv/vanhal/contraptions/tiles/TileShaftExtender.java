@@ -11,12 +11,10 @@ public class TileShaftExtender extends BaseTile {
 	}
 	
 	public boolean isRunning() {
-		Block thisBlock = worldObj.getBlock(getX(), getY(), getZ());
+		Block thisBlock = getPoint().getBlock(worldObj);
 		if (thisBlock instanceof ITorqueBlock) {
-			int amountOfTorque = ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
-					getY(), getZ(), facing.ordinal());
-			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
-					getY(), getZ(), facing.getOpposite().ordinal());
+			int amountOfTorque = ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getPoint(), facing.ordinal());
+			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getPoint(), facing.getOpposite().ordinal());
 			return (amountOfTorque > 0);
 		}
 		return false;

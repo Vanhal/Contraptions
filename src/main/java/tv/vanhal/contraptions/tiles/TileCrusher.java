@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.crafting.RecipeManager;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.Point3I;
 
 public class TileCrusher extends BaseInventoryTile {
 	protected boolean crushed = false;
@@ -33,9 +34,9 @@ public class TileCrusher extends BaseInventoryTile {
 	public void update() {
 		if (!worldObj.isRemote) {
 			//check for a piston moved towards, and then back from the crusher
-			Block aboveBlock = worldObj.getBlock(getX(), getY() + 1, getZ());
+			Block aboveBlock = getPoint().offset(0, 1, 0).getBlock(worldObj);
 			if (!crushed) {
-				TileEntity test = worldObj.getTileEntity(getX(), getY() + 1, getZ());
+				TileEntity test = getPoint().offset(0, 1, 0).getTileEntity(worldObj);
 				if (test!=null) {
 					if (test instanceof TileEntityPiston) {
 						TileEntityPiston movingPiston = (TileEntityPiston)test;

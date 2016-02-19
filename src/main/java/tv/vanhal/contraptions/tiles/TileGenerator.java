@@ -22,10 +22,10 @@ public class TileGenerator extends BasePoweredTile {
 	public void update() {
 		if (!worldObj.isRemote) {
 			if (energyStorage < maxEnergyStorage) {
-				Block testBlock = worldObj.getBlock(getX() + facing.offsetX, getY() + facing.offsetY, getZ() + facing.offsetZ);
+				Block testBlock = getPoint().getAdjacentPoint(facing).getBlock(worldObj);
 				if (testBlock instanceof ITorqueBlock) {
 					int amountOfTorque = ((ITorqueBlock)testBlock).getTorqueTransfering(worldObj, 
-							getPos().getAdjacentPoint(facing), facing.ordinal());
+							getPoint().getAdjacentPoint(facing), facing.ordinal());
 					if (amountOfTorque>0) {
 						addCharge(amountOfTorque * ContConfig.RF_PER_ROTATION);
 					}
@@ -35,8 +35,7 @@ public class TileGenerator extends BasePoweredTile {
 			//push out energy stored
 			if (energyStorage > 0) {
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-					TileEntity test = worldObj.getTileEntity(getX() + direction.offsetX, getY() + direction.offsetY, 
-							getZ() + direction.offsetZ);
+					TileEntity test = getPoint().getAdjacentPoint(facing).getTileEntity(worldObj);
 					if  (test instanceof IEnergyReceiver) {
 						IEnergyReceiver energyBlock = (IEnergyReceiver)test;
 						if (energyBlock.canConnectEnergy(direction.getOpposite())) {
@@ -48,7 +47,7 @@ public class TileGenerator extends BasePoweredTile {
 			}
 			if (currentOutputPower != getComparatorOutput()) {
 				currentOutputPower = getComparatorOutput();
-				worldObj.notifyBlockChange(getX(), getY(), getZ(), worldObj.getBlock(getX(), getY(), getZ()));
+				worldObj.notifyBlockChange(getX(), getY(), getZ(), getPoint().getBlock(worldObj));
 			}
 		}
 	}

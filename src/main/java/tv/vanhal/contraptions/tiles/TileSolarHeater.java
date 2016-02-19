@@ -22,8 +22,7 @@ public class TileSolarHeater extends BaseTile {
 			if (ticks>ContConfig.TICKS_PER_HEAT_TICK) {
 				if (worldObj.isDaytime()) {
 					if (worldObj.canBlockSeeTheSky(getX(), getY(), getZ())) {
-						Point3I targetBlock = new Point3I(getX() + facing.getOpposite().offsetX, getY() - 1, 
-								getZ() + facing.getOpposite().offsetZ);
+						Point3I targetBlock = getPoint().getAdjacentPoint(facing.getOpposite());
 						if (HeatRegistry.getInstance(worldObj).isHeatableBlock(worldObj, targetBlock))
 							HeatRegistry.getInstance(worldObj).addHeat(targetBlock, SOLAR_HEAT_PER_TICK);
 					}

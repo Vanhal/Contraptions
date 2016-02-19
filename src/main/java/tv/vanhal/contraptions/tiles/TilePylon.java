@@ -41,7 +41,7 @@ public class TilePylon extends BasePoweredTile {
 				if (currentIndex>=connectedMachines.size()) currentIndex = 0;
 				if (connectedMachines.get(currentIndex)!=null) {
 					Point3I point = connectedMachines.get(currentIndex);
-					TileEntity tile = worldObj.getTileEntity(point.getX(), point.getY(), point.getZ());
+					TileEntity tile = point.getTileEntity(worldObj);
 					if (tile instanceof IEnergyReceiver) {
 						IEnergyReceiver energyTile = (IEnergyReceiver) tile;
 						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -79,9 +79,8 @@ public class TilePylon extends BasePoweredTile {
 				for (int z = range * -1; z <= range; z++) {
 					if (!( (x==0) && (y==0) && (z==0) )) {
 						Point3I testPoint = new Point3I(getX() + x, getY() + y, getZ() + z);
-						if (worldObj.getTileEntity(testPoint.getX(), testPoint.getY(), testPoint.getZ()) instanceof IEnergyReceiver) {
-							IEnergyReceiver reciever = (IEnergyReceiver) worldObj.getTileEntity(
-									testPoint.getX(), testPoint.getY(), testPoint.getZ());
+						if (testPoint.getTileEntity(worldObj) instanceof IEnergyReceiver) {
+							IEnergyReceiver reciever = (IEnergyReceiver) testPoint.getTileEntity(worldObj);
 							
 							//try all the directions to see if we can connect
 							for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {

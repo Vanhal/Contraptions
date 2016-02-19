@@ -169,7 +169,7 @@ public class HeatRegistry extends WorldSavedData {
 							int touchingBlocks = 1;
 							int totalHeat = heat;
 							for (int i = 0; i < 6; i++) {
-								Point3I testBlock = point.getAdjacentBlock(i);
+								Point3I testBlock = point.getAdjacentPoint(i);
 								if (isHeatBlock(testBlock)) {
 									touchingBlocks++;
 									totalHeat += getValue(testBlock);
@@ -198,7 +198,7 @@ public class HeatRegistry extends WorldSavedData {
 							if (touchingBlocks>1) {
 								heat = (int) Math.floor(totalHeat/(double)touchingBlocks);
 								for (int i = 0; i < 6; i++) {
-									Point3I testBlock = point.getAdjacentBlock(i);
+									Point3I testBlock = point.getAdjacentPoint(i);
 									if (isHeatBlock(testBlock)) {
 										setValue(testBlock, heat);
 									}

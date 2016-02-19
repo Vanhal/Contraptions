@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BaseTile extends TileEntity {
 	protected ItemStack[] slots;
+	protected Point3I point = null;
 	public ForgeDirection facing = ForgeDirection.WEST;
 
 	public static final byte TICKS_PER_MESSAGE = 5;
@@ -41,8 +42,8 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public BaseBlock getBlock() {
-		if (worldObj.getBlock(getX(), getY(), getZ()) instanceof BaseBlock)
-			return (BaseBlock) worldObj.getBlock(getX(), getY(), getZ());
+		if (getPoint().getBlock(worldObj) instanceof BaseBlock)
+			return (BaseBlock) getPoint().getBlock(worldObj);
 		return null;
 	}
 	
@@ -59,8 +60,11 @@ public class BaseTile extends TileEntity {
 		return zCoord;
 	}
 	
-	public Point3I getPos() {
-		return new Point3I(getX(), getY(), getZ());
+	public Point3I getPoint() {
+		if (point==null) point = new Point3I(getX(), getY(), getZ());
+		else if (!( (getX() == point.getX()) && (getY() == point.getY()) && (getZ() == point.getZ()) ))
+			point = new Point3I(getX(), getY(), getZ());
+		return point;
 	}
 	
 	/////START NBT DATA METHODS

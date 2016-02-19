@@ -4,6 +4,7 @@ import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.fluids.ContFluids;
 import tv.vanhal.contraptions.interfaces.ITorqueBlock;
+import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,14 +35,17 @@ public class TileTurbine extends BaseTile {
 			
 			//pull in more steam if there is space
 			if (steamStorage < maxSteam) {
-				Block testBlock = worldObj.getBlock(getX(), getY() - 1, getZ());
+				Point3I testPoint = getPoint().offset(0, -1, 0);
+				Block testBlock = testPoint.getBlock(worldObj);
 				if (testBlock instanceof IFluidBlock) {
 					IFluidBlock fluidBlock = (IFluidBlock)testBlock;
 					if (fluidBlock.getFluid() == ContFluids.steamFluid) {
-						FluidStack fluidStack = fluidBlock.drain(worldObj, getX(), getY() - 1, getZ(), false);
+						FluidStack fluidStack = fluidBlock.drain(worldObj, testPoint.getX(), testPoint.getY(),
+								testPoint.getZ(), false);
 						if (fluidStack.amount <= (maxSteam - steamStorage)) {
 							steamStorage += fluidStack.amount;
-							fluidStack = fluidBlock.drain(worldObj, getX(), getY() - 1, getZ(), true);
+							fluidStack = fluidBlock.drain(worldObj, testPoint.getX(), testPoint.getY(),
+									testPoint.getZ(), true);
 						}
 					}
 					
@@ -63,13 +67,11 @@ public class TileTurbine extends BaseTile {
 	}
 	
 	public boolean isRunning() {
-		Block thisBlock = worldObj.getBlock(getX(), getY(), getZ());
+		Block thisBlock = getPoint().getBlock(worldObj);
 		if (thisBlock instanceof ITorqueBlock) {
 			int amountOfTorque = currentTorque;
-			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
-					getY(), getZ(), facing.ordinal());
-			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getX(), 
-					getY(), getZ(), facing.getOpposite().ordinal());
+			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj, getPoint(), facing.ordinal());
+			amountOfTorque += ((ITorqueBlock)thisBlock).getTorqueTransfering(worldObj,  getPoint(), facing.getOpposite().ordinal());
 			return (amountOfTorque > 0);
 		}
 		return false;
