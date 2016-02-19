@@ -19,7 +19,7 @@ public class TileGenerator extends BasePoweredTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (energyStorage < maxEnergyStorage) {
 				Block testBlock = getPoint().getAdjacentPoint(facing).getBlock(worldObj);

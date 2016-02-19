@@ -67,7 +67,7 @@ public class TileGrabber extends BaseInventoryTile {
 
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (isActive()) {
 				List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);

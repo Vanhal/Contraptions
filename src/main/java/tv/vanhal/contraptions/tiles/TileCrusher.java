@@ -31,7 +31,7 @@ public class TileCrusher extends BaseInventoryTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			//check for a piston moved towards, and then back from the crusher
 			Block aboveBlock = getPoint().offset(0, 1, 0).getBlock(worldObj);

@@ -17,7 +17,7 @@ public class TileSolarHeater extends BaseTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (ticks>ContConfig.TICKS_PER_HEAT_TICK) {
 				if (worldObj.isDaytime()) {

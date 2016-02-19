@@ -349,7 +349,7 @@ public class BaseTile extends TileEntity {
 	/////END NBT DATA METHODS
 	@Override
 	public void updateEntity() {
-		update();
+		doUpdate();
 		if ( (isDirty()) && ((worldObj.getWorldTime() % TICKS_PER_MESSAGE) == 0)) {
 			PartialTileNBTUpdateMessage message = getPartialUpdateMessage();
 			
@@ -361,7 +361,7 @@ public class BaseTile extends TileEntity {
 		}
 	}
 	
-	public void update() {
+	public void doUpdate() {
 		
 	}
 	

@@ -27,7 +27,7 @@ public class TileTurbine extends BaseTile {
 	}
 	
 	
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			//torque only lasts for a tick
 			prevTorque = currentTorque;

@@ -26,7 +26,7 @@ public class TileSpike extends BaseTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			List<TileEntity> tiles = new ArrayList<TileEntity>();
 			for (ForgeDirection direction: ForgeDirection.VALID_DIRECTIONS) {

@@ -29,7 +29,7 @@ public class TileSolidBurner extends BaseInventoryTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (!isRedstonePowered) {
 				if (isActive()) {

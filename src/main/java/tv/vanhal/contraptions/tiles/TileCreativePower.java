@@ -15,7 +15,7 @@ public class TileCreativePower extends BasePoweredTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 				TileEntity testTile = getPoint().getAdjacentPoint(dir).getTileEntity(worldObj);

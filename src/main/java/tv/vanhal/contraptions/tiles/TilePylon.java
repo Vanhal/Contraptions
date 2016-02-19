@@ -29,7 +29,7 @@ public class TilePylon extends BasePoweredTile {
 	
 	//main update
 	@Override
-	public void update() {
+	public void doUpdate() {
 		tickCount++;
 		if (!worldObj.isRemote) {
 			if (tickCount >= TICKS_PER_REFRESH)

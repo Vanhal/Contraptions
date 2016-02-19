@@ -42,7 +42,7 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (cooldown>0) {
 				cooldown--;

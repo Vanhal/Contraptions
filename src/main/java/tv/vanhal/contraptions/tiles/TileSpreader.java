@@ -23,7 +23,7 @@ public class TileSpreader extends BaseInventoryTile {
 	}
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (cooldown>0) {
 				cooldown--;

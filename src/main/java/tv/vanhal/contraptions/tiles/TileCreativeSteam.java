@@ -7,7 +7,7 @@ public class TileCreativeSteam extends BaseTile {
 	protected int currentCount = 0;
 	
 	@Override
-	public void update() {
+	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (currentCount>=TICKS_PER_STEAM) {
 				if (worldObj.isAirBlock(getX(), getY()+1, getZ())) {
