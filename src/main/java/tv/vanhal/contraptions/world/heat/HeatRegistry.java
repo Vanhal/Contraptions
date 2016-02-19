@@ -138,7 +138,7 @@ public class HeatRegistry extends WorldSavedData {
 	
 	public boolean isHeatableBlock(World world, Point3I point) {
 		if (isHeatBlock(point)) return true;
-		if ( (world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) ||
+		if ( (point.getBlock(world) instanceof IHeatBlock) ||
 				(HeatHandlers.isValidBlock(world, point))  ) return true;
 		return false;
 	}
@@ -155,8 +155,8 @@ public class HeatRegistry extends WorldSavedData {
 		//do a tick!
 		if (tickCounter > ContConfig.TICKS_PER_HEAT_TICK) {
 			for (Point3I point : heatValues.keySet()) {
-				if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
-					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
+				if (point.blockExists(world)) {
+					if ( !(point.getBlock(world) instanceof IHeatBlock) &&
 							(!HeatHandlers.isValidBlock(world, point))  ) {
 						removeHeatBlock(point);
 					} else {
@@ -231,10 +231,10 @@ public class HeatRegistry extends WorldSavedData {
 			for (Point3I point : heatValues.keySet()) {
 				int heat = heatValues.get(point);
 				if (heat > 0) {
-					if (world.blockExists(point.getX(), point.getY(), point.getZ())) {
-						if (world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) {
+					if (point.blockExists(world)) {
+						if (point.getBlock(world) instanceof IHeatBlock) {
 							//check to see if this block should melt
-							IHeatBlock block = (IHeatBlock)world.getBlock(point.getX(), point.getY(), point.getZ());
+							IHeatBlock block = (IHeatBlock) point.getBlock(world);
 							if (heat > block.getMeltingPoint()) {
 								//melt block!
 							}
@@ -271,7 +271,7 @@ public class HeatRegistry extends WorldSavedData {
 		if (toRemove.size()>0) {
 			for (Point3I point : toRemove) {
 				if (heatValues.containsKey(point)) {
-					if ( !(world.getBlock(point.getX(), point.getY(), point.getZ()) instanceof IHeatBlock) &&
+					if ( !(point.getBlock(world) instanceof IHeatBlock) &&
 						(!HeatHandlers.isValidBlock(world, point)) ) {
 						heatValues.remove(point);
 					}

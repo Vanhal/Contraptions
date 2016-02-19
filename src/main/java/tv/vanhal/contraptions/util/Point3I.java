@@ -1,7 +1,11 @@
 package tv.vanhal.contraptions.util;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /* A Point case to allow for an x, y, z point */
@@ -101,6 +105,23 @@ public class Point3I {
 	public Point3I getAdjacentBlock(int side) {
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		return new Point3I(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+	}
+	
+	public boolean blockExists(World world) {
+		//worldObj.chunkExists(getX() >> 4, getZ() >> 4);
+		return world.blockExists(getX(), getY(), getZ());
+	}
+	
+	public Block getBlock(IBlockAccess world) {
+		return world.getBlock(getX(), getY(), getZ());
+	}
+	
+	public TileEntity getTileEntity(IBlockAccess world) {
+		return world.getTileEntity(getX(), getY(), getZ());
+	}
+	
+	public int getMetaData(IBlockAccess world) {
+		return world.getBlockMetadata(getX(), getY(), getZ());
 	}
 	
 	public NBTTagCompound getNBT() {
