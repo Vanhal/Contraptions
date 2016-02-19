@@ -24,8 +24,8 @@ public class TileGenerator extends BasePoweredTile {
 			if (energyStorage < maxEnergyStorage) {
 				Block testBlock = worldObj.getBlock(getX() + facing.offsetX, getY() + facing.offsetY, getZ() + facing.offsetZ);
 				if (testBlock instanceof ITorqueBlock) {
-					int amountOfTorque = ((ITorqueBlock)testBlock).getTorqueTransfering(worldObj, getX() + facing.offsetX, 
-							getY() + facing.offsetY, getZ() + facing.offsetZ, facing.ordinal());
+					int amountOfTorque = ((ITorqueBlock)testBlock).getTorqueTransfering(worldObj, 
+							getPos().getAdjacentPoint(facing), facing.ordinal());
 					if (amountOfTorque>0) {
 						addCharge(amountOfTorque * ContConfig.RF_PER_ROTATION);
 					}

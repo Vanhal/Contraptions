@@ -15,6 +15,7 @@ import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.interfaces.ITorqueBlock;
+import tv.vanhal.contraptions.util.Point3I;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TileShaftExtender;
@@ -35,20 +36,20 @@ public class BlockShaftExtender extends BaseBlock implements ITorqueBlock {
 
 
 	@Override
-	public int getTorqueProduced(World world, int x, int y, int z) {
+	public int getTorqueProduced(World world, Point3I point) {
 		return 0;
 	}
 
 
 	@Override
-	public int getTorqueTransfering(World world, int x, int y, int z, int direction) {
-		if (world.getBlock(x, y, z) instanceof ITorqueBlock) {
-			ITorqueBlock torqueBlock = (ITorqueBlock) world.getBlock(x, y, z);
-			int facing = world.getBlockMetadata(x, y, z);
+	public int getTorqueTransfering(World world, Point3I point, int direction) {
+		if (point.getBlock(world) instanceof ITorqueBlock) {
+			ITorqueBlock torqueBlock = (ITorqueBlock) point.getBlock(world);
+			int facing = point.getMetaData(world);
 			if ( (direction == facing) || (direction == ForgeDirection.OPPOSITES[facing]) ) {
 				ForgeDirection dir = ForgeDirection.getOrientation(direction);
-				int torque = torqueBlock.getTorqueProduced(world, x, y, z);
-				torque += torqueBlock.getTorqueTransfering(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, direction);
+				int torque = torqueBlock.getTorqueProduced(world, point);
+				torque += torqueBlock.getTorqueTransfering(world, point.getAdjacentPoint(dir), direction);
 				return torque;
 			}
 		}
@@ -82,4 +83,6 @@ public class BlockShaftExtender extends BaseBlock implements ITorqueBlock {
 				"sps", "pip", "sps", 'p', ContItems.plateIron, 'i', Items.iron_ingot, 's', Blocks.stone});
 		GameRegistry.addRecipe(recipe);
 	}
+
+
 }

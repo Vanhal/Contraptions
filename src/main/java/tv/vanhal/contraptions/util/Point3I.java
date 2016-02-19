@@ -63,28 +63,20 @@ public class Point3I {
 		return ""+x+", "+y+", "+z;
 	}
 	
-	public void stepUp() {
-		this.y++;
+	public Point3I offset(int _x, int _y, int _z) {
+		Point3I result = new Point3I();
+		result.setX(x + _x);
+		result.setY(y + _y);
+		result.setZ(z + _z);
+		return result;
 	}
 	
-	public void stepDown() {
-		this.y--;
+	public Point3I offset(ForgeDirection dir) {
+		return this.offset(dir, 1);
 	}
 	
-	public void incrX() {
-		this.x++;
-	}
-	
-	public void decrX() {
-		this.x--;
-	}
-	
-	public void incrZ() {
-		this.z++;
-	}
-	
-	public void decrZ() {
-		this.z--;
+	public Point3I offset(ForgeDirection dir, int times) {
+		return this.offset(dir.offsetX*times, dir.offsetY*times, dir.offsetZ*times);
 	}
 	
 	@Override
@@ -102,13 +94,16 @@ public class Point3I {
 		return hash.hashCode();
 	}
 	
-	public Point3I getAdjacentBlock(int side) {
+	public Point3I getAdjacentPoint(int side) {
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		return new Point3I(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+		return getAdjacentPoint(dir);
+	}
+	
+	public Point3I getAdjacentPoint(ForgeDirection dir) {
+		return this.offset(dir);
 	}
 	
 	public boolean blockExists(World world) {
-		//worldObj.chunkExists(getX() >> 4, getZ() >> 4);
 		return world.blockExists(getX(), getY(), getZ());
 	}
 	
