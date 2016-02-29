@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class TileGrabber extends BaseInventoryTile {
 	public int range = 2;
@@ -19,7 +19,7 @@ public class TileGrabber extends BaseInventoryTile {
 	protected final int MAX_RANGE = 8;
 	protected final int RF_PER_ACTION = 10;
 	
-	private AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+	private AxisAlignedBB bounds = AxisAlignedBB.fromBounds(0, 0, 0, 0, 0, 0);
 
 	public TileGrabber() {
 		super(1, 5000);
@@ -51,7 +51,7 @@ public class TileGrabber extends BaseInventoryTile {
 	}
 	
 	public void updateBounds() {
-		bounds.setBounds(
+		bounds = AxisAlignedBB.fromBounds(
 				getX() - range, getY() - range, getZ() - range, 
 				getX() + range + 1, getY() + range + 1, getZ() + range + 1
 			);
@@ -73,8 +73,8 @@ public class TileGrabber extends BaseInventoryTile {
 				List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
 				for (EntityItem item : items) {
 					if (energyStorage >= (RF_PER_ACTION*range)) {
-						ForgeDirection invDir = canGetItem(item);
-						if ( (invDir!=null) && (item.age>=10) ) {
+						EnumFacing invDir = canGetItem(item);
+						if ( (invDir!=null) && (item.getAge()>=10) ) {
 							if ( (slots[0]!=null) && (mode == MODE.ITEM) && (item.getEntityItem().isItemEqual(slots[0])) ) {
 								addItemToFirstAdjacent(item, invDir);
 							} else if ( (slots[0]!=null) && (mode == MODE.NOT_ITEM) && (!item.getEntityItem().isItemEqual(slots[0])) ) {
@@ -89,8 +89,8 @@ public class TileGrabber extends BaseInventoryTile {
 		}
 	}
 	
-	protected ForgeDirection canGetItem(EntityItem item) {
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+	protected EnumFacing canGetItem(EntityItem item) {
+		for (EnumFacing dir : EnumFacing.values()) {
 			TileEntity tile = getPoint().getAdjacentPoint(dir).getTileEntity(worldObj);
 			ItemStack remaining = InventoryHelper.insert(tile, item.getEntityItem().copy(), dir.getOpposite(), true);
 			if ( (remaining == null) || (remaining.stackSize < item.getEntityItem().stackSize) ) {
@@ -104,7 +104,7 @@ public class TileGrabber extends BaseInventoryTile {
 		return null;
 	}
 	
-	protected void addItemToFirstAdjacent(EntityItem item, ForgeDirection dir) {
+	protected void addItemToFirstAdjacent(EntityItem item, EnumFacing dir) {
 		if (consumeCharge(RF_PER_ACTION*range)) {
 			ItemStack remainder = InventoryHelper.insert(
 					getPoint().getAdjacentPoint(dir).getTileEntity(worldObj), 

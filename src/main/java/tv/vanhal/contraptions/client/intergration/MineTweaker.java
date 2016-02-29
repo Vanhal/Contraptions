@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.intergration;
-
+/*
 import minetweaker.MineTweakerAPI;
 import tv.vanhal.contraptions.Contraptions;
 
@@ -12,4 +12,4 @@ public class MineTweaker {
 		MineTweakerAPI.registerClass(MTHeat.class);
 	}
 
-}
+}*/

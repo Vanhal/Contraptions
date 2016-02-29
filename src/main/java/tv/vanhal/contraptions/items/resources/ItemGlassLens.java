@@ -1,7 +1,7 @@
 package tv.vanhal.contraptions.items.resources;
 
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.items.BaseItem;
 import tv.vanhal.contraptions.items.ContItems;
 

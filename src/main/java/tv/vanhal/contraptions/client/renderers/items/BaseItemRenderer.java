@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.renderers.items;
-
+/*
 import org.lwjgl.opengl.GL11;
 
 import tv.vanhal.contraptions.util.Point3I;
@@ -48,4 +48,4 @@ public class BaseItemRenderer implements IItemRenderer {
 		
 	}
 
-}
+}*/

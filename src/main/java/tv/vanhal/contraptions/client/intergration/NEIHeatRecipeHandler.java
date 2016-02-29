@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.intergration;
-
+/*
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,4 +129,4 @@ public class NEIHeatRecipeHandler extends TemplateRecipeHandler {
 			}
 		}
 	}
-}
+}*/

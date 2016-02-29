@@ -1,26 +1,25 @@
 buildscript {
     repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            jcenter()
+            maven {
+                name = "forge"
+                url = "http://files.minecraftforge.net/maven"
+            }
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        dependencies {
+            classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
-
 repositories {
-    maven {
+    /*maven {
         name = "chickenbones"
         url = "http://chickenbones.net/maven/"
-    }
+    }*/
+    maven {
+		url "http://dvs1.progwml6.com/files/maven"
+	}
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 def ENV = System.getenv()
 
@@ -41,7 +40,7 @@ x = ENV.DRONE_BUILD_NUMBER as Integer
 
 config.buildNum = x - y
 
-apply plugin: 'forge'
+
 
 version = config.mod_version + "." + config.buildNum
 group= "tv.vanhal.contraptions" 
@@ -50,16 +49,20 @@ archivesBaseName = "Contraptions-" + config.minecraft_version
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
     
+    mappings = "stable_20"
+    runDir = "run"
     replace "@VERSION@", project.version
 }
 
 dependencies {
     // http://files.minecraftforge.net/CodeChickenLib/
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
+    //compile "codechicken:CodeChickenLib:1.8-1.1.2.139:dev"
     
     // http://chickenbones.net/maven
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
+    //compile "codechicken:CodeChickenCore:1.8-1.0.5.36:dev"
+    //compile "codechicken:NotEnoughItems:1.8-1.0.5.104:dev"
+    
+    deobfCompile "mezz.jei:jei_"+config.minecraft_version+":2.27.0.157"
     
     compile fileTree(dir: 'libs', include: '*.jar')
 }
@@ -83,5 +86,3 @@ processResources
         exclude 'mcmod.info'
     }
 }
-
-sourceSets { main { output.resourcesDir = output.classesDir } }

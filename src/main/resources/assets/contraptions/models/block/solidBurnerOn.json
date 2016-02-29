@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+    	"top": "contraptions:blocks/solidBurner",
+	"front": "contraptions:blocks/solidBurner_frontActive",
+        "side": "contraptions:blocks/solidBurner"
+    }
+}

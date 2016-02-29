@@ -1,0 +1,33 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "#material": "contraptions:models/barExtender"
+        },
+        "model": "contraptions:barExtender.obj"
+     },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{
+			"transform": {
+				"thirdperson": {
+					"rotation": [{"x": 10}, {"y": -45}, {"z": 170}],
+					"translation": [ 0, 0, -0.1 ],
+					"scale": [ 0.375, 0.375, 0.375 ]
+				},
+				"gui": {
+					"translation": [ 0, -0.1, 0 ],
+					"scale": [ 1.6, 1.6, 1.6 ]
+				}
+            }
+		}],
+        "facing": {
+            "up": {},
+            "down": {},
+            "north": {"y": 90},
+            "south": {"y": 270},
+            "west": {},
+            "east": {"y": 180}
+        }
+    }
+}

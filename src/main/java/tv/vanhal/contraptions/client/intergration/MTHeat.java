@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.intergration;
-
+/*
 import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
 
 import java.util.ArrayList;
@@ -158,3 +158,4 @@ public class MTHeat {
 		}
 	}
 }
+*/

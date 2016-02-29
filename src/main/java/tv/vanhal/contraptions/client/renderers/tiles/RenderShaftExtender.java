@@ -1,7 +1,6 @@
 package tv.vanhal.contraptions.client.renderers.tiles;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -28,7 +27,7 @@ public class RenderShaftExtender extends BaseRenderer {
 				if (shaft.currentSpin>=360) shaft.currentSpin = 0.0f;
 				float move = 0.081f;
 				GL11.glTranslated(0, move, 0);
-				GL11.glRotatef(shaft.currentSpin, shaft.facing.offsetX + shaft.facing.offsetZ, 0, 0);
+				GL11.glRotatef(shaft.currentSpin, shaft.facing.getFrontOffsetX() + shaft.facing.getFrontOffsetZ(), 0, 0);
 				GL11.glTranslated(0, move*-1, 0);
 	        }
 		}

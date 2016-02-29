@@ -7,9 +7,10 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ContFluids {
 	public static final Material material = new MaterialLiquid(MapColor.waterColor);
@@ -20,11 +21,15 @@ public class ContFluids {
 	
 	public static void preInit() {
 		//fluids
-		steamFluid = registerFluid("steam", -10, 0, 673, EnumRarity.common);
+		steamFluid = registerFluid("steam", -10, 0, 673, EnumRarity.COMMON);
 		
 		//blocks
 		steam = new FluidSteam();
 		steam.preInit();
+	}
+	
+	public static void postInit() {
+		steam.postInit();
 	}
 	
 	public static Fluid registerFluid(String name, int density, EnumRarity rarity) {
@@ -33,7 +38,13 @@ public class ContFluids {
 
 	public static Fluid registerFluid(String name, int density, int lightValue, int temp, EnumRarity rarity) {
 		name = name.toLowerCase(Locale.ENGLISH);
-		Fluid fluid = new Fluid(name);
+		Fluid fluid = new Fluid(name, 
+				new ResourceLocation(Ref.MODID + ":blocks/fluids/"+name+".still"),
+				new ResourceLocation(Ref.MODID + ":blocks/fluids/"+name+".flowing")
+		);
+		if (density<0)
+			fluid.setGaseous(true);
+		
 		if (!FluidRegistry.registerFluid(fluid))
 			fluid = FluidRegistry.getFluid(name);
 		if (density != 0) {

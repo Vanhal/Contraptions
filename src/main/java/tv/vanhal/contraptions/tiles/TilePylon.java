@@ -8,7 +8,7 @@ import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class TilePylon extends BasePoweredTile {
 	private final int TICKS_PER_REFRESH = 40;
@@ -44,7 +44,7 @@ public class TilePylon extends BasePoweredTile {
 					TileEntity tile = point.getTileEntity(worldObj);
 					if (tile instanceof IEnergyReceiver) {
 						IEnergyReceiver energyTile = (IEnergyReceiver) tile;
-						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+						for (EnumFacing dir : EnumFacing.values()) {
 							if (energyTile.canConnectEnergy(dir)) {
 								int consumedAmount = energyTile.receiveEnergy(dir, getMaxPacketSize(), true);
 								if ( (consumedAmount>0) && (consumeCharge(consumedAmount + getTransmitCost())) ) {
@@ -83,7 +83,7 @@ public class TilePylon extends BasePoweredTile {
 							IEnergyReceiver reciever = (IEnergyReceiver) testPoint.getTileEntity(worldObj);
 							
 							//try all the directions to see if we can connect
-							for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+							for (EnumFacing dir : EnumFacing.values()) {
 								if ( (reciever.canConnectEnergy(dir)) && (reciever.getMaxEnergyStored(dir)>0) ) {
 									if (!connectedMachines.contains(testPoint))
 										connectedMachines.add(testPoint);

@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
@@ -34,21 +35,21 @@ public class HeatRegistry extends WorldSavedData {
 	public static TMap<Integer, HeatRegistry> instances = new THashMap<Integer, HeatRegistry>();
 	
 	public static HeatRegistry getInstance(World world) {
-		if (instances.containsKey(world.provider.dimensionId)) {
-			return instances.get(world.provider.dimensionId);
+		if (instances.containsKey(world.provider.getDimensionId())) {
+			return instances.get(world.provider.getDimensionId());
 		} else {
-			MapStorage storage = world.perWorldStorage;
+			MapStorage storage = world.getPerWorldStorage();
 			if (storage!=null) {
 				HeatRegistry heatReg = (HeatRegistry) storage.loadData(HeatRegistry.class, KEY);
 		
 				if(heatReg == null) {
 					heatReg = new HeatRegistry(KEY);
-					heatReg.setDemension(world.provider.dimensionId);
+					heatReg.setDemension(world.provider.getDimensionId());
 					storage.setData(KEY, heatReg);
 				}
 				
 				HeatRegistry instance = (HeatRegistry) storage.loadData(HeatRegistry.class, KEY);
-				instances.put(world.provider.dimensionId, instance);
+				instances.put(world.provider.getDimensionId(), instance);
 				return instance;
 			} else {
 				return null;
@@ -61,7 +62,7 @@ public class HeatRegistry extends WorldSavedData {
 	public int dimensionID = 0;
 	public int tickCounter = 0;
 
-	private AxisAlignedBB boundCheck = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+	private AxisAlignedBB boundCheck = AxisAlignedBB.fromBounds(0, 0, 0, 0, 0, 0);
 	
 	private TMap<Point3I, Integer> heatValues = new THashMap<Point3I, Integer>();
 	private ArrayList<Point3I> toRemove = new ArrayList<Point3I>();
@@ -179,7 +180,7 @@ public class HeatRegistry extends WorldSavedData {
 								}
 							}
 							//check to see if there is any items on top
-							boundCheck.setBounds(point.getX(), point.getY() + 1, point.getZ(), 
+							boundCheck =  AxisAlignedBB.fromBounds(point.getX(), point.getY() + 1, point.getZ(), 
 									point.getX()+1, point.getY()+2, point.getZ()+1);
 							List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, boundCheck);
 							for (EntityItem item : items) {
@@ -301,7 +302,7 @@ public class HeatRegistry extends WorldSavedData {
 				ItemStack output = RecipeManager.getHeatOutput(item.getEntityItem());
 				output.stackSize = item.getEntityItem().stackSize;
 				world.removeEntity(item);
-				ItemHelper.dropAsItem(world, point.getX(), point.getY() + 1, point.getZ(), output);
+				ItemHelper.dropAsItem(world, point.getPos().up(), output);
 			} else if ( (currentHeat>=500) && (recipeHeat==0) ) {
 				item.setFire(10);
 			}

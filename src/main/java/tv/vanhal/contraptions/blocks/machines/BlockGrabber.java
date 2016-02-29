@@ -1,19 +1,23 @@
 package tv.vanhal.contraptions.blocks.machines;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.interfaces.IConfigurable;
@@ -21,7 +25,6 @@ import tv.vanhal.contraptions.interfaces.IGuiRenderer;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.tiles.TileGrabber;
-import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
 import tv.vanhal.contraptions.util.StringHelper;
@@ -30,12 +33,12 @@ import tv.vanhal.contraptions.world.RenderOverlay;
 import tv.vanhal.contraptions.world.heat.HeatRegistry;
 
 public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRenderer {
+    public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
 	public BlockGrabber() {
 		super("grabber");
-		setFrontTexture("grabber");
-		setFrontActiveTexture("grabberOn");
-        setRotationType(null);
+		//setFrontTexture("grabber");
+		//setFrontActiveTexture("grabberOn");
 	}
 	
 	@Override
@@ -44,9 +47,29 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		return ItemHelper.clickAddToTile(world, x, y, z, player, 0);
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return ItemHelper.clickAddToTile(world, pos, player, 0);
 	}
+	
+	@Override
+    protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] {ACTIVE});
+    }
+	
+	@Override
+	protected void setDefaultState() {
+		setDefaultState(blockState.getBaseState().withProperty(ACTIVE, false));
+	}
+	
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileGrabber) {
+			TileGrabber grabber = (TileGrabber)tile;
+			return state.withProperty(ACTIVE, grabber.isActive());
+		}
+        return state;
+    }
 
 	@Override
 	public void addRecipe() {
@@ -58,22 +81,22 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 	}
 
 	@Override
-	public boolean sneakClick(EntityPlayer player, World world, int x, int y, int z, int side) {
+	public boolean sneakClick(EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
 		//change mode
 		if (!world.isRemote) {
-			if (world.getTileEntity(x, y, z) instanceof TileGrabber) {
-				((TileGrabber)world.getTileEntity(x, y, z)).changeMode();
+			if (world.getTileEntity(pos) instanceof TileGrabber) {
+				((TileGrabber)world.getTileEntity(pos)).changeMode();
 			}
 		}
 		return true;
 	}
 
 	@Override
-	public boolean click(EntityPlayer player, World world, int x, int y, int z, int side) {
+	public boolean click(EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
 		//increase range
 		if (!world.isRemote) {
-			if (world.getTileEntity(x, y, z) instanceof TileGrabber) {
-				((TileGrabber)world.getTileEntity(x, y, z)).increaseRange();
+			if (world.getTileEntity(pos) instanceof TileGrabber) {
+				((TileGrabber)world.getTileEntity(pos)).increaseRange();
 			}
 		}
 		return true;
@@ -85,7 +108,7 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 		int scr_y = res.getScaledHeight() / 2;
 		//render the current burning item
 		
-		TileGrabber grabber = (TileGrabber)world.getTileEntity(x, y, z);
+		TileGrabber grabber = (TileGrabber)world.getTileEntity(new BlockPos(x, y, z));
 		if (grabber != null) {
 			ItemStack filterItem = grabber.getFilterItem();
 			if (filterItem != null) {
@@ -100,21 +123,4 @@ public class BlockGrabber extends BaseBlock implements IConfigurable, IGuiRender
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if ( (tile!=null) && (tile instanceof BaseTile) ) {
-			if ( ((BaseTile)tile).isActive() ) {
-				return frontActiveIcon;
-			} else {
-				return frontIcon;
-			}
-		}
-		return this.getIcon(side, world.getBlockMetadata(x, y, z));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		return frontActiveIcon;
-	}
 }

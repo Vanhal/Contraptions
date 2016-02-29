@@ -29,14 +29,14 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockWall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.FMLRenderAccessLibrary;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 
 public class RenderCrusher extends BaseRenderer {
 	public RenderCrusher() {
@@ -57,16 +57,19 @@ public class RenderCrusher extends BaseRenderer {
 			ItemStack itemStack = ((TileCrusher)tileentity).getStackInSlot(0);
 			if (itemStack!=null) {
 				Minecraft mc = Minecraft.getMinecraft();
-				mc.renderEngine.bindTexture(itemStack.getItem() instanceof ItemBlock ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
-				if (itemStack.getItem() instanceof ItemBlock && shouldRenderBlock(itemStack)) {
+				mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+				//if (itemStack.getItem() instanceof ItemBlock && shouldRenderBlock(mc.getRenderItem(), itemStack)) {
 					GL11.glPushMatrix();
 					GL11.glScalef(0.4F, 0.4F, 0.4F);
 					GL11.glTranslatef(0F, 1.0F, 0F);
 					GL11.glRotatef(90, -1, 0, 0);
 					GL11.glRotatef(90, 0, -1, 0);
-					RenderBlocks.getInstance().renderBlockAsItem(Block.getBlockFromItem(itemStack.getItem()), itemStack.getItemDamage(), 1F);
+	                RenderHelper.enableStandardItemLighting();
+					//RenderBlocks.getInstance().renderBlockAsItem(Block.getBlockFromItem(itemStack.getItem()), itemStack.getItemDamage(), 1F);
+					mc.getRenderItem().renderItem(itemStack, ItemCameraTransforms.TransformType.FIXED);
+	                RenderHelper.disableStandardItemLighting();
 					GL11.glPopMatrix();
-				} else {
+				/*} else {
 					int renderPass = 0;
 					do {
 						IIcon icon = itemStack.getItem().getIcon(itemStack, renderPass);
@@ -83,19 +86,19 @@ public class RenderCrusher extends BaseRenderer {
 						}
 						renderPass++;
 					} while(renderPass < itemStack.getItem().getRenderPasses(itemStack.getItemDamage()));
-				}
+				}*/
 			}
 		}
 	}
 	
-	protected boolean shouldRenderBlock(ItemStack itemStack) {
-		int renderType  = Block.getBlockFromItem(itemStack.getItem()).getRenderType();
-		boolean shouldRender = RenderBlocks.renderItemIn3d(renderType);
-		if (!shouldRender) {
+	protected boolean shouldRenderBlock(RenderItem itemRender, ItemStack itemStack) {
+		//int renderType  = Block.getBlockFromItem(itemStack.getItem()).getRenderType();
+		boolean shouldRender = itemRender.shouldRenderItemIn3D(itemStack);
+		/*if (!shouldRender) {
             switch (renderType) {
 	            case 38: return true;
             }
-		}
+		}*/
 		return shouldRender;
 	}
 }

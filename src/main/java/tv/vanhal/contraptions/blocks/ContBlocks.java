@@ -17,7 +17,7 @@ import tv.vanhal.contraptions.blocks.machines.BlockSpike;
 import tv.vanhal.contraptions.blocks.machines.BlockSpreader;
 import tv.vanhal.contraptions.blocks.passive.BlockConductivePlate;
 import tv.vanhal.contraptions.blocks.transport.BlockRFPylon;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ContBlocks {
 	//machines

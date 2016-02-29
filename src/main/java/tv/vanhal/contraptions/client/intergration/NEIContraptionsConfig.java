@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.intergration;
-
+/*
 import net.minecraft.item.ItemStack;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.util.Ref;
@@ -30,3 +30,4 @@ public class NEIContraptionsConfig implements IConfigureNEI {
 	}
 
 }
+*/

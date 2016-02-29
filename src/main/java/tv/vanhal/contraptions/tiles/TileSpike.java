@@ -13,12 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileSpike extends BaseTile {
 	
-	protected AxisAlignedBB boundCheck = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+	protected AxisAlignedBB boundCheck = AxisAlignedBB.fromBounds(0, 0, 0, 0, 0, 0);
 	
 	public TileSpike() {
 		
@@ -29,20 +29,20 @@ public class TileSpike extends BaseTile {
 	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			List<TileEntity> tiles = new ArrayList<TileEntity>();
-			for (ForgeDirection direction: ForgeDirection.VALID_DIRECTIONS) {
+			for (EnumFacing direction: EnumFacing.values()) {
 				TileEntity test = getPoint().getAdjacentPoint(direction).getTileEntity(worldObj);
 				if (test!=null) {
 					if (test instanceof TileEntityPiston) {
 						TileEntityPiston movingPiston = (TileEntityPiston)test;
-						if ( (movingPiston.getStoredBlockID() != null) 
-							&& (!movingPiston.getStoredBlockID().equals(Blocks.piston_head)) 
+						if ( (movingPiston.getBlockType() != null) 
+							&& (!movingPiston.getBlockType().equals(Blocks.piston_head)) 
 							&& (movingPiston.isExtending()) 
-							&& (direction.getOpposite().ordinal() == movingPiston.getPistonOrientation()) ) {
-							ItemHelper.dropBlockIntoWorld(worldObj, movingPiston.xCoord, movingPiston.yCoord,
-									movingPiston.zCoord, movingPiston.getStoredBlockID(), movingPiston.getBlockMetadata());
+							&& (direction.getOpposite() == movingPiston.getFacing()) ) {
+							ItemHelper.dropBlockIntoWorld(worldObj, movingPiston.getPos(), movingPiston.getBlockType(), 
+									movingPiston.getBlockType().getStateFromMeta(movingPiston.getBlockMetadata()));
 							movingPiston.clearPistonTileEntity();
-							worldObj.playAuxSFX(2001, movingPiston.xCoord, movingPiston.yCoord,	movingPiston.zCoord, 
-									Block.getIdFromBlock(movingPiston.getStoredBlockID()) + (movingPiston.getBlockMetadata() << 12));
+							worldObj.playAuxSFX(2001, movingPiston.getPos(), 
+									movingPiston.getBlockType().getStateId(movingPiston.getPistonState()));
 						}
 					}
 				}

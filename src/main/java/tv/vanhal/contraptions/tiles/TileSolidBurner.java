@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.EnumFacing;
 
 public class TileSolidBurner extends BaseInventoryTile {
 	protected int burning = 0;
@@ -92,7 +93,7 @@ public class TileSolidBurner extends BaseInventoryTile {
 	}
 	
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemStack, EnumFacing face) {
 		return true;
 	}
 	

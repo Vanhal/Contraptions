@@ -4,6 +4,7 @@ import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
 import tv.vanhal.contraptions.network.NetworkHandler;
 import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessage;
+import tv.vanhal.contraptions.util.ForgeDirection;
 import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -13,13 +14,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Facing;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 
-public class BaseTile extends TileEntity {
+public class BaseTile extends TileEntity implements ITickable {
 	protected ItemStack[] slots;
 	protected Point3I point = null;
-	public ForgeDirection facing = ForgeDirection.WEST;
+	public EnumFacing facing = EnumFacing.WEST;
 
 	public static final byte TICKS_PER_MESSAGE = 5;
 	
@@ -49,15 +50,15 @@ public class BaseTile extends TileEntity {
 	
 	//these methods are here to improve compat between 1.7 and 1.8 (less rewriting stuff
 	public int getX() {
-		return xCoord;
+		return pos.getX();
 	}
 	
 	public int getY() {
-		return yCoord;
+		return pos.getY();
 	}
 	
 	public int getZ() {
-		return zCoord;
+		return pos.getZ();
 	}
 	
 	public Point3I getPoint() {
@@ -91,22 +92,22 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public void readFromItemStack(ItemStack itemStack) {
-		if (itemStack == null || itemStack.stackTagCompound == null) {
+		if (itemStack == null || itemStack.getTagCompound() == null) {
 			return;
 		}
-		readCommonNBT(itemStack.stackTagCompound);
-		readNonSyncableNBT(itemStack.stackTagCompound);
+		readCommonNBT(itemStack.getTagCompound());
+		readNonSyncableNBT(itemStack.getTagCompound());
 	}
 
 	public void writeToItemStack(ItemStack itemStack) {
 		if (itemStack == null ) {
 			return;
 		}
-		if (itemStack.stackTagCompound == null) {
-			itemStack.stackTagCompound = new NBTTagCompound();
+		if (itemStack.getTagCompound() == null) {
+			itemStack.setTagCompound(new NBTTagCompound());
 		}
-		writeCommonNBT(itemStack.stackTagCompound);
-		writeNonSyncableNBT(itemStack.stackTagCompound);
+		writeCommonNBT(itemStack.getTagCompound());
+		writeNonSyncableNBT(itemStack.getTagCompound());
 	}
 	
 	/**
@@ -177,8 +178,8 @@ public class BaseTile extends TileEntity {
 	 * @param nbt
 	 */
 	public void readCommonNBT(NBTTagCompound nbt) {
-		if (nbt.hasKey("facing")) facing = ForgeDirection.getOrientation(nbt.getInteger("facing"));
-		else if (facing == null) facing = ForgeDirection.WEST;
+		if (nbt.hasKey("facing")) facing = EnumFacing.values()[nbt.getInteger("facing")];
+		else if (facing == null) facing = EnumFacing.WEST;
 	}
 	
 	/**
@@ -211,7 +212,7 @@ public class BaseTile extends TileEntity {
         this.writeCommonNBT(nbttagcompound);
         this.writeSyncOnlyNBT(nbttagcompound);
         
-        return new S35PacketUpdateTileEntity(this.getX(), this.getY(), this.getZ(), -1, nbttagcompound);
+        return new S35PacketUpdateTileEntity(pos, -1, nbttagcompound);
     }
 	
 	/**
@@ -219,10 +220,10 @@ public class BaseTile extends TileEntity {
 	 */
 	@Override    
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-    	this.readCommonNBT(pkt.func_148857_g());
-    	this.readSyncOnlyNBT(pkt.func_148857_g());
+		this.readCommonNBT(pkt.getNbtCompound());
+    	this.readSyncOnlyNBT(pkt.getNbtCompound());
  
-    	worldObj.markBlockForUpdate(getX(), getY(), getZ());
+    	worldObj.markBlockForUpdate(pos);
     }
 	
 	/**
@@ -343,12 +344,12 @@ public class BaseTile extends TileEntity {
 	}
 	
 	protected void notifyUpdate() {
-		worldObj.markBlockForUpdate(getX(), getY(), getZ());
+		worldObj.markBlockForUpdate(pos);
 	}
 	
 	/////END NBT DATA METHODS
 	@Override
-	public void updateEntity() {
+	public void update() {
 		doUpdate();
 		if ( (isDirty()) && ((worldObj.getWorldTime() % TICKS_PER_MESSAGE) == 0)) {
 			PartialTileNBTUpdateMessage message = getPartialUpdateMessage();
@@ -374,28 +375,33 @@ public class BaseTile extends TileEntity {
 	}
 	
 	public int isPoweredLevel() {
-		return worldObj.getStrongestIndirectPower(getX(), getY(), getZ());
+		int highestPower = 0;
+		for (EnumFacing test : EnumFacing.VALUES) {
+			int testVal = worldObj.getRedstonePower(pos.offset(test), test);
+			if (testVal >= 15) 
+				return 15;
+			if (testVal > highestPower)
+				highestPower = testVal;
+		}
+		return highestPower;
 	}
 	
 	public int isPoweredLevelNotFacing() {
 		int highestPower = 0;
-		for (int i = 0; i < 6; ++i) {
-			if (i != facing.ordinal()) {
-	            int testVal = worldObj.getIndirectPowerLevelTo(getX() + Facing.offsetsXForSide[i],
-	            		getY() + Facing.offsetsYForSide[i], getZ() + Facing.offsetsZForSide[i], i);
-	
-	            if (testVal >= 15) 
+		for (EnumFacing test : EnumFacing.VALUES) {
+			if (test != facing) {
+				int testVal = worldObj.getRedstonePower(pos.offset(test), test);
+				if (testVal >= 15) 
 	            	return 15;
-	
-	            if (testVal > highestPower)
+				if (testVal > highestPower)
 	            	highestPower = testVal;
 			}
-        }
-		return 0;
+		}
+		return highestPower;
 	}
 	
 	public void setFacing(int _facing) {
-		facing = ForgeDirection.getOrientation(_facing);
+		facing = EnumFacing.values()[_facing];
 	}
 	
 	public int getFacing() {

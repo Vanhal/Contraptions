@@ -5,17 +5,19 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockPistonMoving;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.machines.BlockSpike;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.Point3I;
 
 public class TilePoweredPiston extends BasePoweredTile {
 	public final int POWER_PER_USE = 100;
@@ -107,94 +109,80 @@ public class TilePoweredPiston extends BasePoweredTile {
 	}
 	
 	protected boolean isAir(int distance, boolean replace) {
-		int x = getX() + (facing.offsetX*distance);
-		int y = getY() + (facing.offsetY*distance);
-		int z = getZ() + (facing.offsetZ*distance);
-		return isAir(x, y, z, replace);
+		return isAir(getPoint().offset(facing, distance), replace);
 	}
 	
-	protected boolean isAir(int x, int y, int z) {
-		return isAir(x, y, z, true);
+	protected boolean isAir(Point3I testPoint) {
+		return isAir(testPoint, true);
 	}
 	
-	protected boolean isAir(int x, int y, int z, boolean replace) {
-		Block testBlock = worldObj.getBlock(x, y, z);
-		return ( (worldObj.isAirBlock(x, y, z)) 
+	protected boolean isAir(Point3I testPoint, boolean replace) {
+		Block testBlock = testPoint.getBlock(worldObj);
+		return ( (worldObj.isAirBlock(testPoint.getPos())) 
 				|| (FluidRegistry.lookupFluidForBlock(testBlock)!=null)
-				|| ( (testBlock.isReplaceable(worldObj, x, y, z)) && (replace) )
+				|| ( (testBlock.isReplaceable(worldObj, testPoint.getPos())) && (replace) )
 				|| ( (testBlock.getMobilityFlag() == 1) && (replace) ) ) ;
 	}
 	
 	protected boolean isPushable(int distance) {
-		int x = getX() + (facing.offsetX*distance);
-		int y = getY() + (facing.offsetY*distance);
-		int z = getZ() + (facing.offsetZ*distance);
-		Block moveBlock = worldObj.getBlock(x, y, z);
-		return isPushable(moveBlock, x, y, z);
+		Point3I testPoint = getPoint().offset(facing, distance);
+		Block moveBlock = testPoint.getBlock(worldObj);
+		return isPushable(moveBlock, testPoint);
 	}
 	
-	protected boolean isPushable(Block moveBlock, int x, int y, int z) {
-		return ( (moveBlock.getMobilityFlag()==0) && (moveBlock != Blocks.obsidian) && (moveBlock.getBlockHardness(worldObj, x, y, z) >= 0) );
+	protected boolean isPushable(Block moveBlock, Point3I testPoint) {
+		return ( (moveBlock.getMobilityFlag()==0) && (moveBlock != Blocks.obsidian) && (moveBlock.getBlockHardness(worldObj, testPoint.getPos()) >= 0) );
 	}
 	
 	protected boolean isSpike(int distance) {
-		int x = getX() + (facing.offsetX*distance);
-		int y = getY() + (facing.offsetY*distance);
-		int z = getZ() + (facing.offsetZ*distance);
-		Block testBlock = worldObj.getBlock(x, y, z);
+		Block testBlock = getPoint().offset(facing, distance).getBlock(worldObj);
 		return (testBlock instanceof BlockSpike);
 	}
 	
 	protected boolean moveBlock(int distance) {
-		int x = getX() + (facing.offsetX*distance);
-		int y = getY() + (facing.offsetY*distance);
-		int z = getZ() + (facing.offsetZ*distance);
-		int dx = x + facing.offsetX;
-		int dy = y + facing.offsetY;
-		int dz = z + facing.offsetZ;
-		Block moveBlock = worldObj.getBlock(x, y, z);
-		int metaData = worldObj.getBlockMetadata(x, y, z);
-		if (!isAir(x, y, z)) {
-			if ( isPushable(moveBlock, x, y, z) ) {
-				if (isAir(dx, dy, dz)) {
+		Point3I point = getPoint().offset(facing, distance);
+		Point3I dPoint = point.offset(facing);
+		Block moveBlock = point.getBlock(worldObj);
+		IBlockState moveState = point.getState(worldObj);
+		if (!isAir(point)) {
+			if ( isPushable(moveBlock, point) ) {
+				if (isAir(dPoint)) {
 					if (moveBlock instanceof BlockSpike) {
-						int bx = dx + facing.offsetX;
-						int by = dy + facing.offsetY;
-						int bz = dz + facing.offsetZ;
-						if (isPushable(moveBlock, bx, by, bz)) {
-							Block smashBlock = worldObj.getBlock(bx, by, bz);
-							int metaSmashData = worldObj.getBlockMetadata(bx, by, bz);
-							ItemHelper.dropBlockIntoWorld(worldObj, bx, by, bz, smashBlock, metaSmashData);
+						Point3I bPoint = dPoint.offset(facing);
+						if (isPushable(moveBlock, bPoint)) {
+							Block smashBlock = bPoint.getBlock(worldObj);
+							IBlockState smashState = bPoint.getState(worldObj);
+							
+							ItemHelper.dropBlockIntoWorld(worldObj, bPoint.getPos(), smashBlock, smashState);
 						}
 					}
 					
-					worldObj.setBlock(dx, dy, dz, moveBlock);
-					worldObj.setBlockMetadataWithNotify(dx, dy, dz, metaData, 3);
-					TileEntity tile = worldObj.getTileEntity(x, y, z);
+					worldObj.setBlockState(dPoint.getPos(), moveState);
+					TileEntity tile = point.getTileEntity(worldObj);
 					if (tile!=null) {
 						NBTTagCompound tileData = new NBTTagCompound();
 						tile.writeToNBT(tileData);
-						TileEntity newTile = worldObj.getTileEntity(dx, dy, dz);
+						TileEntity newTile = dPoint.getTileEntity(worldObj);
 						if (newTile!=null) {
 							newTile.readFromNBT(tileData);
-							worldObj.setTileEntity(dx, dy, dz, newTile);
+							worldObj.setTileEntity(dPoint.getPos(), newTile);
 						}
 					}
 
-					worldObj.removeTileEntity(x, y, z);
-					worldObj.setBlockToAir(x, y, z);
-					//worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(moveBlock) + (metaData << 12));
+					worldObj.removeTileEntity(point.getPos());
+					worldObj.setBlockToAir(point.getPos());
+					//worldObj.playAuxSFX(2001, point.getPos(), moveBlock.getStateId(moveState));
 					
 					if (isSpike(distance+2)) {
-						ItemHelper.dropBlockIntoWorld(worldObj, dx, dy, dz, moveBlock, metaData);
+						ItemHelper.dropBlockIntoWorld(worldObj, dPoint.getPos(), moveBlock, dPoint.getState(worldObj));
 					}
 				}
 			}
-		} else if (isAir(x, y, z, false)) {
-			if ( (moveBlock.getMobilityFlag()==1) || (moveBlock.isReplaceable(worldObj, x, y, z)) ) {
+		} else if (isAir(point, false)) {
+			if ( (moveBlock.getMobilityFlag()==1) || (moveBlock.isReplaceable(worldObj, point.getPos())) ) {
 				if (FluidRegistry.lookupFluidForBlock(moveBlock)==null) {
-					worldObj.setBlockToAir(x, y, z);
-					worldObj.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(moveBlock) + (metaData << 12));
+					worldObj.setBlockToAir(point.getPos());
+					worldObj.playAuxSFX(2001, point.getPos(), moveBlock.getStateId(moveState));
 				}
 			}
 		}

@@ -3,7 +3,7 @@ package tv.vanhal.contraptions.tiles;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.interfaces.ITorqueBlock;
@@ -34,7 +34,7 @@ public class TileGenerator extends BasePoweredTile {
 			}
 			//push out energy stored
 			if (energyStorage > 0) {
-				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+				for (EnumFacing direction : EnumFacing.values()) {
 					TileEntity test = getPoint().getAdjacentPoint(facing).getTileEntity(worldObj);
 					if  (test instanceof IEnergyReceiver) {
 						IEnergyReceiver energyBlock = (IEnergyReceiver)test;
@@ -47,7 +47,7 @@ public class TileGenerator extends BasePoweredTile {
 			}
 			if (currentOutputPower != getComparatorOutput()) {
 				currentOutputPower = getComparatorOutput();
-				worldObj.notifyBlockChange(getX(), getY(), getZ(), getPoint().getBlock(worldObj));
+				worldObj.notifyBlockOfStateChange(pos, getPoint().getBlock(worldObj));
 			}
 		}
 	}

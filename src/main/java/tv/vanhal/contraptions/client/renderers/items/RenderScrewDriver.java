@@ -1,5 +1,5 @@
 package tv.vanhal.contraptions.client.renderers.items;
-
+/*
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.util.ResourceLocation;
@@ -21,4 +21,4 @@ public class RenderScrewDriver extends BaseItemRenderer {
 			GL11.glRotatef(-75.0F, 0.0F, 0.0F, 1.0F);
 		}
 	}
-}
+}*/

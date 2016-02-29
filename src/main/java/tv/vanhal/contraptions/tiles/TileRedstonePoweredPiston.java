@@ -13,10 +13,7 @@ public class TileRedstonePoweredPiston extends TilePoweredPiston {
 		if (isAir(lastBlock + 1)) lastBlock++;
 		
 		if (isAir(lastBlock, false)) {
-			int x = getX() + (facing.offsetX*lastBlock);
-			int y = getY() + (facing.offsetY*lastBlock);
-			int z = getZ() + (facing.offsetZ*lastBlock);
-			worldObj.setBlock(x, y, z, ContBlocks.pulse);
+			worldObj.setBlockState(pos.offset(facing, lastBlock), ContBlocks.pulse.getDefaultState());
 		}
 	}
 	

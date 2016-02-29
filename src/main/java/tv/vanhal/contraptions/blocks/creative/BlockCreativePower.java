@@ -9,7 +9,6 @@ public class BlockCreativePower extends BaseBlock {
 
 	public BlockCreativePower() {
 		super("creativePower");
-		setRotationType(null);
 	}
 
 	@Override

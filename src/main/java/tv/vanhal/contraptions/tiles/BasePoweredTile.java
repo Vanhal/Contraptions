@@ -1,11 +1,14 @@
 package tv.vanhal.contraptions.tiles;
 
+import tv.vanhal.contraptions.blockstates.EnumPowered;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 
-public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
+public class BasePoweredTile extends BaseTile implements IEnergyReceiver, IEnergyProvider  {
 	protected int maxEnergyStorage;
 	protected int energyStorage;
 	protected boolean canExtract = false;
@@ -60,12 +63,12 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing face) {
 		return (maxEnergyStorage>0);
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int amount, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int amount, boolean simulate) {
 		if (!canRecieve) return 0;
 		int energyReceived = Math.min(getMaxEnergyStored(from) - getEnergyStored(from), amount);
 
@@ -76,9 +79,9 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int amount, boolean simulate) {
+	public int extractEnergy(EnumFacing face, int amount, boolean simulate) {
 		if (!canExtract) return 0;
-		int energyExtracted = Math.min(getEnergyStored(from), amount);
+		int energyExtracted = Math.min(getEnergyStored(face), amount);
 		if (!simulate) {
 			consumeCharge(energyExtracted);
 		}
@@ -86,13 +89,18 @@ public class BasePoweredTile extends BaseTile implements IEnergyHandler  {
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing face) {
 		return energyStorage;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing face) {
 		return maxEnergyStorage;
 	}
 
+	public EnumPowered getPoweredStatus() {
+		if (energyStorage==0) return EnumPowered.unpowered;
+		else if (energyStorage < maxEnergyStorage) return EnumPowered.powered;
+		else return EnumPowered.full;
+	}
 }

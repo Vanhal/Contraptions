@@ -1,0 +1,80 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "#material": "contraptions:models/turbineBase",
+			"#inner": "contraptions:models/turbineCenter"
+        },
+        "model": "contraptions:turbineBase.obj"
+		
+    },
+    "variants": {
+        "normal": [{
+			
+		}],
+        "inventory": [{
+			"transform": {
+				"thirdperson": {
+					"rotation": [{"x": 10}, {"y": -45}, {"z": 170}],
+					"translation": [ 0, 0, -0.1 ],
+					"scale": [ 0.375, 0.375, 0.375 ]
+				}
+            },
+			"submodel": {
+				"center": {
+					"model": "contraptions:turbineCenter.obj",
+					"transform": {
+						"translation": [ 0, 0.13, 0 ]
+					}
+				}
+			}
+		}],
+        "facing": {
+            "up": {},
+            "down": {},
+            "north": {
+				"submodel": {
+					"center": {
+						"model": "contraptions:turbineCenter.obj",
+						"transform": {
+							"translation": [ 0, 0.13, 0 ]
+						}
+					}
+				},
+				"y": 90
+			},
+            "south": {
+				"submodel": {
+					"center": {
+						"model": "contraptions:turbineCenter.obj",
+						"transform": {
+							"translation": [ 0, 0.13, 0 ]
+						}
+					}
+				},
+				"y": 270
+			},
+            "west": {
+				"submodel": {
+					"center": {
+						"model": "contraptions:turbineCenter.obj",
+						"transform": {
+							"translation": [ 0, 0.13, 0 ]
+						}
+					}
+				}
+			},
+            "east": {
+				"submodel": {
+					"center": {
+						"model": "contraptions:turbineCenter.obj",
+						"transform": {
+							"translation": [ 0, 0.13, 0 ]
+						}
+					}
+				},
+				"y": 180
+			}
+        }
+    }
+}

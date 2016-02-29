@@ -3,7 +3,8 @@ package tv.vanhal.contraptions.tiles;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 
 public class BaseInventoryTile extends BasePoweredTile implements ISidedInventory {
 	
@@ -45,9 +46,9 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 		}
 		return null;
 	}
-
+	
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack removeStackFromSlot(int slot) {
 		if (slots[slot]!=null) {
 			ItemStack stack = slots[slot];
 			slots[slot] = null;
@@ -65,14 +66,21 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 		setContentsUpdate();
 	}
 
+
 	@Override
-	public String getInventoryName() {
+	public String getName() {
+
 		return blockType.getLocalizedName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return null;
 	}
 
 	@Override
@@ -87,22 +95,12 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 	}
 
 	@Override
-	public void openInventory() {
-		
-	}
-
-	@Override
-	public void closeInventory() {
-		
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
 		return true;
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
+	public int[] getSlotsForFace(EnumFacing side) {
 		int[] output = new int[slots.length];
 		for (int i=0; i<slots.length; i++) {
 			output[i] = i;
@@ -111,7 +109,7 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStack, int side) {
+	public boolean canInsertItem(int slot, ItemStack itemStack, EnumFacing direction) {
 		if ( (slots[slot] != null) 
 				&& (slots[slot].isItemEqual(itemStack))
 				&& (ItemStack.areItemStackTagsEqual(itemStack, slots[slot])) ) {
@@ -126,8 +124,42 @@ public class BaseInventoryTile extends BasePoweredTile implements ISidedInventor
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
+	public boolean canExtractItem(int slot, ItemStack itemStack, EnumFacing direction) {
 		return false;
+	}
+
+
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for (int i = 0; i < slots.length; i++) {
+			slots[i] = null;
+		}
 	}
 
 }

@@ -10,8 +10,8 @@ public class TileCreativeSteam extends BaseTile {
 	public void doUpdate() {
 		if (!worldObj.isRemote) {
 			if (currentCount>=TICKS_PER_STEAM) {
-				if (worldObj.isAirBlock(getX(), getY()+1, getZ())) {
-					worldObj.setBlock(getX(), getY()+1, getZ(), ContFluids.steam);
+				if (worldObj.isAirBlock(pos.up())) {
+					worldObj.setBlockState(pos.up(), ContFluids.steam.getDefaultState());
 				}
 				currentCount = 0;
 			}

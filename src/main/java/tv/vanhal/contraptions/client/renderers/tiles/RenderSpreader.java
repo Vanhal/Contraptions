@@ -1,30 +1,34 @@
 package tv.vanhal.contraptions.client.renderers.tiles;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 
 import tv.vanhal.contraptions.tiles.TileSpreader;
 import tv.vanhal.contraptions.util.Ref;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.obj.OBJLoader;
 
 public class RenderSpreader extends BasePoweredRenderer {
-	protected IModelCustom spinner = null;
+	protected IModel spinner = null;
 	protected ResourceLocation spinnerTexture;
 	
 
 	public RenderSpreader() {
 		super("spreader");
 		spinnerTexture = new ResourceLocation(Ref.MODID, "textures/models/spreaderTop.png");
-		spinner = AdvancedModelLoader.loadModel(new ResourceLocation(Ref.MODID, "models/spreaderTop.obj"));
+		try {
+			spinner = OBJLoader.instance.loadModel(new ResourceLocation(Ref.MODID, "models/spreaderTop.obj"));
+		} catch (IOException e) {}
 	}
 	
 	@Override
 	protected void renderModel(TileEntity tileentity, double x, double y, double z, float f) {
 		setPosition(x, y-0.05, z);
         setTexture(tileentity);
-        model.renderAll();
+        //model.renderAll();
         
         GL11.glPopMatrix();
 		GL11.glPushMatrix();
@@ -44,7 +48,7 @@ public class RenderSpreader extends BasePoweredRenderer {
 		}
 		
         bindTexture(spinnerTexture);
-        spinner.renderAll();
+        //spinner.renderAll();
 	}
 
 }

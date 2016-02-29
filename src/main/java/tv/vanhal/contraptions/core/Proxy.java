@@ -1,6 +1,6 @@
 package tv.vanhal.contraptions.core;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.TileCreativePower;
 import tv.vanhal.contraptions.tiles.TileCreativeSteam;

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityPiston;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.crafting.RecipeManager;
 import tv.vanhal.contraptions.util.ItemHelper;
@@ -40,9 +40,9 @@ public class TileCrusher extends BaseInventoryTile {
 				if (test!=null) {
 					if (test instanceof TileEntityPiston) {
 						TileEntityPiston movingPiston = (TileEntityPiston)test;
-						if ( (movingPiston.getStoredBlockID().equals(Blocks.piston_head)) 
+						if ( (movingPiston.getPistonState().getBlock().equals(Blocks.piston_head)) 
 							&& (movingPiston.isExtending())
-							&& (ForgeDirection.DOWN.ordinal() == movingPiston.getPistonOrientation()) ) {
+							&& (EnumFacing.DOWN == movingPiston.getFacing()) ) {
 							//move towards
 							crushed = true;
 						}
@@ -63,23 +63,23 @@ public class TileCrusher extends BaseInventoryTile {
 		if (slots[0]!=null) {
 			int times = RecipeManager.getCrusherTimes(slots[0]);
 			if (times>0) {
-				int currentTimes = (slots[0].stackTagCompound!=null)?(slots[0].stackTagCompound.hasKey("ContCrushTimes")?
-						slots[0].stackTagCompound.getInteger("ContCrushTimes"):0):0;
+				int currentTimes = (slots[0].getTagCompound()!=null)?(slots[0].getTagCompound().hasKey("ContCrushTimes")?
+						slots[0].getTagCompound().getInteger("ContCrushTimes"):0):0;
 				currentTimes++;
 				if (currentTimes >= times) {
 					ItemStack output = RecipeManager.getCrusherOutput(slots[0]);
 					if (output!=null) {
-						ItemHelper.dropAsItem(worldObj, getX(), getY() + 1, getZ(), output);
+						ItemHelper.dropAsItem(worldObj, pos.up(), output);
 					} else {
 						Contraptions.logger.warn("Crusher Output is null");
 					}
 					setInventorySlotContents(0, null);
 				} else {
-					if (slots[0].stackTagCompound==null) slots[0].stackTagCompound = new NBTTagCompound();
-					slots[0].stackTagCompound.setInteger("ContCrushTimes", currentTimes);
+					if (slots[0].getTagCompound()==null) slots[0].setTagCompound(new NBTTagCompound());
+					slots[0].getTagCompound().setInteger("ContCrushTimes", currentTimes);
 				}
 			} else {
-				ItemHelper.dropAsItem(worldObj, getX(), getY() + 1, getZ(), slots[0]);
+				ItemHelper.dropAsItem(worldObj, pos.up(), slots[0]);
 				setInventorySlotContents(0, null);
 			}
 		}

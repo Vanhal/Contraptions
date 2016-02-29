@@ -2,8 +2,8 @@ package tv.vanhal.contraptions.blocks.creative;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.Ref;
@@ -14,12 +14,14 @@ import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialTransparent;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -28,17 +30,17 @@ public class BlockRedstonePulse extends Block {
 	
 	public BlockRedstonePulse() {
 		super(invisable);
-		setBlockName("pulse");
-		this.setBlockTextureName(Ref.MODID+":invisable");
+		setUnlocalizedName("pulse");
+		//this.setBlockTextureName(Ref.MODID+":invisable");
 	}
 
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int meta) {
+	public int getStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
         return 15;
     }
 	
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int meta) {
+	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
         return 15;
     }
 	
@@ -48,20 +50,20 @@ public class BlockRedstonePulse extends Block {
     }
 	
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rnd) {
-		world.setBlockToAir(x, y, z);
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		world.setBlockToAir(pos);
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
 		if (!world.isRemote)
-			world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+			world.scheduleBlockUpdate(pos, this, tickRate(world), 1);
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 		if (!world.isRemote)
-			world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+			world.scheduleBlockUpdate(pos, this, tickRate(world), 1);
     }
 	
 	@Override
@@ -70,7 +72,7 @@ public class BlockRedstonePulse extends Block {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
         return null;
     }
 
@@ -80,11 +82,15 @@ public class BlockRedstonePulse extends Block {
     }
 
     @Override
-    public boolean canCollideCheck(int p_149678_1_, boolean p_149678_2_) {
+    public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
         return false;
     }
 
     @Override
-    public void dropBlockAsItemWithChance(World p_149690_1_, int p_149690_2_, int p_149690_3_, int p_149690_4_, int p_149690_5_, float p_149690_6_, int p_149690_7_) {}
-
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {}
+    
+    @Override
+   public boolean isReplaceable(World worldIn, BlockPos pos) {
+       return true;
+   }
 }

@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 public class BlockCreativeSteam extends BaseBlock {
 	public BlockCreativeSteam() {
 		super("creativeSteam");
-		setRotationType(null);
 	}
 
 	@Override

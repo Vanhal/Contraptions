@@ -2,12 +2,14 @@ package tv.vanhal.contraptions.blocks.passive;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.blocks.BaseBlock;
@@ -17,6 +19,7 @@ import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.Point3I;
 import tv.vanhal.contraptions.util.StringHelper;
 import tv.vanhal.contraptions.world.RenderOverlay;
 import tv.vanhal.contraptions.world.heat.HeatRegistry;
@@ -25,21 +28,18 @@ public class BlockConductivePlate extends BaseBlock implements IHeatBlock, IGuiR
 
 	public BlockConductivePlate() {
 		super("conductivePlate");
-		this.setFaceTexture(1, "conductivePlate_top");
-		this.setSidesTexture("conductivePlate_side");
-		setRotationType(null);
 	}
-
+	
 	@Override
 	public int getMeltingPoint() {
 		return 2000;
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 		if (!world.isRemote)
-			HeatRegistry.getInstance(world).addHeatBlock(x, y, z);
-		super.onBlockAdded(world, x, y, z);
+			HeatRegistry.getInstance(world).addHeatBlock(new Point3I(pos));
+		super.onBlockAdded(world, pos, state);
     }
 
 	@Override

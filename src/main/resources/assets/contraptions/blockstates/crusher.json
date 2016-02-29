@@ -1,0 +1,21 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "#material": "contraptions:models/crusher"
+        },
+        "model": "contraptions:crusher.obj"
+     },
+    "variants": {
+        "normal": [{ }],
+        "inventory": [{
+			"transform": {
+				"thirdperson": {
+					"rotation": [{"x": 10}, {"y": -45}, {"z": 170}],
+					"translation": [ 0, 0, -0.1 ],
+					"scale": [ 0.375, 0.375, 0.375 ]
+				}
+            }
+		}]
+    }
+}

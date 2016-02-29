@@ -18,7 +18,7 @@ public class HandlerWater implements IHeatBlockHandler {
 	@Override
 	public boolean processHeat(World world, Point3I point, int currentHeat, HeatRegistry heatReg) {
 		if (canProcess(currentHeat)) {
-			world.setBlock(point.getX(), point.getY(), point.getZ(), ContFluids.steam);
+			world.setBlockState(point.getPos(), ContFluids.steam.getDefaultState());
 			heatReg.removeHeatBlock(point);
 			return true;
 		}

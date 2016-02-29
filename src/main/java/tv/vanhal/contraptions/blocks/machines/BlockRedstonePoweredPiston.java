@@ -1,28 +1,40 @@
 package tv.vanhal.contraptions.blocks.machines;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.blocks.BaseBlock;
+import tv.vanhal.contraptions.blocks.BaseCustomBlock;
+import tv.vanhal.contraptions.blocks.BasePoweredBlock;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePoweredPiston;
 import tv.vanhal.contraptions.tiles.TileRedstonePoweredPiston;
+import tv.vanhal.contraptions.util.BlockHelper.Axis;
 
-public class BlockRedstonePoweredPiston extends BaseBlock {
+public class BlockRedstonePoweredPiston extends BasePoweredBlock {
+	protected final Axis rotationType = Axis.SixWay;
+	
 	public BlockRedstonePoweredPiston() {
-		super("poweredRedstonePiston", true);
+		super("poweredRedstonePiston");
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+	public Axis getRotationType() {
+		return Axis.SixWay;
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
         if (!world.isRemote) {
-        	TileEntity tile = world.getTileEntity(x, y, z);
+        	TileEntity tile = world.getTileEntity(pos);
         	if ( (tile != null) && (tile instanceof TilePoweredPiston) ) {
         		((TilePoweredPiston)tile).blockUpdated();
         	}

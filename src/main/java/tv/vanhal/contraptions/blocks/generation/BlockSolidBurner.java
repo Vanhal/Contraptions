@@ -3,9 +3,13 @@ package tv.vanhal.contraptions.blocks.generation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
@@ -15,6 +19,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.Contraptions;
@@ -26,24 +33,40 @@ import tv.vanhal.contraptions.tiles.TilePlacer;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import tv.vanhal.contraptions.util.Colours;
 import tv.vanhal.contraptions.util.ItemHelper;
+import tv.vanhal.contraptions.util.Point3I;
 import tv.vanhal.contraptions.util.StringHelper;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import tv.vanhal.contraptions.world.RenderOverlay;
 import tv.vanhal.contraptions.world.heat.HeatRegistry;
 
 public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRenderer {
+    public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
 	public BlockSolidBurner() {
 		super("solidBurner");
-		setFrontTexture("solidBurner_front");
-		setFrontActiveTexture("solidBurner_frontActive");
-		setRotationType(Axis.FourWay);
+		//setFrontTexture("solidBurner_front");
+		//setFrontActiveTexture("solidBurner_frontActive");
 	}
 	
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+    protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] {FACING, ACTIVE});
+    }
+	
+	@Override
+	protected void setDefaultState() {
+		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.WEST).withProperty(ACTIVE, false));
+	}
+	
+	@Override
+	public Axis getRotationType() {
+		return Axis.FourWay;
+	}
+	
+	@Override
+    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
         if (!world.isRemote) {
-        	TileEntity tile = world.getTileEntity(x, y, z);
+        	TileEntity tile = world.getTileEntity(pos);
         	if ( (tile != null) && (tile instanceof TileSolidBurner) ) {
         		((TileSolidBurner)tile).blockUpdated();
         	}
@@ -51,8 +74,18 @@ public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRende
     }
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		return ItemHelper.clickAddToTile(world, x, y, z, player, 0);
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileSolidBurner) {
+			TileSolidBurner burner = (TileSolidBurner)tile;
+			return state.withProperty(FACING, burner.facing).withProperty(ACTIVE, burner.isActive());
+		}
+        return state;
+    }
+	
+	@Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return ItemHelper.clickAddToTile(world, pos, player, 0);
 	}
 	
 	
@@ -72,10 +105,10 @@ public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRende
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z) {
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
 		if (!world.isRemote)
-			HeatRegistry.getInstance(world).addHeatBlock(x, y, z);
-		super.onBlockAdded(world, x, y, z);
+			HeatRegistry.getInstance(world).addHeatBlock(new Point3I(pos));
+		super.onBlockAdded(world, pos, state);
     }
 
 	@Override
@@ -84,7 +117,7 @@ public class BlockSolidBurner extends BaseBlock implements IHeatBlock, IGuiRende
 		int scr_y = res.getScaledHeight() / 2;
 		//render the current burning item
 		
-		TileSolidBurner burner = (TileSolidBurner)world.getTileEntity(x, y, z);
+		TileSolidBurner burner = (TileSolidBurner)world.getTileEntity(new BlockPos(x, y, z));
 		if (burner != null) {
 			ItemStack burningItem = burner.getBurningItem();
 			if (burningItem != null) {

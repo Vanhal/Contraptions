@@ -1,0 +1,6 @@
+{
+    "variants": {
+		"active=false": { "model": "contraptions:grabber" },
+		"active=true": { "model": "contraptions:grabberOn" }
+    }
+}

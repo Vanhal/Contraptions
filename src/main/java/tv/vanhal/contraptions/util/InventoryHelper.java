@@ -5,25 +5,25 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 //Most of this is based of code by Dynious
 //Source: https://github.com/Dynious/RefinedRelocation/blob/master/src/main/java/com/dynious/refinedrelocation/helper/IOHelper.java
 public class InventoryHelper {
-    public static ItemStack insert(TileEntity tile, ItemStack itemStack, ForgeDirection side, boolean simulate) {
+    public static ItemStack insert(TileEntity tile, ItemStack itemStack, EnumFacing side, boolean simulate) {
         if (tile instanceof IInventory) {
-            return insert((IInventory) tile, itemStack, side.ordinal(), simulate);
+            return insert((IInventory) tile, itemStack, side, simulate);
         }
         return itemStack;
     }
 
-    public static ItemStack insert(IInventory inventory, ItemStack itemStack, int side, boolean simulate) {
+    public static ItemStack insert(IInventory inventory, ItemStack itemStack, EnumFacing side, boolean simulate) {
         ItemStack stackInSlot;
         int emptySlot = -1;
 
-        if (inventory instanceof ISidedInventory && side > -1) {
+        if (inventory instanceof ISidedInventory && side != null) {
             ISidedInventory isidedinventory = (ISidedInventory) inventory;
-            int[] aint = isidedinventory.getAccessibleSlotsFromSide(side);
+            int[] aint = isidedinventory.getSlotsForFace(side);
 
             for (int j = 0; j < aint.length && itemStack != null && itemStack.stackSize > 0; ++j) {
                 if (canInsertItemToInventory(inventory, itemStack, aint[j], side)) {
@@ -107,12 +107,12 @@ public class InventoryHelper {
         return itemStack;
     }
     
-    public static boolean doesInventoryHaveItem(TileEntity tile, ItemStack itemStack, ForgeDirection direction) {
+    public static boolean doesInventoryHaveItem(TileEntity tile, ItemStack itemStack, EnumFacing direction) {
     	if (isInventory(tile, direction)) {
     		IInventory inventory = (IInventory)tile;
     		if (inventory instanceof ISidedInventory) {
                 ISidedInventory iSidedInventory = (ISidedInventory) inventory;
-                int[] accessibleSlotsFromSide = iSidedInventory.getAccessibleSlotsFromSide(direction.ordinal());
+                int[] accessibleSlotsFromSide = iSidedInventory.getSlotsForFace(direction);
 
                 for (int anAccessibleSlotsFromSide : accessibleSlotsFromSide) {
                 	if (areItemStacksEqual(itemStack, iSidedInventory.getStackInSlot(anAccessibleSlotsFromSide), true, true)) 
@@ -130,7 +130,7 @@ public class InventoryHelper {
     	return false;
     }
 
-	public static boolean canInsertItemToInventory(IInventory inventory, ItemStack itemStack, int slot, int side) {
+	public static boolean canInsertItemToInventory(IInventory inventory, ItemStack itemStack, int slot, EnumFacing side) {
 		if (inventory.isItemValidForSlot(slot, itemStack)) {
 			if (!(inventory instanceof ISidedInventory)) return true;
 			else if (((ISidedInventory) inventory).canInsertItem(slot, itemStack, side)) return true;
@@ -138,18 +138,18 @@ public class InventoryHelper {
 		return false;
 	}
 
-	public static boolean canExtractItemFromInventory(IInventory inventory, ItemStack itemStack, int slot, int side) {
+	public static boolean canExtractItemFromInventory(IInventory inventory, ItemStack itemStack, int slot, EnumFacing side) {
 		return !(inventory instanceof ISidedInventory) || ((ISidedInventory) inventory).canExtractItem(slot, itemStack, side);
 	}
 	
-    public static boolean isInventory(TileEntity tile, ForgeDirection side) {
+    public static boolean isInventory(TileEntity tile, EnumFacing side) {
         if (tile instanceof IInventory) {
-            return !(tile instanceof ISidedInventory) || ((ISidedInventory) tile).getAccessibleSlotsFromSide(side.ordinal()).length > 0;
+            return !(tile instanceof ISidedInventory) || ((ISidedInventory) tile).getSlotsForFace(side).length > 0;
         }
         return false;
     }
     
     public static boolean areItemStacksEqual(ItemStack itemStack1, ItemStack itemStack2, boolean checkMeta, boolean checkNBT) {
-        return itemStack1 == null && itemStack2 == null || (!(itemStack1 == null || itemStack2 == null) && (itemStack1.getItem() == itemStack2.getItem() && ((!checkMeta || itemStack1.getItemDamage() == itemStack2.getItemDamage()) && (!checkNBT || !(itemStack1.stackTagCompound == null && itemStack2.stackTagCompound != null) && (itemStack1.stackTagCompound == null || itemStack1.stackTagCompound.equals(itemStack2.stackTagCompound))))));
+        return itemStack1 == null && itemStack2 == null || (!(itemStack1 == null || itemStack2 == null) && (itemStack1.getItem() == itemStack2.getItem() && ((!checkMeta || itemStack1.getItemDamage() == itemStack2.getItemDamage()) && (!checkNBT || !(itemStack1.getTagCompound() == null && itemStack2.getTagCompound() != null) && (itemStack1.getTagCompound() == null || itemStack1.getTagCompound().equals(itemStack2.getTagCompound()))))));
     }
 }

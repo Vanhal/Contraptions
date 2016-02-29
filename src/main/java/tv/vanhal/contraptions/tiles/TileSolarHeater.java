@@ -13,7 +13,7 @@ public class TileSolarHeater extends BaseTile {
 	}
 	
 	public boolean isActive() {
-		return ( (worldObj.isDaytime()) && (worldObj.canBlockSeeTheSky(getX(), getY(), getZ())));
+		return ( (worldObj.isDaytime()) && (worldObj.canBlockSeeSky(pos)));
 	}
 	
 	@Override
@@ -21,8 +21,8 @@ public class TileSolarHeater extends BaseTile {
 		if (!worldObj.isRemote) {
 			if (ticks>ContConfig.TICKS_PER_HEAT_TICK) {
 				if (worldObj.isDaytime()) {
-					if (worldObj.canBlockSeeTheSky(getX(), getY(), getZ())) {
-						Point3I targetBlock = getPoint().getAdjacentPoint(facing.getOpposite());
+					if (worldObj.canBlockSeeSky(pos)) {
+						Point3I targetBlock = getPoint().getAdjacentPoint(facing.getOpposite()).getAdjacentPoint(facing.DOWN);
 						if (HeatRegistry.getInstance(worldObj).isHeatableBlock(worldObj, targetBlock))
 							HeatRegistry.getInstance(worldObj).addHeat(targetBlock, SOLAR_HEAT_PER_TICK);
 					}

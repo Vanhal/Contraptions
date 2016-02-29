@@ -6,6 +6,7 @@ import java.util.List;
 import tv.vanhal.contraptions.tiles.TileCrusher;
 import tv.vanhal.contraptions.tiles.TileSolidBurner;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -13,38 +14,39 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemHelper {
-	public static void dropAsItem(World worldObj, int x, int y, int z, Block block, int meta) {
+	public static void dropAsItem(World worldObj, BlockPos pos, Block block, int meta) {
 		if (block!=null) {
 			ItemStack itemStack = new ItemStack(block, 1, meta);
-			dropAsItem(worldObj, x, y, z, itemStack);
+			dropAsItem(worldObj, pos, itemStack);
 		}
 	}
 	
 	
-	public static void dropAsItem(World worldObj, int x, int y, int z, ItemStack itemStack) {
+	public static void dropAsItem(World worldObj, BlockPos pos, ItemStack itemStack) {
         if (!worldObj.isRemote) {
             float f = 0.7F;
             double d0 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             double d1 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             double d2 = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(worldObj, (double)x + d0, (double)y + d1, (double)z + d2, itemStack);
-            entityitem.delayBeforeCanPickup = 10;
+            EntityItem entityitem = new EntityItem(worldObj, (double)pos.getX() + d0, (double)pos.getY() + d1,
+            		(double)pos.getZ() + d2, itemStack);
             worldObj.spawnEntityInWorld(entityitem);
         }
     }
 	
-	public static void dropBlockIntoWorld(World worldObj, int x, int y, int z, Block block, int meta) {
-		List<ItemStack> drops = block.getDrops(worldObj, x, y, z, meta, 0);
+	public static void dropBlockIntoWorld(World worldObj, BlockPos pos, Block block, IBlockState state) {
+		List<ItemStack> drops = block.getDrops(worldObj, pos, state, 0);
 		for (ItemStack itemStack: drops) {
-			dropAsItem(worldObj, x, y, z, itemStack);
+			dropAsItem(worldObj, pos, itemStack);
 		}
-		worldObj.setBlockToAir(x, y, z);
+		worldObj.setBlockToAir(pos);
 	}
 	
-	public static ArrayList<ItemStack> getBlockContents(World world, int x, int y, int z, TileEntity tileEntity) {
+	public static ArrayList<ItemStack> getBlockContents(World world, BlockPos pos, TileEntity tileEntity) {
 		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 		if (tileEntity!=null) {
 			if (tileEntity instanceof IInventory) {
@@ -73,7 +75,7 @@ public class ItemHelper {
 	}
 	
     public static boolean areStacksSame(ItemStack itemStack1, ItemStack itemStack2, boolean checkMeta, boolean checkNBT) {
-        return itemStack1 == null && itemStack2 == null || (!(itemStack1 == null || itemStack2 == null) && (itemStack1.getItem() == itemStack2.getItem() && ((!checkMeta || itemStack1.getItemDamage() == itemStack2.getItemDamage()) && (!checkNBT || !(itemStack1.stackTagCompound == null && itemStack2.stackTagCompound != null) && (itemStack1.stackTagCompound == null || itemStack1.stackTagCompound.equals(itemStack2.stackTagCompound))))));
+        return itemStack1 == null && itemStack2 == null || (!(itemStack1 == null || itemStack2 == null) && (itemStack1.getItem() == itemStack2.getItem() && ((!checkMeta || itemStack1.getItemDamage() == itemStack2.getItemDamage()) && (!checkNBT || !(itemStack1.getTagCompound() == null && itemStack2.getTagCompound() != null) && (itemStack1.getTagCompound() == null || itemStack1.getTagCompound().equals(itemStack2.getTagCompound()))))));
     }
 	
 	public static boolean isFuel(ItemStack itemStack) {
@@ -84,15 +86,15 @@ public class ItemHelper {
 		return TileEntityFurnace.getItemBurnTime(itemStack);
 	}
 	
-	public static boolean clickAddToTile(World world, int x, int y, int z, EntityPlayer player, int slot) {
+	public static boolean clickAddToTile(World world, BlockPos pos, EntityPlayer player, int slot) {
 		if (player.isSneaking()) {
 			if (!world.isRemote) {
 				if (player.getCurrentEquippedItem()==null) {
-					TileEntity tile = world.getTileEntity(x, y, z);
+					TileEntity tile = world.getTileEntity(pos);
 					if ( (tile != null) && (tile instanceof ISidedInventory) ) {
 						ISidedInventory inventory = (ISidedInventory)tile;
 						if (inventory.getStackInSlot(slot)!=null) {
-							dropAsItem(world, x, y + 1, z, inventory.getStackInSlot(slot));
+							dropAsItem(world, pos.up(), inventory.getStackInSlot(slot));
 							inventory.setInventorySlotContents(slot, null);
 						}
 					}
@@ -100,12 +102,12 @@ public class ItemHelper {
 			}
 			return true;
 		} else if (player.getCurrentEquippedItem() != null) {
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if ( (tile != null) && (tile instanceof ISidedInventory) ) {
 				ISidedInventory inventory = (ISidedInventory)tile;
 				if (inventory.isItemValidForSlot(slot, player.getCurrentEquippedItem())) {
 					if (!world.isRemote) {
-						if (inventory.canInsertItem(slot, player.getCurrentEquippedItem(), 0)) {
+						if (inventory.canInsertItem(slot, player.getCurrentEquippedItem(), null)) {
 							if (inventory.getStackInSlot(slot)==null) {
 								inventory.setInventorySlotContents(slot, new ItemStack(player.getCurrentEquippedItem().getItem(), 
 										1, player.getCurrentEquippedItem().getItemDamage()));

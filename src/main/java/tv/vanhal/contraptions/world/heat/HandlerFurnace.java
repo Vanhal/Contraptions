@@ -13,6 +13,13 @@ import tv.vanhal.contraptions.interfaces.IHeatBlockHandler;
 import tv.vanhal.contraptions.util.Point3I;
 
 public class HandlerFurnace implements IHeatBlockHandler {
+	
+	/* Furnace Fields
+	   0: furnaceBurnTime
+       1: currentItemBurnTime = value;
+       2: cookTime = value;
+       3: totalCookTime
+	 */
 
 	@Override
 	public boolean canProcess(int currentHeat) {
@@ -22,15 +29,15 @@ public class HandlerFurnace implements IHeatBlockHandler {
 	@Override
 	public boolean processHeat(World world, Point3I point, int currentHeat, HeatRegistry heatReg) {
 		if ( (canProcess(currentHeat)) && (!world.isRemote) ) {
-			TileEntity tile = world.getTileEntity(point.getX(), point.getY(), point.getZ());
+			TileEntity tile = point.getTileEntity(world);
 			if (tile instanceof TileEntityFurnace) {
 				TileEntityFurnace furnace = (TileEntityFurnace)tile;
 				if (canSmelt(furnace)) {
 					//Because this doesn't tick every tick updating the block doesn't really work
 					//if (furnace.furnaceBurnTime==0)
 					// BlockFurnace.updateFurnaceBlockState(true, world, point.getX(), point.getY(), point.getZ());
-					furnace.furnaceBurnTime = ContConfig.TICKS_PER_HEAT_TICK + 1;
-					furnace.currentItemBurnTime = 1;
+					furnace.setField(0, ContConfig.TICKS_PER_HEAT_TICK + 1);
+					furnace.setField(1, 1);
 					heatReg.removeHeat(point, 25);
 					furnace.markDirty();
 				}
@@ -43,7 +50,7 @@ public class HandlerFurnace implements IHeatBlockHandler {
     private boolean canSmelt(TileEntityFurnace furnace) {
         if (furnace.getStackInSlot(0) == null) return false;
         
-        ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(furnace.getStackInSlot(0));
+        ItemStack itemstack = FurnaceRecipes.instance().getSmeltingResult(furnace.getStackInSlot(0));
         if (itemstack == null) return false;
         if (furnace.getStackInSlot(2) == null) return true;
         if (!furnace.getStackInSlot(2).isItemEqual(itemstack)) return false;

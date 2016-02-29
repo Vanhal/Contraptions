@@ -40,12 +40,10 @@ public class TileTurbine extends BaseTile {
 				if (testBlock instanceof IFluidBlock) {
 					IFluidBlock fluidBlock = (IFluidBlock)testBlock;
 					if (fluidBlock.getFluid() == ContFluids.steamFluid) {
-						FluidStack fluidStack = fluidBlock.drain(worldObj, testPoint.getX(), testPoint.getY(),
-								testPoint.getZ(), false);
+						FluidStack fluidStack = fluidBlock.drain(worldObj, testPoint.getPos(), false);
 						if (fluidStack.amount <= (maxSteam - steamStorage)) {
 							steamStorage += fluidStack.amount;
-							fluidStack = fluidBlock.drain(worldObj, testPoint.getX(), testPoint.getY(),
-									testPoint.getZ(), true);
+							fluidStack = fluidBlock.drain(worldObj, testPoint.getPos(), true);
 						}
 					}
 					

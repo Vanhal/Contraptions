@@ -21,7 +21,7 @@ public class HandlerRecipes implements IHeatBlockHandler {
 	@Override
 	public boolean processHeat(World world, Point3I point, int currentHeat, HeatRegistry heatReg) {
 		if (canProcess(currentHeat)) {
-			world.setBlock(point.getX(), point.getY(), point.getZ(), recipe.getOutputBlock());
+			world.setBlockState(point.getPos(), recipe.getOutputBlock().getDefaultState());
 			heatReg.removeHeatBlock(point);
 			return true;
 		}

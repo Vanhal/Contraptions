@@ -1,15 +1,16 @@
 package tv.vanhal.contraptions.blocks.generation;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.blocks.BaseBlock;
+import tv.vanhal.contraptions.blocks.BaseCustomBlock;
 import tv.vanhal.contraptions.blocks.ContBlocks;
 import tv.vanhal.contraptions.interfaces.ITorqueBlock;
 import tv.vanhal.contraptions.items.ContItems;
@@ -17,12 +18,16 @@ import tv.vanhal.contraptions.tiles.TileTurbine;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;
 import tv.vanhal.contraptions.util.Point3I;
 
-public class BlockTurbine extends BaseBlock implements ITorqueBlock {
+public class BlockTurbine extends BaseCustomBlock implements ITorqueBlock {
 
 	public BlockTurbine() {
-		super("turbine", true);
+		super("turbine");
 		setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.91f, 1.0f);
-        setRotationType(Axis.FourWay);
+	}
+	
+	@Override
+	public Axis getRotationType() {
+		return Axis.FourWay;
 	}
 
 	
@@ -47,8 +52,8 @@ public class BlockTurbine extends BaseBlock implements ITorqueBlock {
 		if (point.getBlock(world) instanceof ITorqueBlock) {
 			ITorqueBlock torqueBlock = (ITorqueBlock) point.getBlock(world);
 			int facing = point.getMetaData(world);
-			if ( (direction == facing) || (direction == ForgeDirection.OPPOSITES[facing]) ) {
-				ForgeDirection dir = ForgeDirection.getOrientation(direction);
+			if ( (direction == facing) || (direction == EnumFacing.values()[facing].getOpposite().ordinal()) ) {
+				EnumFacing dir = EnumFacing.values()[direction];
 				int torque = torqueBlock.getTorqueProduced(world, point);
 				torque += torqueBlock.getTorqueTransfering(world, point.getAdjacentPoint(dir), direction);
 				return torque;

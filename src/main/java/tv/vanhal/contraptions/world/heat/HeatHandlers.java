@@ -25,12 +25,11 @@ public class HeatHandlers {
 	}
 	
 	public static boolean isValidBlock(World world, Point3I point) {
-		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
-		return validHeatBlocks.containsKey(world.getBlock(point.getX(), point.getY(), point.getZ()));
+		return validHeatBlocks.containsKey(point.getBlock(world));
 	}
 	
 	public static boolean canBlockProcess(World world, Point3I point, int heat) {
-		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
+		Block block = point.getBlock(world);
 		if (validHeatBlocks.containsKey(block)) {
 			return validHeatBlocks.get(block).canProcess(heat);
 		}
@@ -38,7 +37,7 @@ public class HeatHandlers {
 	}
 	
 	public static boolean processBlockHeat(World world, Point3I point, int currentHeat) {
-		Block block = world.getBlock(point.getX(), point.getY(), point.getZ());
+		Block block = point.getBlock(world);
 		if (!validHeatBlocks.containsKey(block)) return false;
 		return validHeatBlocks.get(block).processHeat(world, point, currentHeat, HeatRegistry.getInstance(world));
 	}

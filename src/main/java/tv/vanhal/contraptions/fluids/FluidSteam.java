@@ -4,17 +4,24 @@ import java.util.Random;
 
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.util.Ref;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 
@@ -26,14 +33,10 @@ public class FluidSteam extends BlockFluidFinite {
 	}
 	
 	protected String name;
-
-	protected IIcon still;
-	protected IIcon flowing;
 	
 	public FluidSteam() {
 		super(ContFluids.steamFluid, ContFluids.material);
 		setName("steam");
-		setRenderPass(1);
 		displacements.put(this, false);
 		setHardness(100.0F);
 		setLightOpacity(3);
@@ -42,30 +45,35 @@ public class FluidSteam extends BlockFluidFinite {
 	
 	public void setName(String _name) {
 		name = _name;
-		setBlockName(name);
+		this.setUnlocalizedName(name);
 	}
 	
 	public void preInit() {
 		GameRegistry.registerBlock(this, name);
 	}
 	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-
-		return side <= 1 ? still : flowing;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir) {
-		still = ir.registerIcon(Ref.MODID + ":fluids/" + name + ".still");
-		flowing = ir.registerIcon(Ref.MODID + ":fluids/" + name + ".flowing");
+	public void postInit() {
+		if (Contraptions.proxy.isClient()) {
+			Item steamItem = Item.getItemFromBlock(this);
+			final ModelResourceLocation steamRes = new ModelResourceLocation(Ref.MODID + ":" + name, "steam");
+			//Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(steamItem, 0, steamRes);
+			ModelBakery.registerItemVariants(steamItem);
+			ModelLoader.setCustomMeshDefinition(steamItem, new ItemMeshDefinition() {
+                public ModelResourceLocation getModelLocation(ItemStack stack) {
+                    return steamRes;
+                }
+            });
+			ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+                protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                    return steamRes;
+                }
+            });
+		}
 	}
 	
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity) {
+		super.onEntityCollidedWithBlock(world, pos, entity);
 
 		if (entity instanceof EntityLivingBase) {
 			EntityLivingBase ent = (EntityLivingBase)entity;

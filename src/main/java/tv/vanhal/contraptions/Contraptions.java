@@ -6,12 +6,24 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tv.vanhal.contraptions.blocks.ContBlocks;
-import tv.vanhal.contraptions.client.intergration.MineTweaker;
 import tv.vanhal.contraptions.compat.ModHelper;
 import tv.vanhal.contraptions.core.Proxy;
 import tv.vanhal.contraptions.crafting.Recipes;
@@ -24,19 +36,6 @@ import tv.vanhal.contraptions.network.PartialTileNBTUpdateMessageHandler;
 import tv.vanhal.contraptions.util.Ref;
 import tv.vanhal.contraptions.world.TooltipHandler;
 import tv.vanhal.contraptions.world.WorldTicker;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Ref.MODID, name = Ref.MODNAME, version = Ref.Version)
 public class Contraptions {
@@ -66,6 +65,7 @@ public class Contraptions {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		proxy.preInit();
 		NetworkHandler.registerMessageHandler(PartialTileNBTUpdateMessageHandler.class,
 				PartialTileNBTUpdateMessage.class, Side.CLIENT);
 		
@@ -86,12 +86,12 @@ public class Contraptions {
 		ContItems.init();
 		ContBlocks.init();
 		
-		if(Loader.isModLoaded("MineTweaker3"))
-			MineTweaker.init();
+		/*if(Loader.isModLoaded("MineTweaker3"))
+			MineTweaker.init();*/
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
-		FMLCommonHandler.instance().bus().register(instance);
-		FMLCommonHandler.instance().bus().register(new WorldTicker());
+		MinecraftForge.EVENT_BUS.register(instance);
+		MinecraftForge.EVENT_BUS.register(new WorldTicker());
 		MinecraftForge.EVENT_BUS.register(new TooltipHandler());
 		proxy.init();
 	}
@@ -100,6 +100,7 @@ public class Contraptions {
 	public void postInit(FMLPostInitializationEvent event) {
 		ContItems.postInit();
 		ContBlocks.postInit();
+		ContFluids.postInit();
 		
 		proxy.registerEntities();
 		proxy.registerItems();

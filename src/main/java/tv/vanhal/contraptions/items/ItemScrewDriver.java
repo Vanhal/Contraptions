@@ -1,12 +1,13 @@
 package tv.vanhal.contraptions.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tv.vanhal.contraptions.crafting.RecipeManager;
 import tv.vanhal.contraptions.interfaces.IConfigurable;
@@ -20,28 +21,20 @@ public class ItemScrewDriver extends BaseItem {
 	}
 	
 	@Override
-	public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		Block block = world.getBlock(x, y, z);
+	public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+		Block block = world.getBlockState(pos).getBlock();
 		if (block instanceof IConfigurable) {
 			boolean activated = false;
 			if (player.isSneaking())
-				activated = ((IConfigurable)block).sneakClick(player, world, x, y, z, side);
+				activated = ((IConfigurable)block).sneakClick(player, world, pos, side);
 			else 
-				activated = ((IConfigurable)block).click(player, world, x, y, z, side);
+				activated = ((IConfigurable)block).click(player, world, pos, side);
 	        if (activated) return !world.isRemote;
 		}
 		if (player.isSneaking()) {
 			//dismantle
-			/*if (block instanceof IDismantleable) {
-				IDismantleable dBlock = (IDismantleable)block;
-				if (dBlock.canDismantle(player, world, x, y, z)) {
-					if (!world.isRemote) dBlock.dismantleBlock(player, world, x, y, z, false);
-				}
-			}*/
 		} else {
-			ForgeDirection face = ForgeDirection.getOrientation(side);
-			block.rotateBlock(world, x, y, z, face);
-
+			block.rotateBlock(world, pos, side);
 		}
         return !world.isRemote;
     }

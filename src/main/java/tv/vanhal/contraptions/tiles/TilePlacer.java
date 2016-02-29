@@ -55,9 +55,9 @@ public class TilePlacer extends BaseInventoryTile {
 			Block block = Block.getBlockFromItem(slots[0].getItem());
 			if (block != Blocks.air) {
 				Point3I placePoint = getPoint().getAdjacentPoint(facing);
-				if ( (block.canPlaceBlockAt(worldObj, placePoint.getX(), placePoint.getY(), placePoint.getZ())) 
+				if ( (block.canPlaceBlockAt(worldObj, placePoint.getPos())) 
 						&& (placePoint.getBlock(worldObj) != block) ) {
-					worldObj.setBlock(placePoint.getX(), placePoint.getY(), placePoint.getZ(), block);
+					worldObj.setBlockState(placePoint.getPos(), block.getDefaultState());
 					slots[0] = null;
 					setContentsUpdate();
 				}

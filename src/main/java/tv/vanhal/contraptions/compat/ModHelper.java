@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import tv.vanhal.contraptions.compat.mods.Vanilla;
 import tv.vanhal.contraptions.util.Point3I;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -59,9 +60,9 @@ public class ModHelper {
 	}
 	
 	//check if a block in the world is an ungrown plant	
-	public static boolean isPlant(Block plantBlock, int metadata) {
+	public static boolean isPlant(Block plantBlock, IBlockState state) {
 		for (BaseMod mod: modsLoaded) {
-			if (mod.isPlant(plantBlock, metadata)) return true;
+			if (mod.isPlant(plantBlock, state)) return true;
 		}
 		return false;
 	}

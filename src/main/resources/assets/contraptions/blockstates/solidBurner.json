@@ -1,0 +1,16 @@
+{
+    "variants": {
+            "active=false,facing=north": { "model": "contraptions:solidBurner" },
+            "active=false,facing=east": { "model": "contraptions:solidBurner", "y": 90 },
+            "active=false,facing=south": { "model": "contraptions:solidBurner", "y": 180 },
+            "active=false,facing=west": { "model": "contraptions:solidBurner", "y": 270 },
+            "active=true,facing=north": { "model": "contraptions:solidBurnerOn" },
+            "active=true,facing=east": { "model": "contraptions:solidBurnerOn", "y": 90 },
+            "active=true,facing=south": { "model": "contraptions:solidBurnerOn", "y": 180 },
+            "active=true,facing=west": { "model": "contraptions:solidBurnerOn", "y": 270 },
+            "active=false,facing=up": {"model": "contraptions:solidBurner" },
+            "active=true,facing=up": {"model": "contraptions:solidBurnerOn" },
+            "active=false,facing=down": { "model": "contraptions:solidBurner"},
+            "active=true,facing=down": {"model": "contraptions:solidBurnerOn" }
+    }
+}

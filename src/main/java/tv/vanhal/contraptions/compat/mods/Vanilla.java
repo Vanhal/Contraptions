@@ -3,6 +3,7 @@ package tv.vanhal.contraptions.compat.mods;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -36,7 +37,7 @@ public class Vanilla extends BaseMod {
 	}
 	
 	@Override
-	public boolean isPlant(Block plantBlock, int metadata) {
+	public boolean isPlant(Block plantBlock, IBlockState state) {
 		if (plantBlock instanceof IGrowable) return true;
 		if (plantBlock instanceof BlockNetherWart) return true;
 		if (plantBlock == Blocks.reeds) return true;
@@ -44,35 +45,36 @@ public class Vanilla extends BaseMod {
 		return false;
 	}
 	
-	protected Block getPlantBlock(World worldObj, ItemStack itemStack, Point3I point) {
-		Block plant = null;
+	protected IBlockState getPlantBlock(World worldObj, ItemStack itemStack, Point3I point) {
+		IBlockState plant = null;
 		if (itemStack.getItem() instanceof IPlantable) {
 			//normal crops
-			plant = ((IPlantable)itemStack.getItem()).getPlant(worldObj,  point.getX(), point.getY(), point.getZ());
+			plant = ((IPlantable)itemStack.getItem()).getPlant(worldObj, point.getPos());
 		} else if (itemStack.getItem() == Items.reeds) { //sugarcane
-			plant = Blocks.reeds;
+			plant = Blocks.reeds.getDefaultState();
 		} else if (Block.getBlockFromItem(itemStack.getItem()) == Blocks.cactus) { //cactus
-			plant = Blocks.cactus;
+			plant = Blocks.cactus.getDefaultState();
 		}
 		return plant;
 	}
 	
 	@Override
 	public boolean validBlock(World worldObj, ItemStack itemStack, Point3I point) {
-		Block plant = getPlantBlock(worldObj, itemStack, point);
+		IBlockState plant = getPlantBlock(worldObj, itemStack, point);
 		if (plant!=null) {
-			return (plant.canPlaceBlockAt(worldObj, point.getX(), point.getY(), point.getZ())) &&
-				(worldObj.getBlock(point.getX(), point.getY(), point.getZ()) != plant);
+			return (plant.getBlock().canPlaceBlockAt(worldObj, point.getPos())) &&
+				(worldObj.getBlockState(point.getPos()).getBlock() != plant.getBlock());
 		}
 		return false;
 	}
 	
 	@Override
 	public boolean placeSeed(World worldObj, ItemStack itemStack, Point3I point, boolean doAction) {
-		Block plant = getPlantBlock(worldObj, itemStack, point);
+		IBlockState plant = getPlantBlock(worldObj, itemStack, point);
 		if (plant!=null) {
 			if (doAction) {
-				worldObj.setBlock(point.getX(), point.getY(), point.getZ(), plant, itemStack.getItem().getDamage(itemStack), 7);
+				worldObj.setBlockState(point.getPos(), 
+						plant.getBlock().getStateFromMeta(itemStack.getItem().getDamage(itemStack)), 7);
 			}
 			return true;
 		}

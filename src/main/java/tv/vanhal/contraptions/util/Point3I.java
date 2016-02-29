@@ -1,12 +1,14 @@
 package tv.vanhal.contraptions.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /* A Point case to allow for an x, y, z point */
 public class Point3I {
@@ -22,6 +24,10 @@ public class Point3I {
 	
 	public Point3I(Point3I point) {
 		setLocation(point.getX(), point.getY(), point.getZ());
+	}
+	
+	public Point3I(BlockPos pos) {
+		setLocation(pos.getX(), pos.getY(), pos.getZ());
 	}
 	
 	public Point3I(int x, int y, int z) {
@@ -59,6 +65,10 @@ public class Point3I {
 		return z;
 	}
 	
+	public BlockPos getPos() {
+		return new BlockPos(getX(), getY(), getZ());
+	}
+	
 	public String toString() {
 		return ""+x+", "+y+", "+z;
 	}
@@ -73,6 +83,14 @@ public class Point3I {
 	
 	public Point3I offset(ForgeDirection dir) {
 		return this.offset(dir, 1);
+	}
+	
+	public Point3I offset(EnumFacing face) {
+		return this.offset(face, 1);
+	}
+	
+	public Point3I offset(EnumFacing face, int times) {
+		return this.offset(ForgeDirection.getFromFace(face), times);
 	}
 	
 	public Point3I offset(ForgeDirection dir, int times) {
@@ -94,6 +112,10 @@ public class Point3I {
 		return hash.hashCode();
 	}
 	
+	public Point3I getAdjacentPoint(EnumFacing face) {
+		return offset(face);
+	}
+	
 	public Point3I getAdjacentPoint(int side) {
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 		return getAdjacentPoint(dir);
@@ -104,19 +126,23 @@ public class Point3I {
 	}
 	
 	public boolean blockExists(World world) {
-		return world.blockExists(getX(), getY(), getZ());
+		return world.isBlockLoaded(getPos());
 	}
 	
 	public Block getBlock(IBlockAccess world) {
-		return world.getBlock(getX(), getY(), getZ());
+		return world.getBlockState(getPos()).getBlock();
 	}
 	
 	public TileEntity getTileEntity(IBlockAccess world) {
-		return world.getTileEntity(getX(), getY(), getZ());
+		return world.getTileEntity(getPos());
 	}
 	
 	public int getMetaData(IBlockAccess world) {
-		return world.getBlockMetadata(getX(), getY(), getZ());
+		return getBlock(world).getMetaFromState(getState(world));
+	}
+	
+	public IBlockState getState(IBlockAccess world) {
+		return world.getBlockState(getPos());
 	}
 	
 	public NBTTagCompound getNBT() {

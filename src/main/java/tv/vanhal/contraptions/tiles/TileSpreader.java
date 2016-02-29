@@ -91,12 +91,10 @@ public class TileSpreader extends BaseInventoryTile {
 				if (!( (y==0) && (x==0) )) {
 					if ( (slots[0] != null) && (slots[0].stackSize>0) ) {
 						Point3I plantPoint = getPoint().offset(x, 0, y);
-						if (ItemDye.applyBonemeal(slots[0], worldObj, plantPoint.getX(), 
-								plantPoint.getY(), plantPoint.getZ(), null)) {
+						if (ItemDye.applyBonemeal(slots[0], worldObj, plantPoint.getPos(), null)) {
 							setContentsUpdate();
 							if (worldObj.isRemote) {
-								worldObj.playAuxSFX(2005, plantPoint.getX(), 
-										plantPoint.getY(), plantPoint.getZ(), 0);
+								worldObj.playAuxSFX(2005, plantPoint.getPos(), 0);
 		                    }
 						}
 					}

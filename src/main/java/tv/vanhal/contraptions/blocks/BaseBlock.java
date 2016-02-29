@@ -2,10 +2,14 @@ package tv.vanhal.contraptions.blocks;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.client.model.b3d.B3DLoader;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.BlockHelper;
@@ -17,67 +21,80 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.util.RotationHelper;
 
 public class BaseBlock extends BlockContainer {
 	public String name;
 	public int GUIid = -1;
-	protected boolean isCustomModel = false;
 	
-	protected Axis rotationType = Axis.SixWay;
-	
-	protected IIcon[] blockIcons = new IIcon[6];
-	protected IIcon frontIcon = null;
-	protected IIcon frontActiveIcon = null;
-	protected String[] blockTextures = new String[6];
-	protected String frontTexture = "";
-	protected String frontActiveTexture = "";
-	
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	
 	public BaseBlock(String _name) {
-		this(_name, false);
-	}
-	
-	public BaseBlock(String _name, boolean _customModel) {
 		super(Material.iron);
-		this.isCustomModel = _customModel;
-		setBlockName(_name);
+		setDefaultState();
+
 		name = _name;
+		setUnlocalizedName(_name);
 		
 		setHardness(1.0f);
 		setCreativeTab(Contraptions.ContraptionTab);
 		
 		GUIid = Contraptions.proxy.registerGui(_name);
-		setMainTexture(_name);
 		
-		if (_customModel) setLightOpacity(0);
-	}
-	
-	public void setRotationType(Axis axis) {
-		if (axis == null) rotationType = Axis.None;
-		rotationType = axis;
-	}
-	
-	public Axis getRotationType() {
-		return rotationType;
+		if (isCustomModel()) setLightOpacity(0);
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+    protected BlockState createBlockState() {
+		if (getRotationType() == Axis.None) {
+			return new BlockState(this, new IProperty[0]);
+		} else {
+		    return new BlockState(this, new IProperty[] {FACING});
+		}
+    }
+	
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    	return state;
+    }
+	
+	protected void setDefaultState() {
+		if (getRotationType() == Axis.None) {
+			setDefaultState(blockState.getBaseState());
+		} else {
+			setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.WEST));
+		}
+	}
+	
+	public Axis getRotationType() {
+		return Axis.None;
+	}
+	
+	public boolean isCustomModel() {
+		return false;
+	}
+	
+	@Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (GUIid>=0) {
 			if (!world.isRemote) {
-				FMLNetworkHandler.openGui(player, Contraptions.instance, GUIid, world, x, y, z);
+				FMLNetworkHandler.openGui(player, Contraptions.instance, GUIid, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;
 		}
@@ -98,99 +115,50 @@ public class BaseBlock extends BlockContainer {
 	}
 	
 	public void postInit() {
-		
+		if (Contraptions.proxy.isClient()) {
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Ref.MODID + ":" + name, "inventory"));
+		}
 	}
 	
 	public void addRecipe() {
 		
 	}
 	
-	//normal block stuff
-	public void setMainTexture(String _name) {
-		for (int i = 0; i < 6; i++) {
-			setFaceTexture(i, _name);
-		}
-	}
 	
-	public void setFaceTexture(int side, String _name) {
-		blockTextures[side] = Ref.MODID+":"+_name;
-	}
-	
-	public void setSidesTexture(String _name) {
-		for (int i = 2; i < 6; i++) {
-			setFaceTexture(i, _name);
-		}
-	}
-	
-	public void setFrontTexture(String _name) {
-		frontTexture = Ref.MODID+":"+_name;
-	}
-	
-	public void setFrontActiveTexture(String _name) {
-		frontActiveTexture = Ref.MODID+":"+_name;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		if (frontIcon!=null) {
-			TileEntity tile = world.getTileEntity(x, y, z);
-			if (tile instanceof BaseTile) {
-				if ( ((BaseTile)tile).facing.ordinal() == side) {
-					if ( ((BaseTile)tile).isActive() ) {
-						return frontActiveIcon;
-					} else {
-						return frontIcon;
-					}
-				}
-			}
-		}
-		return this.getIcon(side, world.getBlockMetadata(x, y, z));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister register) {
-		for (int i = 0; i < 6; i++) {
-			blockIcons[i] = register.registerIcon(blockTextures[i]);
-		}
-		if (frontTexture!="") frontIcon = register.registerIcon(frontTexture);
-		if (frontActiveTexture!="") frontActiveIcon = register.registerIcon(frontActiveTexture);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		if ( (rotationType != Axis.FourWay) && (side==meta) && (frontIcon!=null) ) return frontIcon;
-		else if ( (meta==0) && (side==3) && (frontIcon!=null) ) return frontIcon;
-		return blockIcons[side];
+	@Override
+    public boolean isFullBlock() {
+        return !isCustomModel();
 	}
 	
 	@Override
 	public int getRenderType() {
-        return (isCustomModel)?-1:0;
+        return 3;
     }
 	
-	@Override
-	public boolean isOpaqueCube() {
-		return !isCustomModel;
-	}
+    @Override
+    public boolean isOpaqueCube() { 
+    	return !isCustomModel(); 
+    }
 
-	@Override
-	public boolean renderAsNormalBlock() {
-		return !isCustomModel;
-	}
-	
-	@Override
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-		return !isCustomModel;
+    @Override
+    public boolean isFullCube() {
+        return !isCustomModel();
+    }
+
+    @Override
+    public boolean isVisuallyOpaque() {
+        return !isCustomModel();
     }
 	
 	@Override
-	public int isProvidingWeakPower(IBlockAccess block, int x, int y, int z, int side) {
+    public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
 		return 0;
     }
 	
 	@Override
-	public int isProvidingStrongPower(IBlockAccess block, int x, int y, int z, int side) {
-        return side == 0 ? this.isProvidingWeakPower(block, x, y, z, side) : 0;
+	public int getStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
+        return side == side.DOWN ? this.getWeakPower(world, pos, state, side) : 0;
     }
 	
 	@Override
@@ -199,72 +167,102 @@ public class BaseBlock extends BlockContainer {
     }
 	
 	@Override
-	public boolean getWeakChanges(IBlockAccess world, int x, int y, int z) {
+	public boolean getWeakChanges(IBlockAccess world, BlockPos pos) {
         return canProvidePower();
     }
 	
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		int l = BlockHelper.determineOrientation(world, rotationType, x, y, z, entity);
-		setFacing(world, x, y, z, l);
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		int l = BlockHelper.determineOrientation(world, getRotationType(), pos, placer);
+		setFacing(world, pos, l);
     }
 	
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_) {
-		BaseTile tileEntity = (BaseTile)world.getTileEntity(x, y, z);
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		BaseTile tileEntity = (BaseTile)world.getTileEntity(pos);
 
         if (tileEntity != null) {
-            ArrayList<ItemStack> items = ItemHelper.getBlockContents(world, x, y, z, tileEntity);
+            ArrayList<ItemStack> items = ItemHelper.getBlockContents(world, pos, tileEntity);
             
             for (ItemStack item: items) {
-            	ItemHelper.dropAsItem(world, x, y, z, item);
+            	ItemHelper.dropAsItem(world, pos, item);
             }
             
 
-            world.func_147453_f(x, y, z, block);
+            world.updateComparatorOutputLevel(pos, world.getBlockState(pos).getBlock());
         }
-        super.breakBlock(world, x, y, z, block, p_149749_6_);
+        super.breakBlock(world, pos, state);
     }
 	
-	protected int getFacing(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	protected int getFacing(IBlockAccess world, BlockPos pos) {
+		if (getRotationType() == Axis.None) return 0;
+		TileEntity tile = world.getTileEntity(pos);
 		if ( (tile != null) && (tile instanceof BaseTile) ) {
 			return ((BaseTile)tile).getFacing();
 		}
-		return world.getBlockMetadata(x, y, z);
+		if (world.getBlockState(pos).getProperties().containsKey(FACING)) {
+			return world.getBlockState(pos).getValue(FACING).ordinal();
+		} else {
+			return 0;
+		}
 	}
 	
-	protected void setFacing(World world, int x, int y, int z, int facing) {
-		world.setBlockMetadataWithNotify(x, y, z, facing, 2);
-		TileEntity tile = world.getTileEntity(x, y, z);
+	protected void setFacing(World world, BlockPos pos, int facing) {
+		if (getRotationType()!=Axis.None)
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(FACING, EnumFacing.values()[facing]), 2);
+		TileEntity tile = world.getTileEntity(pos);
 		if ( (tile != null) && (tile instanceof BaseTile) ) {
 			((BaseTile)tile).setFacing(facing);
 		}
 	}
 	
 	@Override
-	public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis) {
+    public int getMetaFromState(IBlockState state) {
+		if (getRotationType() == Axis.None) return 0;
+    	if (state.getValue(FACING) != null) {
+    		return state.getValue(FACING).ordinal();
+    	}
+    	return 0;
+    }
+	
+	@Override
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
 		//if (worldObj.isRemote) return false;
-		int currentFacing = getFacing(worldObj, x, y, z);
-		int newFacing = BlockHelper.rotateBlock(currentFacing, rotationType);
-		setFacing(worldObj, x, y, z, newFacing);
+		int currentFacing = getFacing(world, pos);
+		int newFacing = BlockHelper.rotateBlock(currentFacing, getRotationType());
+		setFacing(world, pos, newFacing);
 		return (currentFacing != newFacing);
 	}
 
 	@Override
-    public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z) {
-        return BlockHelper.getValidFacing(rotationType);
+	public EnumFacing[] getValidRotations(World world, BlockPos pos) {
+        return BlockHelper.getValidFacing(getRotationType());
     }
 	
 	protected AxisAlignedBB getBounding(int _x, int _y, int _z, double _minX, double _minY, double _minZ, double _maxX, double _maxY, double _maxZ) {
-		return AxisAlignedBB.getBoundingBox(
+		return AxisAlignedBB.fromBounds(
 	        	(double)_x + _minX, (double)_y + _minY, (double)_z + _minZ, 
 	        	(double)_x + _maxX, (double)_y + _maxY, (double)_z + _maxZ
 	        );
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-		return getCollisionBoundingBoxFromPool(world, x, y, z);
+    public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos) {
+		return getCollisionBoundingBox(world, pos, world.getBlockState(pos));
     }
+	
+	/*@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
+	{
+		EnumFacing facing = world.getBlockState(pos).getValue(FACING);
+		switch (facing)
+		{
+		case NORTH: setBlockBounds(0.0f, 0.0f, 0.875f, 2.0f, 1.0f, 1.0f); break;
+		case SOUTH: setBlockBounds(0.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.125f); break;
+		case WEST: setBlockBounds(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 2.0f); break;
+		case EAST: setBlockBounds(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 2.0f); break;
+		default: break;
+		}
+	}*/
 }

@@ -1,12 +1,13 @@
 package tv.vanhal.contraptions.compat;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import tv.vanhal.contraptions.ContConfig;
 import tv.vanhal.contraptions.Contraptions;
 import tv.vanhal.contraptions.util.Point3I;
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 
 public class BaseMod {
 	public String modID = "base";
@@ -39,7 +40,7 @@ public class BaseMod {
 	}
 	
 	//check if a block in the world is an ungrown plant	
-	public boolean isPlant(Block plantBlock, int metadata) {
+	public boolean isPlant(Block plantBlock, IBlockState state) {
 		return false;
 	}
 

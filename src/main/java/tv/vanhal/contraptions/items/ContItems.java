@@ -27,7 +27,15 @@ public class ContItems {
 	}
 	
 	public static void init() {
+		screwDriver.init();
 		
+		//resources
+		crushedIron.init();
+		moltenIron.init();
+		plateIron.init();
+		rfCore.init();
+		layeredGlass.init();
+		glassLens.init();
 	}
 	
 	public static void postInit() {
