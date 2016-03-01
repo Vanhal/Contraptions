@@ -3,8 +3,13 @@ package tv.vanhal.contraptions.crafting;
 import tv.vanhal.contraptions.blocks.generation.BlockShaftExtender;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidUtil;
 
 public class HeatRecipes {
 	protected Object input;
@@ -66,7 +71,14 @@ public class HeatRecipes {
 		if (!placedBlock) {
 			return (ItemStack)output;
 		} else {
-			return new ItemStack(Item.getItemFromBlock((Block)output));
+			if (Item.getItemFromBlock((Block)output) != null)
+				return new ItemStack(Item.getItemFromBlock((Block)output));
+			else if (FluidRegistry.lookupFluidForBlock((Block)output)==FluidRegistry.LAVA)
+				return new ItemStack(Items.lava_bucket);
+			else if (FluidRegistry.lookupFluidForBlock((Block)output)==FluidRegistry.WATER)
+				return new ItemStack(Items.water_bucket);
+			else
+				return null;
 		}
 	}
 	

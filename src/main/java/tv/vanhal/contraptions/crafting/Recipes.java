@@ -22,8 +22,8 @@ public class Recipes {
 	}
 	
 	public static void addHeatRecipes() {
+		RecipeManager.registerHeatRecipe(Blocks.lava, Blocks.stone, 6000);
 		RecipeManager.registerHeatRecipe(Blocks.lava, Blocks.cobblestone, 5000);
-		RecipeManager.registerHeatRecipe(Blocks.flowing_lava, Blocks.cobblestone, 5000);
 		RecipeManager.registerHeatRecipe(new ItemStack(ContItems.moltenIron), new ItemStack(Items.iron_ingot), 400);
 	}
 }
