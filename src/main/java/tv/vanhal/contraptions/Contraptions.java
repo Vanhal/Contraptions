@@ -85,6 +85,7 @@ public class Contraptions {
 	public void init(FMLInitializationEvent event) {
 		ContItems.init();
 		ContBlocks.init();
+		ContFluids.postInit();
 		
 		/*if(Loader.isModLoaded("MineTweaker3"))
 			MineTweaker.init();*/
@@ -100,7 +101,6 @@ public class Contraptions {
 	public void postInit(FMLPostInitializationEvent event) {
 		ContItems.postInit();
 		ContBlocks.postInit();
-		ContFluids.postInit();
 		
 		proxy.registerEntities();
 		proxy.registerItems();

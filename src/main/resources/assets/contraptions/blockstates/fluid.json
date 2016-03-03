@@ -1,0 +1,50 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "forge:fluid"
+	},
+	"variants": {
+		"normal": [
+			{
+				"custom": {
+					"fluid": "normal"
+				}
+			}
+		],
+		"normalgas": [
+			{
+				"custom": {
+					"fluid": "normalgas"
+				}
+			}
+		],
+		"static": [
+			{
+				"custom": {
+					"fluid": "static"
+				}
+			}
+		],
+		"staticgas": [
+			{
+				"custom": {
+					"fluid": "staticgas"
+				}
+			}
+		],
+		"finite": [
+			{
+				"custom": {
+					"fluid": "finite"
+				}
+			}
+		],
+		"steam": [
+			{
+				"custom": {
+					"fluid": "steam"
+				}
+			}
+		]
+	}
+}

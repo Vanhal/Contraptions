@@ -8,7 +8,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -26,6 +28,8 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 
 public class FluidSteam extends BlockFluidFinite {
+	private static final String FLUID_MODEL_PATH = Ref.MODID + ":fluid";
+	
 	private static DamageSource steamDmg = new DamageSource("steam");
 	{
 			steamDmg.setDamageBypassesArmor().setFireDamage().setDifficultyScaled();
@@ -35,7 +39,7 @@ public class FluidSteam extends BlockFluidFinite {
 	protected String name;
 	
 	public FluidSteam() {
-		super(ContFluids.steamFluid, ContFluids.material);
+		super(ContFluids.steamFluid, new MaterialLiquid(MapColor.silverColor));
 		setName("steam");
 		displacements.put(this, false);
 		setHardness(100.0F);
@@ -55,17 +59,17 @@ public class FluidSteam extends BlockFluidFinite {
 	public void postInit() {
 		if (Contraptions.proxy.isClient()) {
 			Item steamItem = Item.getItemFromBlock(this);
-			final ModelResourceLocation steamRes = new ModelResourceLocation(Ref.MODID + ":" + name, "steam");
-			//Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(steamItem, 0, steamRes);
+			ModelResourceLocation steamRes = new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+
 			ModelBakery.registerItemVariants(steamItem);
 			ModelLoader.setCustomMeshDefinition(steamItem, new ItemMeshDefinition() {
                 public ModelResourceLocation getModelLocation(ItemStack stack) {
-                    return steamRes;
+                    return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
                 }
             });
 			ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
                 protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                    return steamRes;
+                    return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
                 }
             });
 		}
