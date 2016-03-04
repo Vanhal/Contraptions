@@ -31,6 +31,7 @@ public class BaseItem extends Item {
 	}
 	
 	public void init() {
+		if (Contraptions.proxy.isClient())
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 			.register(this, 0, new ModelResourceLocation(Ref.MODID + ":" + itemName, "inventory"));
 	}

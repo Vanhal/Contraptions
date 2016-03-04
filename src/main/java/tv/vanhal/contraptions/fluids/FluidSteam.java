@@ -12,7 +12,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -58,21 +57,26 @@ public class FluidSteam extends BlockFluidFinite {
 	
 	public void postInit() {
 		if (Contraptions.proxy.isClient()) {
-			Item steamItem = Item.getItemFromBlock(this);
-			ModelResourceLocation steamRes = new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
-
-			ModelBakery.registerItemVariants(steamItem);
-			ModelLoader.setCustomMeshDefinition(steamItem, new ItemMeshDefinition() {
-                public ModelResourceLocation getModelLocation(ItemStack stack) {
-                    return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
-                }
-            });
-			ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
-                protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                    return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
-                }
-            });
+			
 		}
+	}
+	
+    @SideOnly(Side.CLIENT)
+	public void registerRenderer() {
+		Item steamItem = Item.getItemFromBlock(this);
+		ModelResourceLocation steamRes = new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+
+		ModelBakery.registerItemVariants(steamItem);
+		ModelLoader.setCustomMeshDefinition(steamItem, new ItemMeshDefinition() {
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+            }
+        });
+		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+            }
+        });
 	}
 	
 	@Override
