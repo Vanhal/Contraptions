@@ -19,7 +19,7 @@ public class NetworkHandler {
 	private NetworkHandler() {
 	}
 	
-	private static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel("pAutomation");
+	private static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel("pContraptions");
 	private static int discriminationByte = 1;
 	
 	public static <REQ extends IMessage> void registerMessageHandler(IMessageHandler<? super REQ, ? extends IMessage> messageHandler, Class<REQ> requestMessageType, Side side) {
