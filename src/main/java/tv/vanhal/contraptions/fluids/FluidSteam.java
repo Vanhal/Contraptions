@@ -22,12 +22,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 
 public class FluidSteam extends BlockFluidFinite {
-	private static final String FLUID_MODEL_PATH = Ref.MODID + ":fluid";
 	
 	private static DamageSource steamDmg = new DamageSource("steam");
 	{
@@ -53,28 +53,28 @@ public class FluidSteam extends BlockFluidFinite {
 	
 	public void preInit() {
 		GameRegistry.registerBlock(this, name);
+		if (Contraptions.proxy.isClient()) {
+			registerRenderer();
+		}
 	}
 	
 	public void postInit() {
-		if (Contraptions.proxy.isClient()) {
-			
-		}
 	}
 	
     @SideOnly(Side.CLIENT)
 	public void registerRenderer() {
+		final ModelResourceLocation steamRes = new ModelResourceLocation(new ResourceLocation(Ref.MODID, "fluid"), "steam");
 		Item steamItem = Item.getItemFromBlock(this);
-		ModelResourceLocation steamRes = new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
 
 		ModelBakery.registerItemVariants(steamItem);
 		ModelLoader.setCustomMeshDefinition(steamItem, new ItemMeshDefinition() {
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-                return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+                return steamRes;
             }
         });
 		ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(FLUID_MODEL_PATH, "steam");
+                return steamRes;
             }
         });
 	}

@@ -35,7 +35,7 @@ public class TileGenerator extends BasePoweredTile {
 			//push out energy stored
 			if (energyStorage > 0) {
 				for (EnumFacing direction : EnumFacing.values()) {
-					TileEntity test = getPoint().getAdjacentPoint(facing).getTileEntity(worldObj);
+					TileEntity test = getPoint().offset(direction).getTileEntity(worldObj);
 					if  (test instanceof IEnergyReceiver) {
 						IEnergyReceiver energyBlock = (IEnergyReceiver)test;
 						if (energyBlock.canConnectEnergy(direction.getOpposite())) {

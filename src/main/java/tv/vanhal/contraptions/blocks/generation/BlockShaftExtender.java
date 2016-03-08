@@ -51,7 +51,7 @@ public class BlockShaftExtender extends BaseCustomBlock implements ITorqueBlock 
 	public int getTorqueTransfering(World world, Point3I point, int direction) {
 		if (point.getBlock(world) instanceof ITorqueBlock) {
 			ITorqueBlock torqueBlock = (ITorqueBlock) point.getBlock(world);
-			int facing = point.getMetaData(world);
+			int facing = getFacing(world, point.getPos());
 			if ( (direction == facing) || (direction == EnumFacing.values()[facing].getOpposite().ordinal()) ) {
 				EnumFacing dir = EnumFacing.values()[direction];
 				int torque = torqueBlock.getTorqueProduced(world, point);

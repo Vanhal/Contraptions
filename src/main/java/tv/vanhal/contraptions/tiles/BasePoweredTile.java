@@ -64,7 +64,7 @@ public class BasePoweredTile extends BaseTile implements IEnergyReceiver, IEnerg
 
 	@Override
 	public boolean canConnectEnergy(EnumFacing face) {
-		return (maxEnergyStorage>0);
+		return (canRecieve || canExtract);
 	}
 
 	@Override

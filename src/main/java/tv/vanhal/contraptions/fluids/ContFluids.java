@@ -19,7 +19,7 @@ public class ContFluids {
 	
 	public static void preInit() {
 		//fluids
-		steamFluid = registerFluid("steam", -800, 0, 673, EnumRarity.COMMON);
+		steamFluid = registerFluid("steam", -10, 0, 673, EnumRarity.COMMON);
 		
 		//blocks
 		steam = new FluidSteam();
