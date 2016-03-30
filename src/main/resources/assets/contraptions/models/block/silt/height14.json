@@ -1,0 +1,7 @@
+{
+    "parent": "block/snow_height14",
+    "textures": {
+        "particle": "contraptions:blocks/silt",
+        "texture": "contraptions:blocks/silt"
+    }
+}

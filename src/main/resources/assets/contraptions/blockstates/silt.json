@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "layers=1":  { "model": "contraptions:silt/height2" },
+        "layers=2":  { "model": "contraptions:silt/height4" },
+        "layers=3":  { "model": "contraptions:silt/height6" },
+        "layers=4":  { "model": "contraptions:silt/height8" },
+        "layers=5":  { "model": "contraptions:silt/height10" },
+        "layers=6":  { "model": "contraptions:silt/height12" },
+        "layers=7":  { "model": "contraptions:silt/height14" },
+        "layers=8":  { "model": "contraptions:silt/height16" }
+    }
+}

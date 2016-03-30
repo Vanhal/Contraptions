@@ -8,7 +8,9 @@ import tv.vanhal.contraptions.blocks.generation.BlockShaftExtender;
 import tv.vanhal.contraptions.blocks.generation.BlockSolarHeater;
 import tv.vanhal.contraptions.blocks.generation.BlockSolidBurner;
 import tv.vanhal.contraptions.blocks.generation.BlockTurbine;
+import tv.vanhal.contraptions.blocks.machines.BlockClock;
 import tv.vanhal.contraptions.blocks.machines.BlockCrusher;
+import tv.vanhal.contraptions.blocks.machines.BlockFilter;
 import tv.vanhal.contraptions.blocks.machines.BlockGrabber;
 import tv.vanhal.contraptions.blocks.machines.BlockPlacer;
 import tv.vanhal.contraptions.blocks.machines.BlockPoweredPiston;
@@ -16,6 +18,8 @@ import tv.vanhal.contraptions.blocks.machines.BlockRedstonePoweredPiston;
 import tv.vanhal.contraptions.blocks.machines.BlockSpike;
 import tv.vanhal.contraptions.blocks.machines.BlockSpreader;
 import tv.vanhal.contraptions.blocks.passive.BlockConductivePlate;
+import tv.vanhal.contraptions.blocks.passive.BlockFrame;
+import tv.vanhal.contraptions.blocks.passive.BlockSilt;
 import tv.vanhal.contraptions.blocks.transport.BlockRFPylon;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -28,6 +32,7 @@ public class ContBlocks {
 	public static BlockSpreader spreader = new BlockSpreader();
 	public static BlockCrusher crusher = new BlockCrusher();
 	public static BlockGrabber grabber = new BlockGrabber();
+	public static BlockClock clock = new BlockClock();
 	
 	//generation
 	public static BlockSolidBurner solidBurner = new BlockSolidBurner();
@@ -47,6 +52,10 @@ public class ContBlocks {
 	public static BlockCreativeSteam creativeSteam = new BlockCreativeSteam();
 	public static BlockRedstonePulse pulse = new BlockRedstonePulse();
 	
+	//filter columns
+	public static BlockFilter filter = new BlockFilter();
+	public static BlockFrame frame = new BlockFrame();
+	public static BlockSilt silt = new BlockSilt();
 	
 
 	public static void preInit() {
@@ -57,6 +66,7 @@ public class ContBlocks {
 		redstonePoweredPiston.preInit();
 		crusher.preInit();
 		grabber.preInit();
+		clock.preInit();
 		
 		conductivePlate.preInit();
 		
@@ -67,6 +77,10 @@ public class ContBlocks {
 		turbine.preInit();
 		
 		rfPylon.preInit();
+		
+		filter.preInit();
+		frame.preInit();
+		silt.preInit();
 		
 		creativePower.preInit();
 		creativeSteam.preInit();
@@ -81,6 +95,7 @@ public class ContBlocks {
 		redstonePoweredPiston.init();
 		crusher.init();
 		grabber.init();
+		clock.init();
 		
 		conductivePlate.init();
 		
@@ -91,6 +106,10 @@ public class ContBlocks {
 		turbine.init();
 		
 		rfPylon.init();
+		
+		filter.init();
+		frame.init();
+		silt.init();
 		
 		creativePower.init();
 		creativeSteam.init();
@@ -104,6 +123,7 @@ public class ContBlocks {
 		redstonePoweredPiston.postInit();
 		crusher.postInit();
 		grabber.postInit();
+		clock.postInit();
 		
 		conductivePlate.postInit();
 		
@@ -114,6 +134,10 @@ public class ContBlocks {
 		turbine.postInit();
 		
 		rfPylon.postInit();
+		
+		filter.postInit();
+		frame.postInit();
+		silt.postInit();
 		
 		creativePower.postInit();
 		creativeSteam.postInit();

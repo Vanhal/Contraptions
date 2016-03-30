@@ -11,6 +11,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.items.resources.ItemSilt;
 import tv.vanhal.contraptions.tiles.BaseTile;
 import tv.vanhal.contraptions.util.BlockHelper;
 import tv.vanhal.contraptions.util.BlockHelper.Axis;

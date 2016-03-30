@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
+import tv.vanhal.contraptions.client.renderers.tiles.RenderBlockFrame;
 import tv.vanhal.contraptions.client.renderers.tiles.RenderCrusher;
 import tv.vanhal.contraptions.items.ContItems;
 import tv.vanhal.contraptions.tiles.TilePlacer;
@@ -37,6 +38,7 @@ public class ClientProxy extends Proxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileShaftExtender.class, new RenderShaftExtender());
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileTurbine.class, new RenderTurbine());*/
 		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileCrusher.class, new RenderCrusher());
+		ClientRegistry.bindTileEntitySpecialRenderer(tv.vanhal.contraptions.tiles.TileFrame.class, new RenderBlockFrame());
 		super.registerEntities();
 	}
 	

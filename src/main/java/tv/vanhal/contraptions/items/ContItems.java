@@ -10,7 +10,9 @@ import tv.vanhal.contraptions.items.resources.ItemGlassLens;
 import tv.vanhal.contraptions.items.resources.ItemLayeredGlass;
 import tv.vanhal.contraptions.items.resources.ItemMoltenIron;
 import tv.vanhal.contraptions.items.resources.ItemPlateIron;
+import tv.vanhal.contraptions.items.resources.ItemPlateWood;
 import tv.vanhal.contraptions.items.resources.ItemRFCore;
+import tv.vanhal.contraptions.items.resources.ItemSilt;
 
 public class ContItems {
 
@@ -21,6 +23,7 @@ public class ContItems {
 		crushedIron.preInit();
 		moltenIron.preInit();
 		plateIron.preInit();
+		woodenIron.preInit();
 		rfCore.preInit();
 		layeredGlass.preInit();
 		glassLens.preInit();
@@ -33,6 +36,7 @@ public class ContItems {
 		crushedIron.init();
 		moltenIron.init();
 		plateIron.init();
+		woodenIron.init();
 		rfCore.init();
 		layeredGlass.init();
 		glassLens.init();
@@ -48,6 +52,7 @@ public class ContItems {
 	public static ItemCrushedIron crushedIron = new ItemCrushedIron();
 	public static ItemMoltenIron moltenIron = new ItemMoltenIron();
 	public static ItemPlateIron plateIron = new ItemPlateIron();
+	public static ItemPlateWood woodenIron = new ItemPlateWood();
 	public static ItemRFCore rfCore = new ItemRFCore();
 	public static ItemLayeredGlass layeredGlass = new ItemLayeredGlass();
 	public static ItemGlassLens glassLens = new ItemGlassLens();

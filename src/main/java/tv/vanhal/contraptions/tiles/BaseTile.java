@@ -25,9 +25,9 @@ public class BaseTile extends TileEntity implements ITickable {
 	public static final byte TICKS_PER_MESSAGE = 5;
 	
 	//flags and tags for updating the NBT data
-	private boolean dirty = false;
-	private boolean blockUpdate = false;
-	private boolean contentsUpdate = false;
+	private boolean dirty = true;
+	private boolean blockUpdate = true;
+	private boolean contentsUpdate = true;
 	private NBTTagCompound partialUpdateTag = new NBTTagCompound();
 	
 	public BaseTile() {

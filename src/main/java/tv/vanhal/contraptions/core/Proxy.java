@@ -2,9 +2,11 @@ package tv.vanhal.contraptions.core;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import tv.vanhal.contraptions.Contraptions;
+import tv.vanhal.contraptions.tiles.TileClock;
 import tv.vanhal.contraptions.tiles.TileCreativePower;
 import tv.vanhal.contraptions.tiles.TileCreativeSteam;
 import tv.vanhal.contraptions.tiles.TileCrusher;
+import tv.vanhal.contraptions.tiles.TileFrame;
 import tv.vanhal.contraptions.tiles.TileGenerator;
 import tv.vanhal.contraptions.tiles.TileGrabber;
 import tv.vanhal.contraptions.tiles.TilePlacer;
@@ -33,12 +35,14 @@ public class Proxy {
 		GameRegistry.registerTileEntity(TileSpreader.class, Ref.MODID+":TileSpreader");
 		GameRegistry.registerTileEntity(TileCrusher.class, Ref.MODID+":TileCrusher");
 		GameRegistry.registerTileEntity(TileGrabber.class, Ref.MODID+":TileGrabber");
+		GameRegistry.registerTileEntity(TileClock.class, Ref.MODID+":TileClock");
 		GameRegistry.registerTileEntity(TileSolidBurner.class, Ref.MODID+":TileSolidBurner");
 		GameRegistry.registerTileEntity(TileSolarHeater.class, Ref.MODID+":TileSolarHeater");
 		GameRegistry.registerTileEntity(TileGenerator.class, Ref.MODID+":TileGenerator");
 		GameRegistry.registerTileEntity(TileShaftExtender.class, Ref.MODID+":TileShaftExtender");
 		GameRegistry.registerTileEntity(TileTurbine.class, Ref.MODID+":TileTurbine");
 		GameRegistry.registerTileEntity(TilePylon.class, Ref.MODID+":TilePylon");
+		GameRegistry.registerTileEntity(TileFrame.class, Ref.MODID+":TileFrame");
 		GameRegistry.registerTileEntity(TileCreativePower.class, Ref.MODID+":TileCreativePower");
 		GameRegistry.registerTileEntity(TileCreativeSteam.class, Ref.MODID+":TileCreativeSteam");
 	}

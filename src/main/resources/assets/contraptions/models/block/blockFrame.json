@@ -1,7 +1,7 @@
 {
 "textures": {
-    "particle": "blocks/frameItem",
-    "texture": "blocks/frameItem"
+    "particle": "contraptions:blocks/frameItem",
+    "texture": "contraptions:blocks/frameItem"
 },
 "elements": [ 
 {

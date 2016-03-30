@@ -1,0 +1,6 @@
+{
+    "parent": "block/snow",
+    "textures": {
+        "all": "contraptions:blocks/silt"
+    }
+}
